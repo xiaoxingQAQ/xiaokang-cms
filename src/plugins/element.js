@@ -19,6 +19,9 @@ import {
   MenuItemGroup,
   Submenu,
   Message,
+  Row,
+  Col,
+  Card,
 } from 'element-ui'
 
 Vue.use(Container)
@@ -41,5 +44,8 @@ Vue.use(RadioGroup)
 Vue.use(MenuItemGroup)
 Vue.use(Submenu)
 Vue.use(Message.name)
+Vue.use(Row)
+Vue.use(Col)
+Vue.use(Card)
 
 Vue.prototype.$message = Message

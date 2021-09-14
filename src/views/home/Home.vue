@@ -177,7 +177,7 @@ export default {
     box-sizing: border-box;
     padding-left: 16px;
     background: #fff;
-    border-bottom: 1px solid #ccc;
+    border-bottom: .5px solid #ccc;
     font-weight: bold;
 
     .NavBar {
