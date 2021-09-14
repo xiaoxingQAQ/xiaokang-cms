@@ -1,6 +1,6 @@
-/* 设备配置页面 */
+/* 知识库 */
 <template>
-  <div>设备配置页面</div>
+  
 </template>
 
 <script>

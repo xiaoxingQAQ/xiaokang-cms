@@ -1,6 +1,8 @@
-/* Home主要页面 */
+/* 菜单管理 */
 <template>
-  <div></div>
+  <div>
+
+  </div>
 </template>
 
 <script>

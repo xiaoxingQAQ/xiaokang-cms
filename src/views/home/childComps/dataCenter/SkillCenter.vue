@@ -1,6 +1,8 @@
-/* Home主要页面 */
+/* 技能中心 */
 <template>
-  <div></div>
+  <div>
+    
+  </div>
 </template>
 
 <script>

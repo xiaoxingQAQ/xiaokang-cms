@@ -1,6 +1,8 @@
-/* Home主要页面 */
+/* 数据中台 */
 <template>
-  <div></div>
+  <div>
+
+  </div>
 </template>
 
 <script>

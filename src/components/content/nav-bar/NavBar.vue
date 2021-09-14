@@ -5,7 +5,7 @@
         v-for="(item, index) in menuList"
         :key="item.id"
         :class="['menu-item', { active: currentIndex === index }]"
-        @click="goNext(item.id, currentIndex)"
+        @click="goNext(item.id)"
       >
         <div><i :class="['iconfont', item.icon]"></i></div>
         <span>{{ item.title }}</span>
@@ -25,7 +25,7 @@ export default {
         { id: 3, title: '产品运营', icon: 'icon-server1' },
         { id: 4, title: '系统管理', icon: 'icon-shezhi3' },
       ],
-      currentIndex: 1,
+      currentIndex: 0,
     }
   },
   created() {
@@ -65,16 +65,82 @@ export default {
       }
     },
     selected() {
+      let path = this.$route.path
       let home = '/home/main';
+
       let allocation = '/home/allocation';
+      let allocationS = '/home/skill';
+      let allocationR = '/home/repository';
+      let allocationE = '/home/edition';
+
       let dataCenter = '/home/dataCenter';
+      let dataCenterS = '/home/skillCenter';
+
       let operation = '/home/operation';
+      let operationU = '/home/userControl';
+      let operationO = '/home/operationControl'
+
       let manage = '/home/manage';
-      if (this.$route.path == home) return this.currentIndex = 0
-      if (this.$route.path == allocation) return this.currentIndex = 1
-      if (this.$route.path == dataCenter) return this.currentIndex = 2
-      if (this.$route.path == operation) return this.currentIndex = 3
-      if (this.$route.path == manage) return this.currentIndex = 4
+      let manageR1 = '/home/role';
+      let manageM = '/home/menu'
+      let manageD1 = '/home/dict'
+      let manageR2 = '/home/resource'
+      let manageD2 = '/home/data'
+      /* 如果当前处于 xxx 路由就进行判断 否则不判断 */
+      switch (path) {
+        case home:
+          this.currentIndex = 0
+          break;
+
+        case allocation:
+          this.currentIndex = 1
+          break;
+        case allocationS:
+          this.currentIndex = 1
+          break;
+        case allocationR:
+          this.currentIndex = 1
+          break;
+        case allocationE:
+          this.currentIndex = 1
+          break;
+
+        case dataCenter:
+          this.currentIndex = 2
+          break;
+        case dataCenterS:
+          this.currentIndex = 2
+          break;
+
+        case operation:
+          this.currentIndex = 3
+          break;
+        case operationU:
+          this.currentIndex = 3
+          break;
+        case operationO:
+          this.currentIndex = 3
+          break;
+
+        case manage:
+          this.currentIndex = 4
+          break;
+        case manageR1:
+          this.currentIndex = 4
+          break;
+        case manageM:
+          this.currentIndex = 4
+          break;
+        case manageD1:
+          this.currentIndex = 4
+          break;
+        case manageR2:
+          this.currentIndex = 4
+          break;
+        case manageD2:
+          this.currentIndex = 4
+          break;
+      }
     },
   },
 }
@@ -100,7 +166,7 @@ export default {
     color: #333;
     border-bottom: 2.5px solid transparent;
     cursor: pointer;
-    transition: all .5s;
+    transition: all 0.5s;
 
     div {
       position: relative;
@@ -145,11 +211,10 @@ export default {
     }
   }
   .menu-item:hover {
-
     background: #edf4fc !important;
   }
   .active {
-    transition: all .5s;
+    transition: all 0.5s;
     border-bottom: 2.5px solid #409eff;
     color: #409eff !important;
   }

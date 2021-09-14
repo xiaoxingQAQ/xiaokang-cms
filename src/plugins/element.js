@@ -18,6 +18,7 @@ import {
   RadioGroup,
   MenuItemGroup,
   Submenu,
+  Message,
 } from 'element-ui'
 
 Vue.use(Container)
@@ -39,3 +40,6 @@ Vue.use(RadioButton)
 Vue.use(RadioGroup)
 Vue.use(MenuItemGroup)
 Vue.use(Submenu)
+Vue.use(Message.name)
+
+Vue.prototype.$message = Message

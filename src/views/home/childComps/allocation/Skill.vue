@@ -1,6 +1,6 @@
-/* Home主要页面 */
+/* 技能管理 */
 <template>
-  <div></div>
+  
 </template>
 
 <script>

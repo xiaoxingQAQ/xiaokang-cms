@@ -2,7 +2,7 @@
   <div class="home-aside active" :default-active="activeIndex">
     <el-menu>
       <el-menu-item index="1">
-        <i class="iconfont icon-shouye">
+        <i class="iconfont icon-house1">
           <span>平台首页</span>
         </i>
       </el-menu-item>

@@ -1,13 +1,135 @@
 <template>
-  
+  <div class="allocation-aside">
+    <el-menu :default-active="activeIndex">
+      <el-menu-item
+        v-for="(item, index) in menuList"
+        :key="item.id"
+        :index="item.id + ''"
+        @click="goNext(index)"
+      >
+        <i :class="['iconfont', item.icon]">
+          <span>{{ item.title }}</span>
+        </i>
+      </el-menu-item>
+    </el-menu>
+  </div>
 </template>
 
 <script>
 export default {
+  data() {
+    return {
+      activeIndex: '0',
+      menuList: [ // 侧边栏数据
+        { id: 0, title: '人设管理', icon: 'icon-jiaose' },
+        { id: 1, title: '技能管理', icon: 'icon-jineng' },
+        { id: 2, title: '知识库', icon: 'icon-ziyuan' },
+        { id: 3, title: '系统版本', icon: 'icon-details' },
+      ],
+    }
+  },
+  created() {
+    this.selected()
+  },
+  methods: {
+    goNext(index) {
+      const indey = index + '';
+      switch (indey) {
+        case '0':
+          this.activeIndex = indey
+          // 点击之后 如果 当前路由 和 将要跳转的路由 相同 那么阻止跳转
+          // 否则 放行
+          if (this.$route.path == '/home/allocation') return
+          this.$router.push('/home/allocation')
+          break;
+        case '1':
+          this.activeIndex = indey
+          if (this.$route.path == '/home/skill') return
+          this.$router.push('/home/skill')
+          break;
+        case '2':
+          this.activeIndex = indey
+          if (this.$route.path == '/home/repository') return
+          this.$router.push('/home/repository')
+          break;
+        case '3':
+          this.activeIndex = indey
+          if (this.$route.path == '/home/edition') return
+          this.$router.push('/home/edition')
+          break;
 
+        default:
+          break;
+      }
+    },
+    selected() {
+      let path = this.$route.path;
+      let allocation = '/home/allocation';
+      let allocationS = '/home/skill';
+      let allocationR = '/home/repository';
+      let allocationE = '/home/edition';
+
+      switch (path) {
+        case allocation:
+          this.activeIndex = '0'
+          break;
+        case allocationS:
+          this.activeIndex = '1'
+          break;
+        case allocationR:
+          this.activeIndex = '2'
+          break;
+        case allocationE:
+          this.activeIndex = '3'
+          break;
+      }
+    },
+  },
 }
 </script>
 
 <style lang="less" scoped>
+.allocation-aside {
+  box-sizing: border-box;
+  width: 80px !important;
+  min-height: 309px;
+  background: #fff;
 
+  .el-menu-item {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 15px;
+    transition: all 0.5s;
+
+    i {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      transform: translate(0, 18px);
+      font-size: 25px;
+      span {
+        font-size: 12px;
+        transform: translate(0, -30px);
+      }
+    }
+  }
+
+  .el-menu--collapse {
+    width: 80px;
+  }
+
+  .el-menu-item.is-active {
+    color: #409eff;
+    background-color: #edf4fc;
+  }
+}
+
+// ::v-deep .el-menu-item {
+//   i {
+//     color: #409eff;
+//   }
+//   background: #ecf5ff;
+// }
 </style>

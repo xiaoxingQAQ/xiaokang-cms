@@ -51,7 +51,11 @@
     <el-container>
       <!-- 侧边栏 -->
       <el-aside>
-        <HomeAside />
+        <HomeAside v-if="$route.path === '/home/main'" />
+        <AllocationAside v-else-if="showAsideA" />
+        <DataCenterAside v-else-if="showAsideD" />
+        <OperationAside v-else-if="showAsideO" />
+        <ManageAside v-else-if="showAsideM" />
       </el-aside>
       <!-- 右侧内容主体 -->
       <el-main>
@@ -65,11 +69,85 @@
 <script>
 import NavBar from '@/components/content/nav-bar/NavBar'
 import HomeAside from '@/components/content/aside/HomeAside'
+import AllocationAside from '@/components/content/aside/AllocationAside'
+import DataCenterAside from '@/components/content/aside/DataCenterAside'
+import OperationAside from '@/components/content/aside/OperationAside'
+import ManageAside from '@/components/content/aside/ManageAside'
 
 export default {
   components: {
-    HomeAside,
     NavBar,
+    HomeAside,
+    AllocationAside,
+    DataCenterAside,
+    OperationAside,
+    ManageAside,
+  },
+  computed: {
+    showAsideA() {
+      const path = this.$route.path;
+      const APath = '/home/allocation';
+      const SPath = '/home/skill';
+      const RPath = '/home/repository';
+      const EPath = '/home/edition';
+
+      switch (path) {
+        case APath:
+          return true
+        case SPath:
+          return true
+        case RPath:
+          return true
+        case EPath:
+          return true
+      }
+    },
+    showAsideD() {
+      const path = this.$route.path;
+      const DPath = '/home/dataCenter';
+      const SPath = '/home/skillCenter';
+      if (path == DPath) return true
+      if (path == SPath) return true
+    },
+    showAsideO() {
+      const path = this.$route.path;
+      const APath = '/home/operation';
+      const UPath = '/home/userControl';
+      const OPath = '/home/operationControl';
+
+      switch (path) {
+        case APath:
+          return true
+        case UPath:
+          return true
+        case OPath:
+          return true
+      }
+    },
+    showAsideM() {
+      const path = this.$route.path;
+      const M1Path = '/home/manage';
+      const R1Path = '/home/role';
+      const M2Path = '/home/menu';
+      const D1Path = '/home/dict';
+      const R2Path = '/home/resource';
+      const D2Path = '/home/data';
+
+      switch (path) {
+        case M1Path:
+          return true
+        case R1Path:
+          return true
+        case M2Path:
+          return true
+        case D1Path:
+          return true
+        case R2Path:
+          return true
+        case D2Path:
+          return true
+      }
+    },
   },
   data() {
     return {

@@ -1,6 +1,8 @@
-/* Home主要页面 */
+/* 系统版本 */
 <template>
-  <div></div>
+  <div>
+    <h1></h1>
+  </div>
 </template>
 
 <script>

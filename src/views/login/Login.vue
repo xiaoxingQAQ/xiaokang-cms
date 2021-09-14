@@ -47,11 +47,15 @@
         </div>
       </div>
     </main>
-    <footer></footer>
+    <footer>
+      <span> Copyright 2021 </span>
+    </footer>
   </div>
 </template>
 
 <script>
+import { login } from '@/network/login'
+
 export default {
   data() {
     return {
@@ -68,7 +72,28 @@ export default {
         password: [{ required: true, message: '密码', trigger: 'blur' }]
       }
     }
-  }
+  },
+  methods: {
+    login() {
+      this.$refs.loginFormRef.validate(valid => {
+        if (!valid) return
+
+        const data = this.loginForm
+        login(data).then(res => {
+          if (res.code !== 1) return this.$message.error('登陆失败')
+
+          this.$message.success({
+            duration: 900,
+            message: '登录成功'
+          })
+          window.sessionStorage.setItem('token', JSON.stringify(res.data.key))
+          console.log(11);
+          this.$router.push('/home/main')
+          
+        })
+      })
+    },
+  },
 }
 </script>
 
@@ -142,7 +167,11 @@ export default {
   }
   footer {
     width: 100%;
-    height: 0px;
+    height: 72px;
+    border-top: 1px solid #d8d8d870;
+    color: #d8d8d8;
+    line-height: 72px;
+    text-align: center;
   }
 }
 </style>
