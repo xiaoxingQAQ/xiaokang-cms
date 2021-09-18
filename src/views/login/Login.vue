@@ -41,7 +41,9 @@
             </el-form-item>
             <!-- 按钮区域 -->
             <el-form-item class="btns">
-              <el-button type="primary" @click="login">登录</el-button>
+              <el-button type="primary" @click="login" :disabled="disabled"
+                >登录</el-button
+              >
             </el-form-item>
           </el-form>
         </div>
@@ -59,6 +61,7 @@ import { login } from '@/network/login'
 export default {
   data() {
     return {
+      disabled: false, // 控制是否禁用按钮
       loginForm: {
         username: 'admin',
         password: ''
@@ -77,7 +80,7 @@ export default {
     login() {
       this.$refs.loginFormRef.validate(valid => {
         if (!valid) return
-
+        this.disabled = true;
         const data = this.loginForm;
 
         login(data).then(res => {
@@ -92,7 +95,6 @@ export default {
           window.sessionStorage.setItem('token', JSON.stringify(res.data.key))
           console.log(11);
           this.$router.push('/home')
-          
         })
       })
     },
@@ -132,7 +134,7 @@ export default {
         transform: translate(25%, 8%);
       }
     }
-    
+
     .login_box {
       position: absolute;
       top: 50%;
@@ -161,6 +163,11 @@ export default {
       width: 100%;
       padding: 0 30px;
       box-sizing: border-box;
+
+      ::v-deep .el-input__inner {
+        font-weight: 500;
+        color: #777;
+      }
     }
 
     .btns {

@@ -90,7 +90,7 @@ export default {
         ],
         hobby: [
           { required: false, message: '爱好', trigger: 'blur' },
-          { min: 1, max: 3, message: '长度在 1 到 3 个字符之间', trigger: 'blur' }
+          { min: 1, max: 30, message: '长度在 1 到 30 个字符之间', trigger: 'blur' }
         ],
         introduce: [
           { required: false, message: '介绍', trigger: 'blur' },
