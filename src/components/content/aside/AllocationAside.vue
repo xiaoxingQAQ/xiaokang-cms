@@ -33,28 +33,29 @@ export default {
   },
   methods: {
     goNext(index) {
+      let path = this.$route.path
       const indey = index + '';
       switch (indey) {
         case '0':
           this.activeIndex = indey
           // 点击之后 如果 当前路由 和 将要跳转的路由 相同 那么阻止跳转
           // 否则 放行
-          if (this.$route.path == '/allocation') return
+          if (path == '/allocation') return
           this.$router.replace('/allocation')
           break;
         case '1':
           this.activeIndex = indey
-          if (this.$route.path == '/skill') return
+          if (path == '/skill') return
           this.$router.replace('/skill')
           break;
         case '2':
           this.activeIndex = indey
-          if (this.$route.path == '/repository') return
+          if (path == '/repository') return
           this.$router.replace('/repository')
           break;
         case '3':
           this.activeIndex = indey
-          if (this.$route.path == '/edition') return
+          if (path == '/edition') return
           this.$router.replace('/edition')
           break;
 

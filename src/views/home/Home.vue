@@ -61,7 +61,9 @@
       <!-- 右侧内容主体 -->
       <el-main>
         <!-- 路由占位符 -->
-        <router-view />
+        <keep-alive>
+          <router-view />
+        </keep-alive>
       </el-main>
     </el-container>
   </el-container>
@@ -178,7 +180,7 @@ export default {
     box-sizing: border-box;
     padding-left: 16px;
     background: #fff;
-    border-bottom: .5px solid #ccc;
+    border-bottom: 0.5px solid #ccc;
     font-weight: 700;
 
     .NavBar {
@@ -191,7 +193,7 @@ export default {
       left: 26px;
       font-size: 30px;
       color: #fffafa;
-      cursor: pointer
+      cursor: pointer;
     }
 
     .info-wrapper {

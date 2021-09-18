@@ -92,7 +92,7 @@ export default {
   mounted() {
     this.loading = true
     this.getDate()
-    this.getHomeData()
+    // this.getHomeData() // 发送请求
   },
   methods: {
     // 获取时间
