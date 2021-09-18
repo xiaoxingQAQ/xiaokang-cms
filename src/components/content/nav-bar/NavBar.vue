@@ -36,28 +36,28 @@ export default {
       switch (index) {
         case 0:
           this.currentIndex = index
-          if (this.$route.path == '/home/main') return
-          this.$router.push('/home/main')
+          if (this.$route.path == '/main') return
+          this.$router.replace('/main')
           break;
         case 1:
           this.currentIndex = index
-          if (this.$route.path == '/home/allocation') return
-          this.$router.push('/home/allocation')
+          if (this.$route.path == '/allocation') return
+          this.$router.replace('/allocation')
           break;
         case 2:
           this.currentIndex = index
-          if (this.$route.path == '/home/dataCenter') return
-          this.$router.push('/home/dataCenter')
+          if (this.$route.path == '/dataCenter') return
+          this.$router.replace('/dataCenter')
           break;
         case 3:
           this.currentIndex = index
-          if (this.$route.path == '/home/operation') return
-          this.$router.push('/home/operation')
+          if (this.$route.path == '/operation') return
+          this.$router.replace('/operation')
           break;
         case 4:
           this.currentIndex = index
-          if (this.$route.path == '/home/manage') return
-          this.$router.push('/home/manage')
+          if (this.$route.path == '/manage') return
+          this.$router.replace('/manage')
           break;
 
         default:
@@ -66,26 +66,26 @@ export default {
     },
     selected() {
       let path = this.$route.path
-      let home = '/home/main';
+      let home = '/main';
 
-      let allocation = '/home/allocation';
-      let allocationS = '/home/skill';
-      let allocationR = '/home/repository';
-      let allocationE = '/home/edition';
+      let allocation = '/allocation';
+      let allocationS = '/skill';
+      let allocationR = '/repository';
+      let allocationE = '/edition';
 
-      let dataCenter = '/home/dataCenter';
-      let dataCenterS = '/home/skillCenter';
+      let dataCenter = '/dataCenter';
+      let dataCenterS = '/skillCenter';
 
-      let operation = '/home/operation';
-      let operationU = '/home/userControl';
-      let operationO = '/home/operationControl'
+      let operation = '/operation';
+      let operationU = '/userControl';
+      let operationO = '/operationControl'
 
-      let manage = '/home/manage';
-      let manageR1 = '/home/role';
-      let manageM = '/home/menu'
-      let manageD1 = '/home/dict'
-      let manageR2 = '/home/resource'
-      let manageD2 = '/home/data'
+      let manage = '/manage';
+      let manageR1 = '/role';
+      let manageM = '/menu'
+      let manageD1 = '/dict'
+      let manageR2 = '/resource'
+      let manageD2 = '/data'
       /* 如果当前处于 xxx 路由就进行判断 否则不判断 */
       switch (path) {
         case home:

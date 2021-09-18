@@ -39,23 +39,23 @@ export default {
           this.activeIndex = indey
           // 点击之后 如果 当前路由 和 将要跳转的路由 相同 那么阻止跳转
           // 否则 放行
-          if (this.$route.path == '/home/allocation') return
-          this.$router.push('/home/allocation')
+          if (this.$route.path == '/allocation') return
+          this.$router.replace('/allocation')
           break;
         case '1':
           this.activeIndex = indey
-          if (this.$route.path == '/home/skill') return
-          this.$router.push('/home/skill')
+          if (this.$route.path == '/skill') return
+          this.$router.replace('/skill')
           break;
         case '2':
           this.activeIndex = indey
-          if (this.$route.path == '/home/repository') return
-          this.$router.push('/home/repository')
+          if (this.$route.path == '/repository') return
+          this.$router.replace('/repository')
           break;
         case '3':
           this.activeIndex = indey
-          if (this.$route.path == '/home/edition') return
-          this.$router.push('/home/edition')
+          if (this.$route.path == '/edition') return
+          this.$router.replace('/edition')
           break;
 
         default:
@@ -64,10 +64,10 @@ export default {
     },
     selected() {
       let path = this.$route.path;
-      let allocation = '/home/allocation';
-      let allocationS = '/home/skill';
-      let allocationR = '/home/repository';
-      let allocationE = '/home/edition';
+      let allocation = '/allocation';
+      let allocationS = '/skill';
+      let allocationR = '/repository';
+      let allocationE = '/edition';
 
       switch (path) {
         case allocation:

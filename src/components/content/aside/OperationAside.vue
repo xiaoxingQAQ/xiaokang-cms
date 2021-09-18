@@ -38,26 +38,26 @@ export default {
           this.activeIndex = indey
           // 点击之后 如果 当前路由 和 将要跳转的路由 相同 那么阻止跳转
           // 否则 放行
-          if (this.$route.path == '/home/operation') return
-          this.$router.push('/home/operation')
+          if (this.$route.path == '/operation') return
+          this.$router.replace('/operation')
           break;
         case '1':
           this.activeIndex = indey
-          if (this.$route.path == '/home/userControl') return
-          this.$router.push('/home/userControl')
+          if (this.$route.path == '/userControl') return
+          this.$router.replace('/userControl')
           break;
         case '2':
           this.activeIndex = indey
-          if (this.$route.path == '/home/operationControl') return
-          this.$router.push('/home/operationControl')
+          if (this.$route.path == '/operationControl') return
+          this.$router.replace('/operationControl')
           break;
       }
     },
     selected() {
       let path = this.$route.path;
-      let operation = '/home/operation';
-      let operationU = '/home/userControl';
-      let operationO = '/home/operationControl'
+      let operation = '/operation';
+      let operationU = '/userControl';
+      let operationO = '/operationControl'
 
       switch (path) {
         case operation:

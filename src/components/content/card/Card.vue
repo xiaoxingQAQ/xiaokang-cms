@@ -14,34 +14,36 @@
             </div>
           </div>
           <!-- 内容 -->
-          <div class="content">
-            <div>
+          <slot name="main">
+            <div class="content">
               <div>
-                <slot name="data_1"></slot>
+                <div>
+                  <slot name="data_1"></slot>
+                </div>
+                <span>
+                  <slot name="title_1"></slot>
+                </span>
               </div>
-              <span>
-                <slot name="title_1"></slot>
-              </span>
-            </div>
 
-            <div>
               <div>
-                <slot name="data_2"></slot>
+                <div>
+                  <slot name="data_2"></slot>
+                </div>
+                <span>
+                  <slot name="title_2"></slot>
+                </span>
               </div>
-              <span>
-                <slot name="title_2"></slot>
-              </span>
-            </div>
 
-            <div>
               <div>
-                <slot name="data_3"></slot>
+                <div>
+                  <slot name="data_3"></slot>
+                </div>
+                <span>
+                  <slot name="title_3"></slot>
+                </span>
               </div>
-              <span>
-                <slot name="title_3"></slot>
-              </span>
             </div>
-          </div>
+          </slot>
         </div>
       </el-card>
     </el-row>
@@ -58,7 +60,7 @@ export default {
 @color1: #0cc;
 @color2: #7f7f7f;
 .container {
-  margin-bottom: 30px;
+  margin-bottom: 25px;
   /* 卡片 */
   .box-card {
     box-sizing: border-box;
@@ -73,7 +75,9 @@ export default {
       > div:nth-child(1) {
         color: @color2;
       }
+      /* 查看更多数据选项 */
       > div:last-child {
+        cursor: pointer;
         color: @color1;
       }
     }

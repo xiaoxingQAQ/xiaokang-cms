@@ -41,44 +41,44 @@ export default {
           this.activeIndex = indey
           // 点击之后 如果 当前路由 和 将要跳转的路由 相同 那么阻止跳转
           // 否则 放行
-          if (this.$route.path == '/home/manage') return
-          this.$router.push('/home/manage')
+          if (this.$route.path == '/manage') return
+          this.$router.replace('/manage')
           break;
         case '1':
           this.activeIndex = indey
-          if (this.$route.path == '/home/role') return
-          this.$router.push('/home/role')
+          if (this.$route.path == '/role') return
+          this.$router.replace('/role')
           break;
         case '2':
           this.activeIndex = indey
-          if (this.$route.path == '/home/menu') return
-          this.$router.push('/home/menu')
+          if (this.$route.path == '/menu') return
+          this.$router.replace('/menu')
           break;
         case '3':
           this.activeIndex = indey
-          if (this.$route.path == '/home/dict') return
-          this.$router.push('/home/dict')
+          if (this.$route.path == '/dict') return
+          this.$router.replace('/dict')
           break;
         case '4':
           this.activeIndex = indey
-          if (this.$route.path == '/home/resource') return
-          this.$router.push('/home/resource')
+          if (this.$route.path == '/resource') return
+          this.$router.replace('/resource')
           break;
         case '5':
           this.activeIndex = indey
-          if (this.$route.path == '/home/data') return
-          this.$router.push('/home/data')
+          if (this.$route.path == '/data') return
+          this.$router.replace('/data')
           break;
       }
     },
     selected() {
       let path = this.$route.path;
-      let manage = '/home/manage';
-      let manageR1 = '/home/role';
-      let manageM = '/home/menu'
-      let manageD1 = '/home/dict'
-      let manageR2 = '/home/resource'
-      let manageD2 = '/home/data'
+      let manage = '/manage';
+      let manageR1 = '/role';
+      let manageM = '/menu'
+      let manageD1 = '/dict'
+      let manageR2 = '/resource'
+      let manageD2 = '/data'
 
       switch (path) {
         case manage:

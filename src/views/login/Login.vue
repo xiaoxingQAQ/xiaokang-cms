@@ -78,17 +78,20 @@ export default {
       this.$refs.loginFormRef.validate(valid => {
         if (!valid) return
 
-        const data = this.loginForm
-        login(data).then(res => {
-          if (res.code !== 1) return this.$message.error('登陆失败')
+        const data = this.loginForm;
 
+        login(data).then(res => {
+          if (!res) return this.$message.error('未知错误')
+          if (res.code !== 1) return this.$message.error('登陆失败')
+          console.log(res);
           this.$message.success({
             duration: 900,
             message: '登录成功'
           })
+          window.sessionStorage.setItem('memberID', JSON.stringify(res.data.id))
           window.sessionStorage.setItem('token', JSON.stringify(res.data.key))
           console.log(11);
-          this.$router.push('/home/main')
+          this.$router.push('/home')
           
         })
       })

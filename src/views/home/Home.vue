@@ -22,6 +22,7 @@
               <img src="@/assets/images/avatar.png" alt="" />
             </div>
           </div>
+
           <div class="list">
             <div>
               <i class="iconfont icon-shezhi2"></i>
@@ -51,7 +52,7 @@
     <el-container>
       <!-- 侧边栏 -->
       <el-aside>
-        <HomeAside v-if="$route.path === '/home/main'" />
+        <HomeAside v-if="$route.path === '/main'" />
         <AllocationAside v-else-if="showAsideA" />
         <DataCenterAside v-else-if="showAsideD" />
         <OperationAside v-else-if="showAsideO" />
@@ -86,10 +87,10 @@ export default {
   computed: {
     showAsideA() {
       const path = this.$route.path;
-      const APath = '/home/allocation';
-      const SPath = '/home/skill';
-      const RPath = '/home/repository';
-      const EPath = '/home/edition';
+      const APath = '/allocation';
+      const SPath = '/skill';
+      const RPath = '/repository';
+      const EPath = '/edition';
 
       switch (path) {
         case APath:
@@ -104,16 +105,16 @@ export default {
     },
     showAsideD() {
       const path = this.$route.path;
-      const DPath = '/home/dataCenter';
-      const SPath = '/home/skillCenter';
+      const DPath = '/dataCenter';
+      const SPath = '/skillCenter';
       if (path == DPath) return true
       if (path == SPath) return true
     },
     showAsideO() {
       const path = this.$route.path;
-      const APath = '/home/operation';
-      const UPath = '/home/userControl';
-      const OPath = '/home/operationControl';
+      const APath = '/operation';
+      const UPath = '/userControl';
+      const OPath = '/operationControl';
 
       switch (path) {
         case APath:
@@ -126,12 +127,12 @@ export default {
     },
     showAsideM() {
       const path = this.$route.path;
-      const M1Path = '/home/manage';
-      const R1Path = '/home/role';
-      const M2Path = '/home/menu';
-      const D1Path = '/home/dict';
-      const R2Path = '/home/resource';
-      const D2Path = '/home/data';
+      const M1Path = '/manage';
+      const R1Path = '/role';
+      const M2Path = '/menu';
+      const D1Path = '/dict';
+      const R2Path = '/resource';
+      const D2Path = '/data';
 
       switch (path) {
         case M1Path:
@@ -178,7 +179,7 @@ export default {
     padding-left: 16px;
     background: #fff;
     border-bottom: .5px solid #ccc;
-    font-weight: bold;
+    font-weight: 700;
 
     .NavBar {
       transform: translate(-8%);
@@ -186,10 +187,11 @@ export default {
 
     .icon-user {
       position: absolute;
-      top: 9px;
+      top: 7px;
       left: 26px;
       font-size: 30px;
       color: #fffafa;
+      cursor: pointer
     }
 
     .info-wrapper {

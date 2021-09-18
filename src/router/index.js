@@ -2,9 +2,9 @@ import Vue from 'vue'
 import VueRouter from 'vue-router'
 Vue.use(VueRouter)
 
-const Login = () => import('@/views/login/Login')
+import Home from '@/views/home/Home'
 
-const Home = () => import('@/views/home/Home')
+const Login = () => import('@/views/login/Login')
 
 const HomeMain = () => import('@/views/home/childComps/HomeMain')
 
@@ -34,29 +34,29 @@ const routes = [
     path: '/home',
     name: 'Home',
     component: Home,
-    redirect: '/home/main',
+    redirect: '/main',
     children: [
-      { path: 'main', name: HomeMain, component: HomeMain },
+      { path: '/main', name: HomeMain, component: HomeMain },
       
-      { path: 'allocation', name: Allocation, component: Allocation,},
-      { path: 'skill', name: Skill, component: Skill },
-      { path: 'repository', name: Repository, component: Repository },
-      { path: 'edition', name: Edition, component: Edition },
+      { path: '/allocation', name: Allocation, component: Allocation,},
+      { path: '/skill', name: Skill, component: Skill },
+      { path: '/repository', name: Repository, component: Repository },
+      { path: '/edition', name: Edition, component: Edition },
 
-      { path: 'dataCenter', name: DataCenter, component: DataCenter },
-      { path: 'skillCenter', name: SkillCenter, component: SkillCenter },
+      { path: '/dataCenter', name: DataCenter, component: DataCenter },
+      { path: '/skillCenter', name: SkillCenter, component: SkillCenter },
       
 
-      { path: 'operation', name: Operation, component: Operation },
-      { path: 'userControl', name: UserControl, component: UserControl },
-      { path: 'operationControl', name: OperationControl, component: OperationControl },
+      { path: '/operation', name: Operation, component: Operation },
+      { path: '/userControl', name: UserControl, component: UserControl },
+      { path: '/operationControl', name: OperationControl, component: OperationControl },
 
-      { path: 'manage', name: Manage, component: Manage },
-      { path: 'role', name: Role, component: Role },
-      { path: 'menu', name: Menu, component: Menu },
-      { path: 'dict', name: Dict, component: Dict },
-      { path: 'resource', name: Resource, component: Resource },
-      { path: 'data', name: Data, component: Data },
+      { path: '/manage', name: Manage, component: Manage },
+      { path: '/role', name: Role, component: Role },
+      { path: '/menu', name: Menu, component: Menu },
+      { path: '/dict', name: Dict, component: Dict },
+      { path: '/resource', name: Resource, component: Resource },
+      { path: '/data', name: Data, component: Data },
       
     ]
   },

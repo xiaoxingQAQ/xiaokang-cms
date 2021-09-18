@@ -37,20 +37,20 @@ export default {
           this.activeIndex = indey
           // 点击之后 如果 当前路由 和 将要跳转的路由 相同 那么阻止跳转
           // 否则 放行
-          if (this.$route.path == '/home/dataCenter') return
-          this.$router.push('/home/dataCenter')
+          if (this.$route.path == '/dataCenter') return
+          this.$router.replace('/dataCenter')
           break;
         case '1':
           this.activeIndex = indey
-          if (this.$route.path == '/home/skillCenter') return
-          this.$router.push('/home/skillCenter')
+          if (this.$route.path == '/skillCenter') return
+          this.$router.replace('/skillCenter')
           break;
       }
     },
     selected() {
       let path = this.$route.path
-      let dataCenter = '/home/allocation';
-      let dataCenterS = '/home/skillCenter';
+      let dataCenter = '/allocation';
+      let dataCenterS = '/skillCenter';
 
        switch (path) {
         case dataCenter:
