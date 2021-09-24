@@ -62,7 +62,6 @@ export default {
           slill: '111',
           describe: 32,
         },
-
       ]
     }
   },

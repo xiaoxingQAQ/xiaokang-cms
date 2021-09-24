@@ -22,8 +22,16 @@ import {
   Row,
   Col,
   Card,
+  Dialog,
+  Tag,
+  Upload,
+  Select,
+  Option,
 } from 'element-ui'
 
+Vue.use(Option)
+Vue.use(Select)
+Vue.use(Upload)
 Vue.use(Container)
 Vue.use(Aside)
 Vue.use(Header)
@@ -47,5 +55,8 @@ Vue.use(Message.name)
 Vue.use(Row)
 Vue.use(Col)
 Vue.use(Card)
+Vue.use(Dialog)
+Vue.use(Tag)
+
 
 Vue.prototype.$message = Message

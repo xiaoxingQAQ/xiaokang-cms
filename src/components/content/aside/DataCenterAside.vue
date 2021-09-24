@@ -29,6 +29,15 @@ export default {
   created() {
     this.selected()
   },
+  watch: {
+    $route: {
+      handler(val) {
+        console.log(val.path);
+        this.selected()
+      },
+      deep: true
+    }
+  },
   methods: {
     goNext(index) {
       const indey = index + '';
@@ -49,10 +58,10 @@ export default {
     },
     selected() {
       let path = this.$route.path
-      let dataCenter = '/allocation';
+      let dataCenter = '/dataCenter';
       let dataCenterS = '/skillCenter';
 
-       switch (path) {
+      switch (path) {
         case dataCenter:
           this.activeIndex = '0'
           break;

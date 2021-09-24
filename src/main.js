@@ -13,9 +13,10 @@ import 'ant-design-vue/dist/antd.css'
 // 引入normalize
 import './assets/css/normalize.css'
 // 公共css文件
-import './assets/css/common.css' 
+import './assets/css/common.css'
 // 字体图标
 import './assets/css/iconfont.css'
+
 
 new Vue({
   router,

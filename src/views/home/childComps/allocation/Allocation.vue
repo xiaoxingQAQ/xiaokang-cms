@@ -105,7 +105,7 @@ export default {
 <style lang="less" scoped>
 .container {
   .el-form {
-    padding: 0 350px 30px 210px;
+    padding: 0 450px 30px 100px;
 
     .el-form-item {
       font-weight: 600;

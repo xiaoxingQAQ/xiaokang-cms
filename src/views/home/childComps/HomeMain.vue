@@ -88,11 +88,12 @@ export default {
       TabData: [], // 卡片3 的数据
     }
   },
-
+  created() {
+    // this.getHomeData() // 发送请求
+  },
   mounted() {
     this.loading = true
     this.getDate()
-    // this.getHomeData() // 发送请求
   },
   methods: {
     // 获取时间

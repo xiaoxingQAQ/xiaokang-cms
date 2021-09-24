@@ -33,6 +33,14 @@ export default {
   created() {
     this.selected()
   },
+  watch: {
+    $route: {
+      handler() {
+        this.selected()
+      },
+      deep: true
+    }
+  },
   methods: {
     goNext(index) {
       const indey = index + '';
