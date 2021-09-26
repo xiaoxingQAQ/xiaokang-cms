@@ -170,7 +170,7 @@ export default {
       line-height: 50px;
     }
   }
-
+  // 表格的样式修改
   ::v-deep .ant-table-thead > tr > th {
     text-align: center;
     color: #fff;

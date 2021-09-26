@@ -70,12 +70,13 @@
 </template>
 
 <script>
-import NavBar from '@/components/content/nav-bar/NavBar'
+import NavBar from '@/components/content/navBar/NavBar'
 import HomeAside from '@/components/content/aside/HomeAside'
 import AllocationAside from '@/components/content/aside/AllocationAside'
 import DataCenterAside from '@/components/content/aside/DataCenterAside'
 import OperationAside from '@/components/content/aside/OperationAside'
 import ManageAside from '@/components/content/aside/ManageAside'
+
 
 export default {
   components: {
@@ -172,7 +173,10 @@ export default {
   height: 100%;
 
   .el-header {
+    position: fixed;
+    z-index: 99;
     width: 100%;
+    height: 60px;
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -291,11 +295,17 @@ export default {
   }
 
   .el-aside {
+    position: fixed;
+
+    transform: translate(0, 60px);
     width: 80px !important;
     background: #fff;
   }
 
   .el-main {
+    position: relative;
+    top: 60px;
+    margin-left: 80px;
     background: #eaedf1;
   }
 }

@@ -85,10 +85,13 @@ export default {
 
         login(data).then(res => {
           if (!res) return this.$message.error('未知错误')
-          if (res.code !== 1) return this.$message.error('登陆失败')
-          console.log(res);
+          if (res.code !== 1) {
+            this.disabled = false
+            return this.$message.error('登陆失败') 
+          }
+          
           this.$message.success({
-            duration: 900,
+            duration: 600,
             message: '登录成功'
           })
           window.sessionStorage.setItem('memberID', JSON.stringify(res.data.id))

@@ -16,7 +16,10 @@ import './assets/css/normalize.css'
 import './assets/css/common.css'
 // 字体图标
 import './assets/css/iconfont.css'
+// 引入 ECharts
+import echarts from '@/plugins/echarts'
 
+Vue.prototype.$echarts = echarts
 
 new Vue({
   router,

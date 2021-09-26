@@ -31,10 +31,10 @@
           :pagination="false"
         >
           <template slot="set" slot-scope="text, record, index">
-            <el-button type="success" size="mini" @click="addOldRepository"
+            <el-button plain type="warning" size="mini" @click="addOldRepository"
               >添加至 已有知识库</el-button
             >
-            <el-button type="primary" size="mini" @click="addNewRepository">添加至 新知识库</el-button>
+            <el-button plain type="success" size="mini" @click="addNewRepository">添加至 新知识库</el-button>
           </template>
         </a-table>
       </div>

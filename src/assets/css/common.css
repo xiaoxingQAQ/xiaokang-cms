@@ -45,6 +45,22 @@ li {
   background: #ededed;
 }
 
-::v-deep .ant-table-thead > tr > th {
+.Margin_left {
+  margin-left: 90px;
+}
+
+.tabs_nav {
+  position: fixed;
+}
+
+ .ant-table-thead > tr > th {
+  text-align: center;
+  color: #fff;
   background-color: #73c4fc;
+}
+ .ant-table-row-level-0 {
+  text-align: center;
+}
+ .ant-table-row-level-0:nth-child(2n) {
+  background-color: #fcae7312;
 }

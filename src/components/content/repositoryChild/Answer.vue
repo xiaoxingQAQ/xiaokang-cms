@@ -1,5 +1,5 @@
 <template>
-  <div class="container">
+  <div class="container tabs_1">
     <!-- 按钮 -->
     <el-row>
       <el-button type="primary" @click="showAddDialog">新增知识库</el-button>
@@ -19,12 +19,14 @@
     <!-- 卡片 -->
     <Card>
       <span slot="leftTitle">知识库：{{ title }}</span>
+
       <div slot="rightTitle">
         <el-button type="primary" @click="answerDialogVisible = true"
           >新增问答</el-button
         >
         <el-button type="danger" @click="clearAnswer">删除问答</el-button>
       </div>
+      
       <div slot="main">
         <a-table
           :columns="columns"
