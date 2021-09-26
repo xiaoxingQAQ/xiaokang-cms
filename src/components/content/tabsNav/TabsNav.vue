@@ -59,9 +59,9 @@ export default {
     flex-direction: column;
     align-items: center;
     margin-right: 15px;
-    width: 75px;
+    width: 65px;
     > div {
-      padding: 8px 0;
+      padding: 10px 0;
       transition: all 0.3s;
     }
     > div:hover {

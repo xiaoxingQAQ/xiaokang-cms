@@ -1,14 +1,160 @@
 /* 产品运营页面 */
 <template>
-  <div>产品运营页面</div>
+  <div class="container">
+    <!-- 外部卡片 -->
+    <div class="el-card el-card box-card is-always-shadow" @click="handle">
+      <h1>新建消息推送</h1>
+    </div>
+
+    <!-- Dialog 对话框 -->
+    <a-modal
+      width="800px"
+      title="新建消息推送"
+      v-model="visible"
+      destroyOnClose
+      @ok="sbumit"
+      @cancel="cancel"
+      class="modal"
+      cancelText="取消"
+      okText="确定"
+      :confirmLoading="loading"
+    >
+      <a-row>
+        <div class="aim">选择目标：</div>
+      </a-row>
+      <!-- 用户选择 -->
+      <a-tabs default-active-key="1">
+        <a-tab-pane key="1" tab="设备别名">
+          <a-input
+            type="string"
+            placeholder="添加设备别名，按Enter键继续"
+            @pressEnter="nextStep"
+            v-model.trim="facilityValue"
+            class="unique"
+            size="large"
+          />
+          <a-tag
+            v-for="(item, index) in facilityValueArr"
+            :key="index"
+            color="blue"
+            closable
+            @close="handleClose(index)"
+          >
+            {{ item }}
+          </a-tag>
+          <a-row>
+            <br />
+            <div class="aim content">推送内容：</div>
+          </a-row>
+          <a-textarea placeholder="请输入推送内容" :rows="4" />
+        </a-tab-pane>
+        <a-tab-pane key="2" tab="推送所有人" force-render>
+          <div class="aim content">推送内容：</div>
+          <a-textarea placeholder="请输入推送内容" :rows="4" />
+        </a-tab-pane>
+      </a-tabs>
+    </a-modal>
+  </div>
 </template>
 
 <script>
-export default {
+import Card from '@/components/content/card/Card';
 
+export default {
+  components: {
+    Card
+  },
+  data() {
+    return {
+      loading: false, // 确定按钮 loading
+      visible: false, // 显示 or 隐藏
+      facilityValue: '', // 输入的设备编号value
+      facilityValueArr: [], // 输入的设备编号value 数组
+    }
+  },
+  created() {
+    this.facilityValueArr = JSON.parse(localStorage.getItem('facilityList'));
+  },
+  methods: {
+    // 点击显示对话框
+    handle() {
+      console.log(11);
+      this.visible = true
+    },
+    /* Entenr下一步 */
+    nextStep() {
+      // 如果input框为空就 返回
+      if (!this.facilityValue) return;
+      if (this.facilityValueArr && this.facilityValueArr.length === 6)
+        return this.$message.warning('最多只能添加6台设备');
+
+      this.next();
+    },
+    next() {
+      if (!localStorage.getItem('facilityList')) {
+        // 如果没有
+        localStorage.setItem('facilityList', '[]');
+      } else {
+        // 如果有
+        this.facilityValueArr = JSON.parse(localStorage.getItem('facilityList'));
+      }
+
+      this.facilityValueArr.push(this.facilityValue);
+      const newArr = Array.from(new Set(this.facilityValueArr));
+
+      this.facilityValueArr = newArr;
+      // 给本地赋
+      localStorage.setItem('facilityList', JSON.stringify(newArr));
+      /* 清空input输入框 */
+      this.facilityValue = '';
+    },
+    /* 删除对应的参数可选项 */
+    handleClose(index) {
+      this.facilityValueArr.splice(index, 1);
+      // 给本地赋值
+      localStorage.setItem('facilityList', JSON.stringify(this.facilityValueArr));
+    },
+    /* 点击确定回调 */
+    sbumit() {},
+    /* 点击右上角 叉 或 取消按钮 的回调 */
+    cancel() {
+      localStorage.removeItem('facilityList');
+      this.facilityValueArr = [];
+      /* 清空input输入框 */
+      this.facilityValue = '';
+    }
+  },
 }
 </script>
 
 <style lang="less" scoped>
+.container {
+  .el-card {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 30px 0;
+    cursor: pointer;
+    h1 {
+      color: #00cccc;
+      font-weight: 700;
+    }
+  }
+}
 
+.aim {
+  padding-left: 2px;
+  font-weight: bold;
+}
+.content {
+  padding: 0 0 13px 2px;
+  background-color: none;
+}
+.unique {
+  margin-bottom: 5px;
+}
+
+::v-deep .ant-tabs-tab {
+  font-weight: 500;
+}
 </style>
