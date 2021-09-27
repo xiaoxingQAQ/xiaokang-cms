@@ -18,6 +18,10 @@ import './assets/css/common.css'
 import './assets/css/iconfont.css'
 // 引入 ECharts
 import echarts from '@/plugins/echarts'
+// 引入lodash
+import _ from 'lodash'
+Vue.prototype._ = _
+
 
 Vue.prototype.$echarts = echarts
 

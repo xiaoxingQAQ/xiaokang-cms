@@ -226,7 +226,7 @@ export default {
         }
       }
     }
-
+    // 动画
     .slide-fade-enter-active {
       transition: all 0.2s ease;
     }

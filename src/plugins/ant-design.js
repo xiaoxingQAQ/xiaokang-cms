@@ -9,6 +9,8 @@ import {
   Tabs,
   Input,
   Tag,
+  FormModel,
+  Icon,
 } from 'ant-design-vue';
 
 Vue.use(Popover)
@@ -20,3 +22,5 @@ Vue.use(Row)
 Vue.use(Tabs)
 Vue.use(Input)
 Vue.use(Tag)
+Vue.use(FormModel)
+Vue.use(Icon)

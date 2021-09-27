@@ -33,15 +33,16 @@
             class="unique"
             size="large"
           />
-          <a-tag
+
+          <el-tag
             v-for="(item, index) in facilityValueArr"
-            :key="index"
-            color="blue"
+            :key="item"
             closable
             @close="handleClose(index)"
           >
             {{ item }}
-          </a-tag>
+          </el-tag>
+
           <a-row>
             <br />
             <div class="aim content">推送内容：</div>
@@ -73,12 +74,12 @@ export default {
     }
   },
   created() {
-    this.facilityValueArr = JSON.parse(localStorage.getItem('facilityList'));
+    this.getFacility()
   },
+ 
   methods: {
     // 点击显示对话框
     handle() {
-      console.log(11);
       this.visible = true
     },
     /* Entenr下一步 */
@@ -91,6 +92,15 @@ export default {
       this.next();
     },
     next() {
+      this.facilityValueArr.push(this.facilityValue);
+      this.facilityValueArr = Array.from(new Set(this.facilityValueArr));
+      // 给本地赋
+      localStorage.setItem('facilityList', JSON.stringify(this.facilityValueArr));
+      /* 清空input输入框 */
+      this.facilityValue = '';
+    },
+    // 过去localStorage里面的 设备别名数组
+    getFacility() {
       if (!localStorage.getItem('facilityList')) {
         // 如果没有
         localStorage.setItem('facilityList', '[]');
@@ -98,28 +108,20 @@ export default {
         // 如果有
         this.facilityValueArr = JSON.parse(localStorage.getItem('facilityList'));
       }
-
-      this.facilityValueArr.push(this.facilityValue);
-      const newArr = Array.from(new Set(this.facilityValueArr));
-
-      this.facilityValueArr = newArr;
-      // 给本地赋
-      localStorage.setItem('facilityList', JSON.stringify(newArr));
-      /* 清空input输入框 */
-      this.facilityValue = '';
     },
     /* 删除对应的参数可选项 */
     handleClose(index) {
       this.facilityValueArr.splice(index, 1);
+
       // 给本地赋值
       localStorage.setItem('facilityList', JSON.stringify(this.facilityValueArr));
     },
     /* 点击确定回调 */
-    sbumit() {},
+    sbumit() { },
     /* 点击右上角 叉 或 取消按钮 的回调 */
     cancel() {
       localStorage.removeItem('facilityList');
-      this.facilityValueArr = [];
+      this.facilityValueArr = []
       /* 清空input输入框 */
       this.facilityValue = '';
     }
@@ -133,7 +135,7 @@ export default {
     display: flex;
     justify-content: center;
     align-items: center;
-    padding: 30px 0;
+    padding: 40px 0;
     cursor: pointer;
     h1 {
       color: #00cccc;
@@ -156,5 +158,8 @@ export default {
 
 ::v-deep .ant-tabs-tab {
   font-weight: 500;
+}
+.el-tag {
+  margin-right: 8px;
 }
 </style>

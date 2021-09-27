@@ -20,9 +20,9 @@ export default {
   data() {
     return {
       tabs_nav: [
-        { id: 1, name: 'top' },
-        { id: 2, name: 'center' },
-        { id: 3, name: 'bottom' }
+        { id: 0, name: 'top' },
+        { id: 1, name: 'center' },
+        { id: 2, name: 'bottom' }
       ],
       currentIndex: 0,
     }
@@ -30,22 +30,37 @@ export default {
   created() {
     this.selected()
   },
+  watch: {
+    $route: {
+      handler() {
+        // 监听路由变化 如果路由发生变化 currentIndex 重置为 0
+        let index = 0;
+        this.currentIndex = index;
+        sessionStorage.setItem('tabsIndex', JSON.stringify(index))
+        // 传数据给父组件
+        this.$emit('onChange', index)
+      },
+      deep: true
+    }
+  },
   methods: {
     btnClick(index) {
       this.currentIndex = index
       sessionStorage.setItem('tabsIndex', JSON.stringify(index))
 
       // 传数据给父组件
-      this.$emit('onChange',index)
+      this.$emit('onChange', index)
     },
     selected() {
       let tabsIndex = JSON.parse(sessionStorage.getItem('tabsIndex'));
       if (!tabsIndex) return
+
       this.currentIndex = tabsIndex
-      // 页面刚重新加载 发送自定义事件
-      this.$emit('onChange',tabsIndex)
+      // 传数据给父组件
+      this.$emit('onChange', tabsIndex)
     }
   },
+
 }
 </script>
 

@@ -2,14 +2,29 @@
   <div class="container">
     <el-row>
       <el-col :span="9">
-        <a-button
-          v-for="(item, index) in dateArr"
-          :key="index"
-          @click="changeDate(index)"
-          class="changeDateBtn"
-          :class="{ active: currentIndex == index }"
-          >{{ item }}日</a-button
-        >
+        <!-- 时间日期 -->
+        <template v-if="types == 'number'">
+          <a-button
+            v-for="(item, index) in dateArr"
+            :key="index"
+            @click="changeDate(index)"
+            class="changeDateBtn"
+            :class="{ active: currentIndex == index }"
+            >{{ item }}日</a-button
+          >
+        </template>
+        <!-- 文字文本 -->
+        <template v-else-if="types == 'string'">
+          <a-button
+            class="changeDateBtn"
+            v-for="(item, index) in dateArr_text"
+            :key="index"
+            @click="changeDate(index)"
+            :class="{ active: currentIndex == index }"
+          >
+          {{item}}
+          </a-button>
+        </template>
       </el-col>
 
       <el-col class="date" :span="11">
@@ -29,10 +44,17 @@
 
 <script>
 export default {
+  props: {
+    types: {
+      type: String,
+      default: 'number',
+    }
+  },
   data() {
     return {
       value1: '', // 自定义日期 value值
       dateArr: [7, 14, 30], // changdate的数组
+      dateArr_text: ['最新激活', '活跃排名'],
       currentIndex: 0, // 当前的 index
     }
   },
@@ -58,7 +80,8 @@ export default {
 
     .changeDateBtn {
       margin-right: 10px !important;
-      width: 80px;
+      width: 90px;
+      font-weight: 500;
     }
     .date {
       display: flex;

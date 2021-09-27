@@ -31,6 +31,7 @@ export default {
   },
   methods: {
     onChange(index) {
+      console.log('index',index);
       this.currentIndex = index
       console.log(index);
     },
