@@ -1,5 +1,5 @@
 <template>
-  <div class="container">
+  <div class="wrapper">
     <Card class="card_1">
       <span slot="leftTitle">技能使用次数</span>
       <div slot="main">
@@ -158,7 +158,7 @@ export default {
 </script>
 
 <style lang="less" scoped>
-.container {
+.wrapper {
   .card_1 {
     > div {
       .el-row {

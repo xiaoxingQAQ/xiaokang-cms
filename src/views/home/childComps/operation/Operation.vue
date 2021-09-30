@@ -1,6 +1,6 @@
 /* 产品运营页面 */
 <template>
-  <div class="container">
+  <div class="wrapper">
     <!-- 外部卡片 -->
     <div class="el-card el-card box-card is-always-shadow" @click="handle">
       <h1>新建消息推送</h1>
@@ -130,7 +130,7 @@ export default {
 </script>
 
 <style lang="less" scoped>
-.container {
+.wrapper {
   .el-card {
     display: flex;
     justify-content: center;

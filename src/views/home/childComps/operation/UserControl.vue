@@ -1,6 +1,6 @@
 /* 用户管理 */
 <template>
-  <div class="container" >
+  <div class="wrapper" >
     <transition name="slide-fade" v-if="!isChange">
       <User @onChange="onChange" />
     </transition>

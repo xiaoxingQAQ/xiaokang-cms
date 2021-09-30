@@ -1,5 +1,5 @@
 <template>
-  <div class="container" v-if="isShow">
+  <div class="wrapper" v-if="isShow">
     <!-- 返回 -->
     <el-row class="back" :gutter="10">
       <el-col :span="6">
@@ -171,7 +171,7 @@ export default {
 <style lang="less" scoped>
 @color1: #0cc;
 @color2: #7f7f7f;
-.container {
+.wrapper {
   .back {
     i {
       margin-bottom: 20px;

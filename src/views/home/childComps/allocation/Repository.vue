@@ -1,6 +1,6 @@
 /* 知识库 */
 <template>
-  <div class="container">
+  <div class="wrapper">
     <TabsNav @onChange="onChange" class="tabs_nav">
       <span slot="top">问答管理</span>
       <span slot="center">知识雷达</span>
@@ -29,18 +29,25 @@ export default {
       currentIndex: 0,
     }
   },
+  created() {
+    
+  },
+  computed: {
+    
+  },
   methods: {
     onChange(index) {
       console.log('index',index);
       this.currentIndex = index
       console.log(index);
     },
+
   },
 }
 </script>
 
 <style lang="less" scoped>
-.container {
+.wrapper {
   ::v-deep .el-tabs--left {
     height: 100% !important;
   }

@@ -1,6 +1,6 @@
 /* 技能中心 */
 <template>
-  <div class="container">
+  <div class="wrapper">
     <div class="tabs-nav">
       <div
         v-for="(item, index) in tabs_nav"
@@ -65,7 +65,7 @@ export default {
 </script>
 
 <style lang="less" scoped>
-.container {
+.wrapper {
   display: flex;
   font-weight: 600;
   .tabs-nav {

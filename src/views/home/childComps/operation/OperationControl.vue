@@ -1,6 +1,6 @@
 /* 运营管理 */
 <template>
-  <div class="container">
+  <div class="wrapper">
     <Card>
       <span slot="leftTitle">运营管理</span>
 
@@ -170,7 +170,7 @@ export default {
 <style lang="less" scoped>
 @color1: #0cc;
 @color2: #7f7f7f;
-.container {
+.wrapper {
   .btn {
     width: 90px;
     font-weight: 500;

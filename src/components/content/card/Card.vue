@@ -1,6 +1,6 @@
-/* Home主要页面 */
+/* Card组件页面 */
 <template>
-  <div class="container">
+  <div class="wrapper">
     <el-row>
       <el-card class="box-card">
         <div class="box-container">
@@ -59,7 +59,7 @@ export default {
 <style lang="less" scoped>
 @color1: #0cc;
 @color2: #7f7f7f;
-.container {
+.wrapper {
   margin-bottom: 25px;
   /* 卡片 */
   .box-card {

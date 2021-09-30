@@ -1,6 +1,6 @@
 /* 设备数据页面 */
 <template>
-  <div class="container">
+  <div class="wrapper">
     <!-- 版本分布 -->
     <Card class="card_1">
       <span slot="leftTitle">版本分布</span>
@@ -149,7 +149,7 @@ export default {
 <style lang="less" scoped>
 @color1: #0cc;
 @color2: #7f7f7f;
-.container {
+.wrapper {
   .card_1,
   .card_2 {
     width: 100%;

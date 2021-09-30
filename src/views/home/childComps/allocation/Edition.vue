@@ -1,6 +1,6 @@
 /* 系统版本 */
 <template>
-  <div class="container">
+  <div class="wrapper">
     <el-tabs tab-position="left" style="height: 200px">
       <el-tab-pane class="tabs_1" label="系统升级">
         <SystemUpdata />

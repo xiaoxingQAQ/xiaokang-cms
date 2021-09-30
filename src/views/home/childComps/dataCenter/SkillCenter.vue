@@ -1,5 +1,5 @@
 <template>
-  <div class="container">
+  <div class="wrapper">
     <TabsNav @onChange="onChange" class="tabs_nav">
       <span slot="top">技能数据</span>
       <span slot="center">技能问答</span>

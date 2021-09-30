@@ -1,6 +1,6 @@
 /* 设备数据页面 */
 <template>
-  <div class="container">
+  <div class="wrapper">
     <Card>
       <span slot="leftTitle">历史消息</span>
       <div slot="main">
@@ -69,7 +69,7 @@ export default {
 </script>
 
 <style lang="less" scoped>
-.container {
+.wrapper {
   // 表格的样式修改
   ::v-deep .ant-table-thead > tr > th {
     text-align: center;

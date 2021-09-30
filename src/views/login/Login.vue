@@ -1,8 +1,9 @@
 <template>
-  <div class="container">
+  <div class="wrapper">
     <header>
       <img src="@/assets/images/logo.png" alt="" />
     </header>
+
     <main>
       <div class="img-wrapper">
         <div>
@@ -37,11 +38,12 @@
                 v-model="loginForm.password"
                 type="password"
                 prefix-icon="iconfont icon-suo1"
+                @keyup.enter.native="login"
               ></el-input>
             </el-form-item>
             <!-- 按钮区域 -->
             <el-form-item class="btns">
-              <el-button type="primary" @click="login" :disabled="disabled"
+              <el-button :loading="loading" type="primary" @click="login"
                 >登录</el-button
               >
             </el-form-item>
@@ -49,6 +51,7 @@
         </div>
       </div>
     </main>
+
     <footer>
       <span> Copyright 2021 </span>
     </footer>
@@ -57,11 +60,12 @@
 
 <script>
 import { login } from '@/network/login'
+import { mapMutations } from 'vuex'
 
 export default {
   data() {
     return {
-      disabled: false, // 控制是否禁用按钮
+      loading: false,
       loginForm: {
         username: 'admin',
         password: ''
@@ -76,27 +80,38 @@ export default {
       }
     }
   },
+  computed: {
+  },
   methods: {
+    ...mapMutations('user', ['User_Login']),
     login() {
       this.$refs.loginFormRef.validate(valid => {
         if (!valid) return
-        this.disabled = true;
+        this.loading = true
         const data = this.loginForm;
 
         login(data).then(res => {
           if (!res) return this.$message.error('未知错误')
-          if (res.code !== 1) {
-            this.disabled = false
-            return this.$message.error('登陆失败') 
+          console.log(res);
+          if (res.code != 1) {
+            this.loading = false
+            return this.$message.warning({
+              message: '登录失败',
+              offset: 46,
+            })
           }
-          
+
+          this.loading = false
           this.$message.success({
-            duration: 600,
-            message: '登录成功'
+            message: '登录成功',
+            offset: 72,
+          })
+
+          this.User_Login({
+            memberID: res.data.id
           })
           window.sessionStorage.setItem('memberID', JSON.stringify(res.data.id))
           window.sessionStorage.setItem('token', JSON.stringify(res.data.key))
-          console.log(11);
           this.$router.push('/home')
         })
       })
@@ -106,11 +121,12 @@ export default {
 </script>
 
 <style lang="less" scoped>
-.container {
+.wrapper {
   width: 100%;
   height: 100%;
   background: url('../../assets/images/background.png');
   background-size: 100%;
+  overflow: hidden;
 
   header {
     box-sizing: border-box;
@@ -121,20 +137,21 @@ export default {
 
     img {
       display: block;
-      width: 325px;
-      height: 80px;
+      width: 20%;
     }
   }
+
   main {
     width: 100%;
     .img-wrapper {
-      padding: 50px 80px 0 0;
-      width: 50%;
+      padding: 22px 80px 0 0;
+      width: 53%;
+      min-width: 650px;
       height: 520px;
 
       img {
         width: 85%;
-        transform: translate(25%, 8%);
+        transform: translate(16%, 8%);
       }
     }
 
@@ -158,7 +175,7 @@ export default {
         line-height: 150px;
         text-align: center;
         color: #ccc;
-        font-size: 30px;
+        font-size: 25px;
       }
     }
 
@@ -179,6 +196,9 @@ export default {
     }
   }
   footer {
+    position: absolute;
+    bottom: 0;
+    left: 0;
     width: 100%;
     height: 72px;
     border-top: 1px solid #d8d8d870;

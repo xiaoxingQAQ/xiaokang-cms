@@ -1,10 +1,8 @@
 <template>
-  <div class="container tabs_2">
+  <div class="wrapper tabs_2">
     <!-- 按钮 -->
     <el-row>
-      <el-button type="primary" @click="addDialogVisible = true"
-        >新增嗅探词</el-button
-      >
+      <el-button type="primary" @click="showAddDialog">新增嗅探词</el-button>
       <el-button type="danger" @click="showClearTerms">删除嗅探词</el-button>
     </el-row>
     <!-- Tag标签 -->
@@ -16,25 +14,39 @@
         effect="dark"
         @click="toTable(item)"
       >
-        {{ item }}
+        {{ item.name }}
       </el-tag>
     </el-row>
 
     <!-- 卡片区域 -->
     <Card>
-      <span slot="leftTitle">知识库：{{ title }}</span>
+      <span slot="leftTitle" v-if="title">问题：{{ title }}</span>
+      <span slot="leftTitle" v-else>
+        点击上方标签，木有的话，先创建嗅探词；
+      </span>
       <div slot="main">
         <a-table
+          :loading="TableLoading_1"
           :columns="columns"
           :data-source="data"
           :row-selection="rowSelection"
           :pagination="false"
         >
           <template slot="set" slot-scope="text, record, index">
-            <el-button plain type="warning" size="mini" @click="addOldRepository"
+            <el-button
+              plain
+              type="warning"
+              size="mini"
+              @click="addOldRepository"
               >添加至 已有知识库</el-button
             >
-            <el-button plain type="success" size="mini" @click="addNewRepository">添加至 新知识库</el-button>
+            <el-button
+              plain
+              type="success"
+              size="mini"
+              @click="addNewRepository"
+              >添加至 新知识库</el-button
+            >
           </template>
         </a-table>
       </div>
@@ -57,13 +69,14 @@
       >
         <el-form-item label="嗅探词：">
           <el-input
+            ref="input"
             placeholder="请输入嗅探词"
             v-model.trim="addForm.name"
             @keyup.enter.native="saveAddForm"
           ></el-input>
         </el-form-item>
         <el-button type="info" @click="addDialogClosed">取消</el-button>
-        <el-button type="primary" :loading="loading" @click="saveAddForm"
+        <el-button type="primary" :loading="loading_1" @click="saveAddForm"
           >保存</el-button
         >
       </el-form>
@@ -175,6 +188,8 @@
 
 <script>
 import Card from '@/components/content/card/Card'
+import { getSnifferWord, addSnifferWord, deleteSnifferWord } from '@/network/home'
+import { mapState } from 'vuex'
 
 export default {
   components: {
@@ -182,6 +197,12 @@ export default {
   },
   data() {
     return {
+      loading_4: false,
+      loading_3: false,
+      loading_2: false,
+      loading_1: false,
+      TableLoading_2: false,
+      TableLoading_1: false,
       addDialogVisible_2: false,
       addDialogVisible_1: false,
       addForm_1: {
@@ -276,7 +297,11 @@ export default {
       ],
     }
   },
+  created() {
+    this.getSnifferWord()
+  },
   computed: {
+    ...mapState('user', ['memberID']),
     // 删除 嗅探词的table
     rowSelection() {
       return {
@@ -289,20 +314,87 @@ export default {
   },
   methods: {
     // 点击 tag标签 触发
-    toTable() {
-      this.title = item
+    toTable(item) {
+      this.title = item.name
     },
-    // 点击保存
+    // 获取 嗅探词列表
+    getSnifferWord() {
+      const memberID = this.memberID
+      const data = {
+        memberID
+      }
+      this.TableLoading_1 = true
+      // 发送请求
+      getSnifferWord(data).then(res => {
+        if (!res) return
+        if (res.code != 1) return this.$message.error('获取数据失败')
+        console.log('res: ', res);
+        res.data.forEach((item, index) => {
+          let key = index + 1;
+          let id = item.id
+          let name = item.name;
+
+          // this.removeData.push({
+          //   key,
+          //   id,
+          //   name
+          // })
+          this.nameArr.push({
+            key,
+            id,
+            name
+          })
+        });
+        this.nameArr = _.uniqBy(this.nameArr, 'id')
+        this.removeData = _.uniqBy(this.removeData, 'id')
+        this.TableLoading_1 = false
+      })
+    },
+    // 展示 添加嗅探词的Dialog
+    showAddDialog() {
+      this.addDialogVisible = true
+      // 直接获取焦点
+      this.$nextTick(() => {
+        this.$refs.input.focus()
+      })
+    },
+    // 点击保存 嗅探词
     saveAddForm() {
       let val = this.addForm.name;
       if (!val) return this.$message.info('您输入的内容为空')
 
-      this.nameArr.unshift(val)
-      this.nameArr = Array.from(new Set(this.nameArr))
+      const memberID = this.memberID
+      const name = val;
+      const data = {
+        name,
+        memberID
+      }
+      this.loading_1 = true
+      // 发送请求
+      addSnifferWord(data).then(res => {
+        if (!res) return
+        if (res.code != 1) {
+          this.loading_1 = false
+          return this.$message.warning('保存失败，可能是 名称重复啦')
+        }
+
+        // 成功
+        this.$message.success('保存成功')
+        this.nameArr.unshift({
+          name: val
+        })
+        this.nameArr = Array.from(new Set(this.nameArr))
+
+        this.loading_1 = false
+      })
+
+
+      this.nameArr = _.
 
       console.log(this.nameArr);
       this.addDialogClosed()
     },
+
     // 关闭 添加嗅探词 Dialog
     addDialogClosed() {
       this.addForm.name = ''
@@ -346,7 +438,7 @@ export default {
 </script>
 
 <style lang="less" scoped>
-.container {
+.wrapper {
   .tabs_2 {
     .el-row {
       margin-bottom: 10px;

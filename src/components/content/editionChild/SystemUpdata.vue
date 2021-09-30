@@ -1,5 +1,5 @@
 <template>
-  <div class="container">
+  <div class="wrapper">
     <Card>
       <span slot="leftTitle">语音技能</span>
       <div slot="main">
@@ -70,7 +70,7 @@ export default {
 </script>
 
 <style lang="less" scoped>
-.container {
+.wrapper {
   .el-form {
     padding: 0 403px 30px 100px;
 

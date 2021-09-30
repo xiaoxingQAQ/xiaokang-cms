@@ -1,5 +1,5 @@
 <template>
-  <div class="container">
+  <div class="wrapper">
     <el-row>
       <el-col :span="9">
         <!-- 时间日期 -->
@@ -70,7 +70,7 @@ export default {
 <style lang="less" scoped>
 @color1: #0cc;
 @color2: #7f7f7f;
-.container {
+.wrapper {
   width: 100%;
   .el-row {
     display: flex;

@@ -1,5 +1,5 @@
 <template>
-  <el-container class="home-container">
+  <el-container class="home-container container">
     <!-- 头部区域 -->
     <el-header>
       <div class="iconfont icon-user" @click="showInfo"></div>
@@ -184,7 +184,7 @@ export default {
     box-sizing: border-box;
     padding-left: 16px;
     background: #fff;
-    border-bottom: 0.5px solid #ccc;
+    border-bottom: 1px solid #ccc;
     font-weight: 700;
 
     .NavBar {

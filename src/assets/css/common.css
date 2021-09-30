@@ -7,7 +7,13 @@ body,
   margin: 0;
   padding: 0;
   min-width: 1055px;
+  overflow: hidden;
 }
+.container {
+  height: 100%;
+  overflow: scroll;
+}
+
 /* 禁止选中图片和文字  */
 body {
   -moz-user-select: none; /*火狐*/
@@ -24,10 +30,11 @@ li {
   margin: 0px;
 }
 
+
 /* 全局滚动条样式 */
 ::-webkit-scrollbar {
   /*滚动条整体样式*/
-  width: 0px;
+  width: 6px;
   /*高宽分别对应横竖滚动条的尺寸*/
   height: 1px;
   cursor: pointer;
@@ -53,6 +60,10 @@ li {
   position: fixed;
 }
 
+.ant-table-tbody > tr > td {
+  font-weight: 500;
+}
+
  .ant-table-thead > tr > th {
   text-align: center;
   color: #fff;
@@ -66,5 +77,21 @@ li {
 }
 
 .el-textarea__inner {
+  font-weight: 500;
+}
+
+.el-menu {
+  overflow: hidden;
+}
+
+.el-form-item__error {
+  font-weight: 500;
+}
+
+.el-message__content {
+  font-weight: 700;
+}
+
+.el-icon-success:before {
   font-weight: 500;
 }

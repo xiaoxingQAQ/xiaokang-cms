@@ -1,6 +1,6 @@
 /* 设备数据页面 */
 <template>
-  <div class="container">
+  <div class="wrapper">
     <Card class="card_1">
       <span slot="leftTitle">数据总览</span>
 
@@ -145,7 +145,7 @@ export default {
 <style lang="less" scoped>
 @color1: #0cc;
 @color2: #7f7f7f;
-.container {
+.wrapper {
   .card_2,
   .card_3 {
     width: 100%;

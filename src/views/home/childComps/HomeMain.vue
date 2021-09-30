@@ -1,6 +1,6 @@
 /* Home主要页面 */
 <template>
-  <div class="container">
+  <div class="wrapper">
     <!-- 时间 -->
     <el-row>
       <el-col class="date" :span="6">
@@ -52,6 +52,7 @@
 <script>
 import Card from '@/components/content/card/Card'
 import { card_1, card_2, card_3 } from '@/network/home'
+import { mapState } from 'vuex'
 
 export default {
   components: {
@@ -93,7 +94,11 @@ export default {
   },
   mounted() {
     this.loading = true
+    // 获取时间
     this.getDate()
+  },
+  computed: {
+    ...mapState('user', ['memberID'])
   },
   methods: {
     // 获取时间
@@ -111,33 +116,33 @@ export default {
     },
     // 获取首页的数据
     getHomeData() {
-      const memberID = JSON.parse(sessionStorage.getItem('memberID'));
+      const memberID = this.memberID
       console.log(memberID);
       const data = {
         memberID
       }
       // 请求卡片1的数据
       card_1(data).then(res_1 => {
-        if (!res_1) return this.$message.error('获取数据失败')
+        if (!res_1) return 
         console.log('res_1', res_1);
-        if (res_1.code != 1) return
+        if (res_1.code != 1) return this.$message.error('获取数据失败')
 
         this.cardData_1 = res_1.data
       })
       // 请求卡片2的数据
       card_2(data).then(res_2 => {
-        if (!res_2) return this.$message.error('获取数据失败')
+        if (!res_2) return 
         console.log('res_2', res_2);
-        if (res_2.code != 1) return
+        if (res_2.code != 1) return this.$message.error('获取数据失败')
 
         this.cardData_2 = res_2.data
       })
 
       // 请求卡片3的数据
       card_3(data).then(res_3 => {
-        if (!res_3) return this.$message.error('获取数据失败')
+        if (!res_3) return 
         console.log('res_3', res_3);
-        if (res_3.code != 1) return
+        if (res_3.code != 1) return this.$message.error('获取数据失败')
 
         const arr = [];
         res_3.data.forEach((item, index) => {
@@ -158,7 +163,7 @@ export default {
 </script>
 
 <style lang="less" scoped>
-.container {
+.wrapper {
   /* 时间 */
   .date {
     margin-bottom: 10px;

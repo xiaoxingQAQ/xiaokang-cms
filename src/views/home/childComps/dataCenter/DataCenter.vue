@@ -1,6 +1,6 @@
 /* 数据中心页面 */
 <template>
-  <div class="container">
+  <div class="wrapper">
 
     <TabsNav @onChange="onChange" class="tabs_nav">
       <span slot="top">设备数据</span>
@@ -43,7 +43,7 @@ export default {
 </script>
 
 <style lang="less" scoped>
-.container {
+.wrapper {
   ::v-deep .el-tabs--left {
     height: 100% !important;
   }
