@@ -11,8 +11,11 @@ import {
   Tag,
   FormModel,
   Icon,
+  Spin, 
+  Upload,
 } from 'ant-design-vue';
 
+Vue.use(Upload)
 Vue.use(Popover)
 Vue.use(Button)
 Vue.use(Table)
@@ -24,3 +27,4 @@ Vue.use(Input)
 Vue.use(Tag)
 Vue.use(FormModel)
 Vue.use(Icon)
+Vue.use(Spin)

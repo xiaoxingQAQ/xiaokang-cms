@@ -175,17 +175,5 @@ export default {
       line-height: 50px;
     }
   }
-  // 表格的样式修改
-  ::v-deep .ant-table-thead > tr > th {
-    text-align: center;
-    color: #fff;
-    background-color: #73c4fc;
-  }
-  ::v-deep .ant-table-row-level-0 {
-    text-align: center;
-  }
-  ::v-deep .ant-table-row-level-0:nth-child(2n) {
-    background-color: #fcae7312;
-  }
 }
 </style>

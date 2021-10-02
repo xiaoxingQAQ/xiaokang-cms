@@ -7,11 +7,6 @@ body,
   margin: 0;
   padding: 0;
   min-width: 1055px;
-  overflow: hidden;
-}
-.container {
-  height: 100%;
-  overflow: scroll;
 }
 
 /* 禁止选中图片和文字  */
@@ -30,6 +25,9 @@ li {
   margin: 0px;
 }
 
+.el-menu {
+  overflow: hidden !important;
+}
 
 /* 全局滚动条样式 */
 ::-webkit-scrollbar {
@@ -69,22 +67,20 @@ li {
   color: #fff;
   background-color: #73c4fc;
 }
+
  .ant-table-row-level-0 {
   text-align: center;
 }
+
  .ant-table-row-level-0:nth-child(2n) {
   background-color: #fcae7312;
 }
 
-.el-textarea__inner {
-  font-weight: 500;
-}
-
-.el-menu {
-  overflow: hidden;
-}
-
-.el-form-item__error {
+.el-input__inner,
+.el-textarea__inner,
+.el-form-item__error,
+.el-form-item__error,
+.el-icon-success:before {
   font-weight: 500;
 }
 
@@ -92,6 +88,3 @@ li {
   font-weight: 700;
 }
 
-.el-icon-success:before {
-  font-weight: 500;
-}

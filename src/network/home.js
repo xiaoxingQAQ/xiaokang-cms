@@ -144,3 +144,30 @@ export function deleteSnifferWord(data) {
     data
   })
 }
+
+// 知识雷达列表
+export function getKnowledge(data) {
+  return request({
+    method: 'post',
+    url: '/service/backequipment/radarlist',
+    data
+  })
+}
+
+// 版本推送
+export function editionPush(data) {
+  return request({
+    method: 'post',
+    url: '/service/versions/save',
+    data
+  })
+}
+
+// 版本信息
+export function getEditionInfo(data) {
+  return request({
+    method: 'post',
+    url: '/service/versions/list',
+    data
+  })
+}

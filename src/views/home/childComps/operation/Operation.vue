@@ -135,6 +135,7 @@ export default {
     display: flex;
     justify-content: center;
     align-items: center;
+    // width: 90%;
     padding: 40px 0;
     cursor: pointer;
     h1 {
@@ -161,5 +162,6 @@ export default {
 }
 .el-tag {
   margin-right: 8px;
+  margin-bottom: 8px;
 }
 </style>

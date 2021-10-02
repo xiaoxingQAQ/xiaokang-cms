@@ -28,8 +28,10 @@ import {
   Select,
   Option,
   DatePicker,
+  MessageBox
 } from 'element-ui'
 
+Vue.use(MessageBox)
 Vue.use(DatePicker)
 Vue.use(Option)
 Vue.use(Select)
@@ -62,3 +64,4 @@ Vue.use(Tag)
 
 
 Vue.prototype.$message = Message
+Vue.prototype.$confirm = MessageBox.confirm 

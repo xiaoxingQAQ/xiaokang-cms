@@ -5,7 +5,14 @@
       <el-button type="primary" @click="showAddDialog">新增知识库</el-button>
       <el-button type="danger" @click="showRemoveDialog">删除知识库</el-button>
     </el-row>
-    <el-row>
+
+    <el-row class="loading" v-if="nameArr.length == 0">
+      <a-spin tip="Loading...">
+        <div class="spin-content"></div>
+      </a-spin>
+    </el-row>
+
+    <el-row v-else>
       <el-tag
         v-for="(item, indey) in nameArr"
         :key="indey"
@@ -20,7 +27,7 @@
     <Card>
       <span slot="leftTitle" v-if="title">知识库：{{ title }}</span>
       <span slot="leftTitle" v-else>
-       点击上方标签，木有的话，先创建知识库；
+        点击上方标签，木有的话，先创建知识库；
       </span>
 
       <div slot="rightTitle">
@@ -92,7 +99,6 @@
     >
       <a-table
         :rowKey="(record) => record.id"
-        ref="removeTable_1"
         :columns="removeColumns"
         :data-source="removeData"
         :row-selection="removeRowSelection"
@@ -126,11 +132,11 @@
             v-model.trim="answerForm.questions"
           ></el-input>
         </el-form-item>
-        <el-form-item label="答案：">
+        <el-form-item label="回答：">
           <el-input
             :autosize="{ minRows: 3, maxRows: 6 }"
             type="textarea"
-            placeholder="请输入答案"
+            placeholder="请输入回答"
             v-model.trim="answerForm.answers"
           ></el-input>
         </el-form-item>
@@ -194,7 +200,7 @@ export default {
           key: 'questions',
         },
         {
-          title: '答案',
+          title: '回答',
           dataIndex: 'answers',
           key: 'answers',
           width: '60%',
@@ -276,6 +282,7 @@ export default {
         memberID
       }
       this.TableLoading_1 = true
+      this.TableLoading_2 = true
       // 发送请求
       getRepository(data).then(res => {
         if (!res) return
@@ -284,7 +291,6 @@ export default {
           let key = index + 1;
           let id = item.id
           let name = item.name;
-
           this.removeData.push({
             key,
             id,
@@ -299,6 +305,41 @@ export default {
         this.nameArr = _.uniqBy(this.nameArr, 'id')
         this.removeData = _.uniqBy(this.removeData, 'id')
         this.TableLoading_1 = false
+        this.TableLoading_2 = false
+      })
+    },
+    // 获取请求问答的数据列表
+    getAnswer() {
+      const memberID = this.memberID
+      const repository = this.answerForm.repository
+      const data = {
+        memberID,
+        repository
+      }
+      this.TableLoading_2 = true
+      // 发送请求
+      getAnswer(data).then(res => {
+        if (!res) return
+        if (res.code != 1) return this.$message.error('获取数据失败')
+        console.log(res);
+
+        res.data.forEach((item, index) => {
+          let key = index;
+          let id = item.id
+          let questions = item.questions;
+          let answers = item.answers
+          let pubDate = item.pubDate
+          this.data.push({
+            key,
+            id,
+            questions,
+            answers,
+            pubDate
+          })
+        });
+        // 去重
+        this.data = _.uniqBy(this.data, 'key')
+        this.TableLoading_2 = false
       })
     },
     /* 展示添加知识库的dialog */
@@ -311,6 +352,7 @@ export default {
     },
     /* 展示删除知识库的dialog  */
     showRemoveDialog() {
+      this.removeData = []
       this.removeDialogVisible = true
       // 发送请求
       this.getRepositorys()
@@ -391,40 +433,6 @@ export default {
     },
     /* 新增问答区域 */
     // #region
-    // 获取请求问答的数据列表
-    getAnswer() {
-      const memberID = this.memberID
-      const repository = this.answerForm.repository
-      const data = {
-        memberID,
-        repository
-      }
-      this.TableLoading_2 = true
-      // 发送请求
-      getAnswer(data).then(res => {
-        if (!res) return
-        if (res.code != 1) return this.$message.error('获取数据失败')
-        console.log(res);
-
-        res.data.forEach((item, index) => {
-          let key = index;
-          let id = item.id
-          let questions = item.questions;
-          let answers = item.answers
-          let pubDate = item.pubDate
-          this.data.push({
-            key,
-            id,
-            questions,
-            answers,
-            pubDate
-          })
-        });
-        // 去重
-        this.data = _.uniqBy(this.data, 'key')
-        this.TableLoading_2 = false
-      })
-    },
     /* 关闭 新增问答的Dialog */
     answerDialogClosed() {
       this.answerForm = {}
@@ -460,7 +468,7 @@ export default {
       // 发送请求
       addAnswer(Form).then(res => {
         if (!res) return
-        if (res.code != 1) return this.$message.error('获取数据失败')
+        if (res.code != 1) return this.$message.error('添加失败')
         console.log('res: ', res);
 
         this.$message.success('添加成功')
@@ -477,7 +485,6 @@ export default {
           pubDate
         })
       })
-      console.log(this.data);
 
       setTimeout(() => {
         this.data = _.uniqBy(this.data, 'questions')
@@ -521,9 +528,6 @@ export default {
             })
           })
 
-          // this.data = []
-          // const item = this.answerForm.repository
-          // this.getAnswer(item)
           this.loading_4 = false
         })
       }, 500);
@@ -551,6 +555,16 @@ export default {
   .tabs_1 {
     .el-row {
       margin-bottom: 10px;
+    }
+
+    .loading {
+      width: 22%;
+       ::v-deep .ant-spin-nested-loading > div > .ant-spin {
+        background-color: #eaedf1 !important;
+      }
+      .spin-content {
+        padding: 30px;
+      }
     }
 
     .el-tag {

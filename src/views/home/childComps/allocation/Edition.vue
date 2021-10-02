@@ -1,25 +1,37 @@
 /* 系统版本 */
 <template>
   <div class="wrapper">
-    <el-tabs tab-position="left" style="height: 200px">
-      <el-tab-pane class="tabs_1" label="系统升级">
-        <SystemUpdata />
-      </el-tab-pane>
-      <el-tab-pane label="版本日志">
-        <Log />
-      </el-tab-pane>
-    </el-tabs>
+    <TabsNav @onChange="onChange" class="tabs_nav">
+      <span slot="top">版本推送</span>
+      <span slot="center">版本信息</span>
+    </TabsNav>
+
+    <SystemUpdata v-if="currentIndex == 0" class="Margin_left" />
+    <Info v-if="currentIndex == 1" class="Margin_left" />
   </div>
 </template>
 
 <script>
 import SystemUpdata from '@/components/content/editionChild/SystemUpdata'
-import Log from '@/components/content/editionChild/Log'
+import Info from '@/components/content/editionChild/Info'
+import TabsNav from '@/components/content/tabsNav/TabsNav'
 
 export default {
   components: {
     SystemUpdata,
-    Log
+    Info,
+    TabsNav
+  },
+  data() {
+    return {
+      currentIndex: 0,
+    }
+  },
+  methods: {
+    onChange(index) {
+      this.currentIndex = index
+    },
+
   },
 }
 </script>

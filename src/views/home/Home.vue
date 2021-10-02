@@ -173,8 +173,9 @@ export default {
   height: 100%;
 
   .el-header {
-    position: fixed;
-    z-index: 99;
+    position: absolute;
+    top: 0;
+    left: 0;
     width: 100%;
     height: 60px;
     display: flex;
@@ -295,16 +296,23 @@ export default {
   }
 
   .el-aside {
-    position: fixed;
+    position: absolute;
+    left: 0;
+    top: 60px;
+    bottom: 0;
 
-    transform: translate(0, 60px);
     width: 80px !important;
     background: #fff;
   }
 
   .el-main {
-    position: relative;
+    position: absolute;
+    left: 0px;
+    right: 0;
     top: 60px;
+    bottom: 0;
+    overflow-y: scroll;
+
     margin-left: 80px;
     background: #eaedf1;
   }

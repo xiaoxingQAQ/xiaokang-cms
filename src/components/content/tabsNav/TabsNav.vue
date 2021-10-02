@@ -75,6 +75,7 @@ export default {
     align-items: center;
     margin-right: 15px;
     width: 65px;
+    color: #000;
     > div {
       padding: 10px 0;
       transition: all 0.3s;

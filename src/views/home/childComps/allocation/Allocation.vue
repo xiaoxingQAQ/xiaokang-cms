@@ -3,7 +3,14 @@
   <div class="wrapper">
     <Card>
       <span slot="leftTitle">设备数据</span>
-      <div slot="main">
+      <div slot="main" v-if="detailForm.name == ''">
+        <el-row class="loading">
+          <a-spin size="large" tip="Loading...">
+            <div class="spin-content"></div>
+          </a-spin>
+        </el-row>
+      </div>
+      <div v-else slot="main">
         <el-form
           ref="detailFormRef"
           label-position="right"
@@ -41,7 +48,9 @@
               v-model.trim="detailForm.introduce"
             ></el-input>
           </el-form-item>
-          <el-button type="primary" :loading="loading" @click="submit">保存</el-button>
+          <el-button type="primary" :loading="loading" @click="submit"
+            >保存</el-button
+          >
         </el-form>
       </div>
     </Card>
@@ -115,13 +124,13 @@ export default {
     getData() {
       const memberID = this.memberID
       this.detailForm.memberID = memberID
-      
+
       const data = {
         memberID
       }
       // 发送请求
       getCharacter(data).then(res => {
-        if (!res) return 
+        if (!res) return
         console.log(res.data);
         if (res.code != 1) return this.$message.error('获取数据失败')
         const Form = res.data
@@ -145,7 +154,7 @@ export default {
         const data = this.detailForm
         // 发送请求
         submitCharacter(data).then(res => {
-          if (!res) return 
+          if (!res) return
           console.log(res.data);
           if (res.code != 1) return this.$message.error('修改失败')
 
@@ -160,26 +169,39 @@ export default {
 
 <style lang="less" scoped>
 .wrapper {
+  .loading {
+    ::v-deep .ant-spin-nested-loading > div > .ant-spin {
+      background-color: #fff !important;
+    }
+    .spin-content {
+      background-color: #fff;
+      padding: 220px;
+    }
+  }
   .el-form {
-    padding: 0 450px 30px 100px;
+    padding: 0 0 30px 100px;
+
+    ::v-deep .el-input__inner,
+    ::v-deep .el-textarea__inner {
+      width: 40% !important;
+      font-weight: 500;
+    }
 
     .el-form-item {
       font-weight: 600;
 
       ::v-deep .el-input__inner {
-        font-weight: 500;
         color: #777;
       }
     }
 
     ::v-deep .el-textarea__inner {
-      font-weight: 500;
       height: 100px;
     }
 
     .el-button {
-      float: right;
-      margin-top: 10px;
+      position: absolute;
+      left: 43.5%;
     }
   }
 }
