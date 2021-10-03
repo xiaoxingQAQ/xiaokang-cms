@@ -1,6 +1,6 @@
 <template>
   <div class="wrapper">
-    <TabsNav @onChange="onChange" class="tabs_nav">
+    <TabsNav :indey="currentIndex" @onChange="onChange" class="tabs_nav">
       <span slot="top">技能数据</span>
       <span slot="center">技能问答</span>
     </TabsNav>
@@ -26,6 +26,10 @@ export default {
     return {
       currentIndex: 0,
     }
+  },
+  created() {
+    if (sessionStorage.getItem('tabsIndex')) return
+    this.currentIndex = JSON.parse(sessionStorage.getItem('tabsIndex'));
   },
   methods: {
     onChange(index) {

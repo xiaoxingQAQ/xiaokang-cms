@@ -17,6 +17,7 @@
 <script>
 
 export default {
+  props: ['indey'],
   data() {
     return {
       tabs_nav: [
@@ -29,19 +30,13 @@ export default {
   },
   created() {
     this.selected()
-  },
-  watch: {
-    $route: {
-      handler() {
-        // 监听路由变化 如果路由发生变化 currentIndex 重置为 0
-        let index = 0;
-        this.currentIndex = index;
-        sessionStorage.setItem('tabsIndex', JSON.stringify(index))
-        // 传数据给父组件
-        this.$emit('onChange', index)
-      },
-      deep: true
+    if (this.index == 0) {
+      this.currentIndex = this.indey
+      return
     }
+
+    this.$emit('onChange',  this.currentIndex)
+
   },
   methods: {
     btnClick(index) {
@@ -56,8 +51,6 @@ export default {
       if (!tabsIndex) return
 
       this.currentIndex = tabsIndex
-      // 传数据给父组件
-      this.$emit('onChange', tabsIndex)
     }
   },
 

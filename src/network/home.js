@@ -171,3 +171,36 @@ export function getEditionInfo(data) {
     data
   })
 }
+
+
+/* --------数据中心页-------- */
+
+// 用户数据
+export function getUserData(data) {
+  return request({
+    method: 'post',
+    url: '/service/backequipment/userData',
+    data
+  })
+}
+
+// 设备增长
+export function getIncrease(data) {
+  return request({
+    method: 'post',
+    url: '/service/backequipment/eqmentincrease',
+    data
+  })
+}
+
+// 设备活跃
+export function getActive(data) {
+  return request({
+    method: 'post',
+    url: '/service/backequipment/eqmentactive',
+    data
+  })
+}
+
+
+

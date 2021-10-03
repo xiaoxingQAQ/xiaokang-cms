@@ -61,9 +61,7 @@
       <!-- 右侧内容主体 -->
       <el-main>
         <!-- 路由占位符 -->
-        <keep-alive>
-          <router-view />
-        </keep-alive>
+        <router-view />
       </el-main>
     </el-container>
   </el-container>
@@ -157,6 +155,11 @@ export default {
     return {
       isShow: false,
       isCollapse: true,
+    }
+  },
+  watch: {
+    '$route'(to, from) {
+      sessionStorage.setItem('tabsIndex', JSON.stringify(0))
     }
   },
   methods: {

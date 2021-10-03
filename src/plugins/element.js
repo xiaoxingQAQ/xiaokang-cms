@@ -31,7 +31,6 @@ import {
   MessageBox
 } from 'element-ui'
 
-Vue.use(MessageBox)
 Vue.use(DatePicker)
 Vue.use(Option)
 Vue.use(Select)
@@ -55,7 +54,6 @@ Vue.use(RadioButton)
 Vue.use(RadioGroup)
 Vue.use(MenuItemGroup)
 Vue.use(Submenu)
-Vue.use(Message.name)
 Vue.use(Row)
 Vue.use(Col)
 Vue.use(Card)

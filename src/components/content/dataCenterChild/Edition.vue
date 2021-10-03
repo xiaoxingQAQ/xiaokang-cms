@@ -5,7 +5,7 @@
     <Card class="card_1">
       <span slot="leftTitle">版本分布</span>
       <div slot="main">
-        <div class="echarts" ref="echarts_1"></div>
+        <div class="echarts" id="echarts_1" ref="echarts_1"></div>
       </div>
     </Card>
 
@@ -13,7 +13,7 @@
     <Card class="card_2">
       <span slot="leftTitle">版本排行</span>
       <div slot="main">
-        <div class="echarts" ref="echarts_2"></div>
+        <div class="echarts" id="echarts_2" ref="echarts_2"></div>
       </div>
     </Card>
   </div>
@@ -152,7 +152,6 @@ export default {
 .wrapper {
   .card_1,
   .card_2 {
-    width: 100%;
     .el-row {
       display: flex;
       justify-content: space-between;

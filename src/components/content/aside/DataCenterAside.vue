@@ -29,15 +29,6 @@ export default {
   created() {
     this.selected()
   },
-  watch: {
-    $route: {
-      handler(val) {
-        console.log(val.path);
-        this.selected()
-      },
-      deep: true
-    }
-  },
   methods: {
     goNext(index) {
       const indey = index + '';

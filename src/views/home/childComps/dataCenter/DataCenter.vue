@@ -1,15 +1,14 @@
 /* 数据中心页面 */
 <template>
   <div class="wrapper">
-
-    <TabsNav @onChange="onChange" class="tabs_nav">
+    <TabsNav :indey="currentIndex" @onChange="onChange" class="tabs_nav">
       <span slot="top">设备数据</span>
       <span slot="center">历史消息</span>
       <span slot="bottom">版本分布</span>
     </TabsNav>
 
     <Data v-if="currentIndex == 0" class="Margin_left" />
-    <History v-if="currentIndex == 1" class="Margin_left" />
+    <History v-else-if="currentIndex == 1" class="Margin_left" />
     <Edition v-else-if="currentIndex == 2" class="Margin_left" />
   </div>
 </template>
@@ -33,6 +32,10 @@ export default {
     return {
       currentIndex: 0,
     }
+  },
+  created() {
+    if (sessionStorage.getItem('tabsIndex')) return
+    this.currentIndex = JSON.parse(sessionStorage.getItem('tabsIndex'));
   },
   methods: {
     onChange(index) {

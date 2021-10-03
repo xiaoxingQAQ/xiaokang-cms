@@ -82,7 +82,7 @@ export default {
           result: '嗯嗯',
           counts: '12',
         },
-         {
+        {
           key: 4,
           indey: '4',
           problem: '好好',
@@ -94,6 +94,9 @@ export default {
   },
   mounted() {
     this.initEcharts()
+  },
+  destroyed() {
+    console.log('SkillAnswer 技能问答销毁');
   },
   methods: {
     initEcharts() {

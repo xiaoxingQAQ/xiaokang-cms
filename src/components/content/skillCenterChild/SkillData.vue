@@ -19,7 +19,7 @@
         <!-- 选择时间 -->
         <DateRow class="date_row" />
         <!-- echarts -->
-        <div class="echarts" ref="echarts_2"></div>
+        <div class="echarts" ref="echarts_1"></div>
       </div>
     </Card>
 
@@ -43,6 +43,7 @@ import Card from '@/components/content/card/Card';
 import DateRow from '@/components/content/dateRow/DateRow'
 
 export default {
+  name: 'SkillData',
   components: {
     Card,
     DateRow
@@ -51,22 +52,28 @@ export default {
     return {
       loading: false,
       value: '',
-      options: [{
-        value: '选项1',
-        label: '黄金糕'
-      }, {
-        value: '选项2',
-        label: '双皮奶'
-      }, {
-        value: '选项3',
-        label: '蚵仔煎'
-      }, {
-        value: '选项4',
-        label: '龙须面'
-      }, {
-        value: '选项5',
-        label: '北京烤鸭'
-      }],
+      options: [
+        {
+          value: '选项1',
+          label: '黄金糕'
+        },
+        {
+          value: '选项2',
+          label: '双皮奶'
+        },
+        {
+          value: '选项3',
+          label: '蚵仔煎'
+        },
+        {
+          value: '选项4',
+          label: '龙须面'
+        },
+        {
+          value: '选项5',
+          label: '北京烤鸭'
+        }
+      ],
       columns: [
         {
           title: '排行',
@@ -111,7 +118,7 @@ export default {
   },
   methods: {
     initEcharts() {
-      let myEcharts = this.$echarts.init(this.$refs.echarts_2)
+      let myEcharts = this.$echarts.init(this.$refs.echarts_1)
       let option = {
         title: {
           text: ''
