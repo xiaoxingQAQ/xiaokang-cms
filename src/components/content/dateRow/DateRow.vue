@@ -22,7 +22,7 @@
             @click="changeDate(index)"
             :class="{ active: currentIndex == index }"
           >
-          {{item}}
+            {{ item }}
           </a-button>
         </template>
       </el-col>
@@ -30,11 +30,13 @@
       <el-col class="date" :span="11">
         <span>自定义时间：</span>
         <el-date-picker
-          v-model="value1"
+          v-model="value"
           type="daterange"
+          value-format="yyyy-MM-dd"
           range-separator="~"
           start-placeholder="开始日期"
           end-placeholder="结束日期"
+          @change="onChange"
         >
         </el-date-picker>
       </el-col>
@@ -52,17 +54,40 @@ export default {
   },
   data() {
     return {
-      value1: '', // 自定义日期 value值
+      value: '', // 自定义日期 value值
       dateArr: [7, 14, 30], // changdate的数组
       dateArr_text: ['最新激活', '活跃排名'],
       currentIndex: 0, // 当前的 index
     }
   },
   methods: {
+    onChange() {
+      let start_date = this.value[0]
+      let end_date = this.value[1]
+      let day = this.getDaysBetween(start_date, end_date)
+      this.$emit('Change', day, start_date, end_date)
+    },
     // 点击改变 日期
     changeDate(index) {
       this.currentIndex = index
+      this.$emit('onChange', index)
     },
+    //根据起始日期和结束日期计算天数
+    getDaysBetween(date1, date2) {
+      var startDate = Date.parse(date1);
+      var endDate = Date.parse(date2);
+      if (startDate > endDate) {
+        return 0;
+      }
+      if (startDate == endDate) {
+        return 1;
+      }
+      var days = (endDate - startDate) / (1 * 24 * 60 * 60 * 1000);
+      return days;
+    }
+
+
+
   },
 }
 </script>

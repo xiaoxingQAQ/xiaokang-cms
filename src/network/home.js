@@ -202,5 +202,69 @@ export function getActive(data) {
   })
 }
 
+// 系统消息列表
+export function getMessageList(data) {
+  return request({
+    method: 'post',
+    url: '/service/remindrule/systemlist',
+    data
+  })
+}
 
+// 版本饼图
+export function getDistribution(data) {
+  return request({
+    method: 'post',
+    url: '/service/backequipment/versionPie',
+    data
+  })
+}
+
+// 版本排行
+export function getRanking(data) {
+  return request({
+    method: 'post',
+    url: '/service/backequipment/versionRanking',
+    data
+  })
+}
+
+/* --------技能中心页-------- */
+
+
+// 技能使用次数
+export function getSkillsUsed(data) {
+  return request({
+    method: 'post',
+    url: '/service/skill/useskill',
+    data
+  })
+}
+
+// 技能调用排行榜
+export function getSkillsRanking(data) {
+  return request({
+    method: 'post',
+    url: '/service/skill/skillranking',
+    data
+  })
+}
+
+// 问答技能使用次数
+export function getAnswerSkillsUsed(data) {
+  return request({
+    method: 'post',
+    url: '/service/skill/useskill',
+    data
+  })
+}
+
+// 热问排行榜
+export function getHotAnswerRanking(data) {
+  return request({
+    method: 'post',
+    url: '/service/backequipment/answeranking',
+    data
+  })
+}
 

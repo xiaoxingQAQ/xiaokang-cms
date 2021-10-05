@@ -17,7 +17,7 @@
       <span slot="leftTitle">设备增长</span>
       <div slot="main">
         <!-- 选择时间 -->
-        <DateRow />
+        <DateRow @onChange="getIncrease_1" @Change="getIncrease_2" />
         <div class="echarts" ref="echarts_1"></div>
       </div>
     </Card>
@@ -26,7 +26,7 @@
       <span slot="leftTitle">设备活跃</span>
       <div slot="main">
         <!-- 选择时间 -->
-        <DateRow />
+        <DateRow  @onChange="getActive_1" @Change="getActive_2" />
         <div class="echarts" ref="echarts_2"></div>
       </div>
     </Card>
@@ -95,122 +95,7 @@ export default {
           }
         ]
       }, // echarts_1
-      option_2: {}, // echarts_2
-    }
-  },
-  created() {
-    this.getIncrease_7day()
-    this.getUserData()
-  },
-  mounted() {
-    this.initEcharts_1()
-    this.initEcharts_2()
-  },
-  computed: {
-    ...mapState('user', ['memberID'])
-  },
-  watch: {
-    option_1: {
-      handler(val, oldVal) {
-        if (val != oldVal) {
-          this.option_1 = val
-        }
-      },
-      deep: true
-    }
-  },
-  methods: {
-    // 获取用户数据
-    getUserData() {
-      const memberID = this.memberID
-      const data = {
-        memberID
-      }
-      // 发送请求
-      getUserData(data).then(res => {
-        if (!res) return
-        if (res.code != 1) return this.$message.error('获取数据失败')
-        this.yestuser = res.data.yestuser
-        this.accumuser = res.data.accumuser
-      })
-    },
-    // 获取设备 最近7天 增长数据
-    getIncrease_7day() {
-      let day = 30;
-      let startdate = getDate(-day) + ''
-      let enddate = getDate(0) + ''
-      let type = day + ''
-      const data = {
-        startdate,
-        enddate,
-        type
-      }
-      // 发送请求
-      getIncrease(data).then(res => {
-        if (!res) return
-        if (res.code != 1) return this.$message.error('获取数据失败')
-
-        console.log(res.data);
-        res.data.forEach(item => {
-          let newlate = item.newlate;
-          let accumulate = item.accumulate
-          let date = item.date
-          console.log(this.option_1);
-          this.option_1.series[0].data.push(newlate)
-          this.option_1.series[1].data.push(accumulate)
-          this.option_1.xAxis.data.push(date)
-        });
-        let series_1 = this.option_1.series[0].data
-        let series_2 = this.option_1.series[1].data
-        let xAxis = this.option_1.xAxis.data
-        this.myEcharts_1.hideLoading(); //隐藏加载动画
-        this.myEcharts_1.setOption({ //加载数据图表
-          xAxis: {
-            data: xAxis
-          },
-          series: [
-            {
-              // 根据名字对应到相应的系列
-              name: '新增',
-              data: series_1
-            },
-            {
-              // 根据名字对应到相应的系列
-              name: '累计',
-              data: series_2
-            }
-          ]
-        })
-      })
-    },
-    getIncrease_14day() {
-      let startdate = getDate(0)
-      let enddate = getDate(-14)
-    },
-    getIncrease_30day() {
-      let startdate = getDate(0)
-      let enddate = getDate(-30)
-    },
-    // 获取设备活跃数据
-    getActive() {
-
-    },
-    // ECharts
-    initEcharts_1() {
-      this.$nextTick(() => {
-        this.myEcharts_1 = this.$echarts.init(this.$refs.echarts_1)
-
-        let myEcharts = this.myEcharts_1
-        let option = this.option_1
-        myEcharts.showLoading()
-        console.log(option);
-        // 5. 展示数据
-        option && myEcharts.setOption(option)
-      })
-    },
-    initEcharts_2() {
-      let myEcharts = this.$echarts.init(this.$refs.echarts_2)
-      let option = {
+      option_2: {
         title: {
           text: ''
         },
@@ -233,7 +118,7 @@ export default {
         xAxis: {
           type: 'category',
           boundaryGap: false,
-          data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
+          data: []
         },
         yAxis: {
           type: 'value'
@@ -243,11 +128,264 @@ export default {
             name: '设备活跃',
             type: 'line',
             stack: 'Total',
-            data: [120, 132, 101, 134, 90, 230, 210]
+            data: []
           }
         ]
-      };
-      this.option_2 = option
+      }, // echarts_2
+    }
+  },
+  created() {
+    this.getActive_1()
+    this.getIncrease_1()
+    this.getUserData()
+  },
+  mounted() {
+    this.initEcharts_1()
+    this.initEcharts_2()
+  },
+  computed: {
+    ...mapState('user', ['memberID'])
+  },
+  methods: {
+    // 获取用户数据
+    getUserData() {
+      const memberID = this.memberID
+      const data = {
+        memberID
+      }
+      // 发送请求
+      getUserData(data).then(res => {
+        if (!res) return
+        if (res.code != 1) return this.$message.error('获取数据失败')
+        this.yestuser = res.data.yestuser
+        this.accumuser = res.data.accumuser
+      })
+    },
+    // 获取设备 最近7天 增长数据
+    getIncrease_1(day = 0) {
+      this.option_1.series[0].data = []
+      this.option_1.series[1].data = []
+      this.option_1.xAxis.data = []
+
+      switch (day) {
+        case 0:
+          day = 7
+          break;
+        case 1:
+          day = 14
+          break;
+        case 2:
+          day = 30
+          break;
+      }
+      let startdate = getDate(-day) + ''
+      let enddate = getDate(0) + ''
+      let type = day + ''
+      const data = {
+        startdate,
+        enddate,
+        type
+      }
+      // 发送请求
+      getIncrease(data).then(res => {
+        if (!res) return
+        if (res.code != 1) return this.$message.error('获取数据失败')
+
+        res.data.forEach(item => {
+          let newlate = item.newlate;
+          let accumulate = item.accumulate
+          let date = item.date
+          this.option_1.series[0].data.push(newlate)
+          this.option_1.series[1].data.push(accumulate)
+          this.option_1.xAxis.data.push(date)
+        });
+        let series_1 = this.option_1.series[0].data
+        let series_2 = this.option_1.series[1].data
+        let xAxis_1 = this.option_1.xAxis.data
+
+        this.myEcharts_1.hideLoading(); // 隐藏加载动画
+        this.myEcharts_1.setOption({ // 加载数据图表
+          xAxis: {
+            data: xAxis_1
+          },
+          series: [
+            {
+              // 根据名字对应到相应的系列
+              name: '新增',
+              data: series_1
+            },
+            {
+              // 根据名字对应到相应的系列
+              name: '累计',
+              data: series_2
+            }
+          ]
+        })
+      })
+
+    },
+    getIncrease_2(day, start_date, end_date) {
+      this.option_1.series[0].data = []
+      this.option_1.series[1].data = []
+      this.option_1.xAxis.data = []
+
+      console.log('day, startdate, enddate: ', day, startdate, enddate);
+      let startdate = start_date + ''
+      let enddate = end_date + ''
+      let type = day + ''
+      const data = {
+        startdate,
+        enddate,
+        type
+      }
+      // 发送请求
+      getIncrease(data).then(res => {
+        if (!res) return
+        if (res.code != 1) return this.$message.error('获取数据失败')
+
+        res.data.forEach(item => {
+          let newlate = item.newlate;
+          let accumulate = item.accumulate
+          let date = item.date
+          this.option_1.series[0].data.push(newlate)
+          this.option_1.series[1].data.push(accumulate)
+          this.option_1.xAxis.data.push(date)
+        });
+        let series_1 = this.option_1.series[0].data
+        let series_2 = this.option_1.series[1].data
+        let xAxis_1 = this.option_1.xAxis.data
+
+        this.myEcharts_1.hideLoading(); // 隐藏加载动画
+        this.myEcharts_1.setOption({ // 加载数据图表
+          xAxis: {
+            data: xAxis_1
+          },
+          series: [
+            {
+              // 根据名字对应到相应的系列
+              name: '新增',
+              data: series_1
+            },
+            {
+              // 根据名字对应到相应的系列
+              name: '累计',
+              data: series_2
+            }
+          ]
+        })
+      })
+
+    },
+    // 获取设备活跃数据
+    getActive_1(day = 0) {
+      this.option_2.series[0].data = []
+      this.option_2.xAxis.data = []
+
+      switch (day) {
+        case 0:
+          day = 7
+          break;
+        case 1:
+          day = 14
+          break;
+        case 2:
+          day = 30
+          break;
+      }
+      let startdate = getDate(-day) + ''
+      let enddate = getDate(0) + ''
+      let type = day + ''
+      const data = {
+        startdate,
+        enddate,
+        type
+      }
+      // 发送请求
+      getActive(data).then(res => {
+        console.log(res);
+        if (!res) return
+        if (res.code != 1) return this.$message.error('获取数据失败')
+
+        res.data.forEach(item => {
+          let time = item.time
+          let sumcount = item.sumcount
+          this.option_2.series[0].data.push(sumcount)
+          this.option_2.xAxis.data.push(time)
+        })
+        let series = this.option_2.series[0].data
+        let xAxis = this.option_2.xAxis.data
+        this.myEcharts_2.hideLoading(); // 隐藏加载动画
+        this.myEcharts_2.setOption({ // 加载数据图表
+          xAxis: {
+            data: xAxis
+          },
+          series: [
+            {
+              // 根据名字对应到相应的系列
+              name: '设备活跃',
+              data: series
+            },
+          ]
+        })
+      })
+    },
+    getActive_2(day, start_date, end_date) {
+      this.option_2.series[0].data = []
+      this.option_2.xAxis.data = []
+
+      let startdate = start_date + ''
+      let enddate = end_date + ''
+      let type = day + ''
+      const data = {
+        startdate,
+        enddate,
+        type
+      }
+      // 发送请求
+      getActive(data).then(res => {
+        if (!res) return
+        if (res.code != 1) return this.$message.error('获取数据失败')
+
+        res.data.forEach(item => {
+          let time = item.time
+          let sumcount = item.sumcount
+          this.option_2.series[0].data.push(sumcount)
+          this.option_2.xAxis.data.push(time)
+        })
+        let series = this.option_2.series[0].data
+        let xAxis = this.option_2.xAxis.data
+        this.myEcharts_2.hideLoading(); // 隐藏加载动画
+        this.myEcharts_2.setOption({ // 加载数据图表
+          xAxis: {
+            data: xAxis
+          },
+          series: [
+            {
+              // 根据名字对应到相应的系列
+              name: '设备活跃',
+              data: series
+            },
+          ]
+        })
+      })
+
+    },
+    // ECharts
+    initEcharts_1() {
+      this.myEcharts_1 = this.$echarts.init(this.$refs.echarts_1)
+
+      let myEcharts = this.myEcharts_1
+      let option = this.option_1
+      myEcharts.showLoading()
+      // 5. 展示数据
+      option && myEcharts.setOption(option)
+    },
+    initEcharts_2() {
+      this.myEcharts_2 = this.$echarts.init(this.$refs.echarts_2)
+
+      let myEcharts = this.myEcharts_2
+      let option = this.option_2
+      myEcharts.showLoading()
       // 5. 展示数据
       option && myEcharts.setOption(option)
     }

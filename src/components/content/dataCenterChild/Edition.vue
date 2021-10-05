@@ -22,47 +22,137 @@
 <script>
 import Card from '@/components/content/card/Card'
 
+import { getDistribution, getRanking } from '@/network/home'
+import { mapState } from 'vuex'
+
 export default {
   components: {
     Card,
   },
   data() {
     return {
-
+      option_1: {},
+      option_2: {},
+      myEcharts_1: null,
+      myEcharts_2: null,
     }
+  },
+  created() {
+    this.getDistribution()
+    this.getRanking()
   },
   mounted() {
     this.initEcharts_1()
     this.initEcharts_2()
   },
+  computed: {
+    ...mapState('user', ['memberID'])
+  },
   methods: {
+    // 获取 版本饼图
+    getDistribution() {
+      const memberID = this.memberID
+      const data = {
+        memberID
+      }
+      // 发送请求 
+      getDistribution(data).then(res => {
+        if (!res) return
+        if (res.code != 1) return this.$message.error('获取数据失败')
+
+        res.data.forEach(item => {
+          let value = item.counts
+          let name = item.hardVersion
+          this.option_1.series[0].data.push({
+            value,
+            name
+          })
+        })
+        let data = this.option_1.series[0].data
+        this.myEcharts_1.hideLoading(); // 隐藏加载动画
+        this.myEcharts_1.setOption({
+          series: [
+            {
+              name: '版本',
+              type: 'pie',
+              radius: '50%',
+              data,
+              emphasis: {
+                itemStyle: {
+                  shadowBlur: 10,
+                  shadowOffsetX: 0,
+                  shadowColor: 'rgba(0, 0, 0, 0.5)'
+                }
+              }
+            }
+          ]
+        })
+      })
+    },
+    // 获取 版本排行
+    getRanking() {
+      const memberID = this.memberID
+      const data = {
+        memberID
+      }
+      // 发送请求
+      getRanking(data).then(res => {
+        if (!res) return
+        if (res.code != 1) return this.$message.error('获取数据失败')
+        console.log(res.data);
+        res.data.forEach(item => {
+          let value = item.counts
+          let name = item.hardVersion
+          this.option_2.series[0].data.push({
+            value,
+            name
+          })
+          this.option_2.yAxis.data.push(name)
+        })
+        let data_1 = this.option_2.yAxis.data
+        let data = this.option_2.series[0].data
+        this.myEcharts_2.hideLoading(); // 隐藏加载动画
+        this.myEcharts_2.setOption({
+          yAxis: {
+            data: data_1
+          },
+          series: [
+            {
+              realtimeSort: true,
+              name: '版本',
+              type: 'bar',
+              data,
+            },
+
+          ]
+        })
+      })
+    },
     initEcharts_1() {
       let myEcharts = this.$echarts.init(this.$refs.echarts_1)
+      this.myEcharts_1 = myEcharts
       let option = {
         title: {
-          text: 'Referer of a Website',
-          subtext: 'Fake Data',
+          text: 'Version of the distribution',
+          subtext: 'Dynamic Data ',
           left: 'center'
         },
         tooltip: {
           trigger: 'item',
-          formatter: '{a} <br/>{b} : {c} ({d}%)'
+          formatter: '{a} <br/>{b} ({d}%)'
         },
         legend: {
           orient: 'vertical',
-          left: 'left'
+          left: 'left',
         },
         series: [
           {
-            name: 'Access From',
+            name: '版本',
             type: 'pie',
             radius: '50%',
+            center: ['75%', '60%'],
             data: [
-              { value: 1048, name: 'Search Engine' },
-              { value: 735, name: 'Direct' },
-              { value: 580, name: 'Email' },
-              { value: 484, name: 'Union Ads' },
-              { value: 300, name: 'Video Ads' }
+
             ],
             emphasis: {
               itemStyle: {
@@ -74,12 +164,20 @@ export default {
           }
         ]
       };
+      this.option_1 = option
+      myEcharts.showLoading() // 开启加载动画
       // 5. 展示数据
       option && myEcharts.setOption(option)
     },
     initEcharts_2() {
       let myEcharts = this.$echarts.init(this.$refs.echarts_2)
+      this.myEcharts_2 = myEcharts
       let option = {
+        title: {
+          text: 'Version number',
+          subtext: 'Dynamic Data ',
+          left: 'center'
+        },
         tooltip: {
           trigger: 'axis',
           axisPointer: {
@@ -87,35 +185,36 @@ export default {
             formatter: '{a} <br/>{b}'
           }
         },
+        grid: {
+          x: '30%',
+          left: '3%',
+          right: '4%',
+          bottom: '3%',
+          containLabel: true
+        },
         xAxis: {
           mim: 0,
-          max: 'dataMax'
+          max: 'dataMax',
         },
         yAxis: {
           type: 'category',
-          data: ['A', 'B', 'C', 'D', 'E', 'F', 'G'],
+          data: [],
           inverse: true,
+          position: 'left',
+          offset: 12, // y轴相对于默认位置的偏移
         },
         series: [
           {
             realtimeSort: true,
             name: '#',
             type: 'bar',
-            data: [
-              { value: 1048, name: 'A' },
-              { value: 735, name: 'B' },
-              { value: 580, name: 'C' },
-              { value: 484, name: 'D' },
-              { value: 300, name: 'E' },
-              { value: 108, name: 'F' },
-              { value: 75, name: '6' },
-              { value: 80, name: '7' },
-            ],
+            data: [],
+
             itemStyle: {
               normal: {
                 //这里是重点
                 color(params) {
-                  let colorList = ['#c23531', '#2f4554', '#61a0a8', '#d48265', '#91c7ae', '#749f83', '#ca8622'];
+                  let colorList = ['#5470c6', '#91cc75', '#fac858', '#ee6666', '#73c0de', '#3ba272', '#fc8452', '#9a60b4', '#ea7ccc', '#5a75c8', '#73c0de', '#91c6ae', '#ea7ccc', '#fac858'];
                   let index;
                   //给大于颜色数量的柱体添加循环颜色的判断
                   if (params.dataIndex >= colorList.length) {
@@ -138,7 +237,9 @@ export default {
         animationEasing: 'linear',
         animationEasingUpdate: 'linear'
       };
-
+      this.option_2 = option
+      myEcharts.showLoading() // 开启加载动画
+      // 展示数据
       option && myEcharts.setOption(option);
     },
 

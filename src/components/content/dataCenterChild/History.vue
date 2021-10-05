@@ -8,7 +8,7 @@
           :columns="columns"
           :data-source="tabData"
           :loading="loading"
-          :pagination="false"
+          :pagination="true"
         >
         </a-table>
       </div>
@@ -19,6 +19,9 @@
 <script>
 import Card from '@/components/content/card/Card'
 
+import { getMessageList } from '@/network/home'
+import { mapState } from 'vuex'
+
 export default {
   components: {
     Card,
@@ -26,44 +29,65 @@ export default {
   data() {
     return {
       loading: false,
-      columns: [ 
+      columns: [
         {
           title: '序号',
-          dataIndex: 'indey',
-          key: 'indey',
+          dataIndex: 'key',
+          key: 'key',
+          width: '20%'
         },
         {
           title: '系统消息',
           dataIndex: 'message',
           key: 'message',
+          width: '60%'
         },
         {
           title: '发送时间',
-          dataIndex: 'date',
-          key: 'date',
+          dataIndex: 'pubDate',
+          key: 'pubDate',
         },
       ],
-      tabData: [ 
-        {
-          key: 1,
-          indey: '1',
-          message: '好好',
-          date: '2019-12-08',
-        },
-        {
-          key: 2,
-          indey: '2',
-          message: '都是',
-          date: '2019-12-08',
-        },
-        {
-          key: 3,
-          indey: '3',
-          message: '好好',
-          date: '2019-12-08',
-        },
-      ],
+      tabData: [],
     }
+  },
+  computed: {
+    ...mapState('user', ['memberID'])
+  },
+  created() {
+    this.getMessageList()
+  },
+  methods: {
+    getMessageList() {
+      const memberID = this.memberID
+      const data = {
+        memberID,
+        pageIndex: 1,
+        pageSize: 999999,
+      }
+      this.loading = true
+      // 发送请求
+      getMessageList(data).then(res => {
+        if (!res) return
+        if (res.code != 1) return this.$message.error('数据请求失败')
+
+        console.log(res);
+        res.data.forEach((item, index) => {
+          let key = index + 1
+          let id = item.id
+          let message = item.message
+          let pubDate = item.pubDate
+          this.tabData.push({
+            id,
+            key,
+            message,
+            pubDate
+          })
+        });
+        this.tabData = _.uniqBy(this.tabData, 'id')
+        this.loading = false
+      })
+    },
   },
 }
 </script>
