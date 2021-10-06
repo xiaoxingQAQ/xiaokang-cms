@@ -4,9 +4,9 @@
       <span slot="leftTitle">技能使用次数</span>
       <div slot="main">
         <!-- 选择技能 select 框 -->
-        <el-row>
+        <el-row v-if="options.length != 0">
           <span>选择技能：</span>
-          <el-select v-model="value" placeholder="请选择">
+          <el-select v-model="value" @change="onChange" placeholder="请选择">
             <el-option
               v-for="item in options"
               :key="item.value"
@@ -16,8 +16,19 @@
             </el-option>
           </el-select>
         </el-row>
+        <!-- loading -->
+        <el-row class="loading" v-else>
+          <span>选择技能：</span>
+          <a-spin tip="Loading...">
+            <div class="spin-content"></div>
+          </a-spin>
+        </el-row>
         <!-- 选择时间 -->
-        <DateRow class="date_row" />
+        <DateRow
+          @onChange="getSkillsUsed_1"
+          @Change="getSkillsUsed_2"
+          class="date_row"
+        />
         <!-- echarts -->
         <div class="echarts" ref="echarts_1"></div>
       </div>
@@ -26,7 +37,11 @@
     <Card class="card_2">
       <span slot="leftTitle">技能调用排行</span>
       <div slot="main">
-        <DateRow class="date_row" />
+        <DateRow
+          @onChange="getSkillsRanking_1"
+          @Change="getSkillsRanking_2"
+          class="date_row"
+        />
         <a-table
           :columns="columns"
           :data-source="tabData"
@@ -42,6 +57,10 @@
 import Card from '@/components/content/card/Card';
 import DateRow from '@/components/content/dateRow/DateRow'
 
+import { getSkillList, getSkillsUsed, getSkillsRanking } from '@/network/home'
+import { mapState } from 'vuex';
+import { getDate } from '@/utils/getDate'
+
 export default {
   name: 'SkillData',
   components: {
@@ -50,76 +69,13 @@ export default {
   },
   data() {
     return {
+      myEcharts: null,
+
       loading: false,
       value: '',
-      options: [
-        {
-          value: '选项1',
-          label: '黄金糕'
-        },
-        {
-          value: '选项2',
-          label: '双皮奶'
-        },
-        {
-          value: '选项3',
-          label: '蚵仔煎'
-        },
-        {
-          value: '选项4',
-          label: '龙须面'
-        },
-        {
-          value: '选项5',
-          label: '北京烤鸭'
-        }
-      ],
-      columns: [
-        {
-          title: '排行',
-          dataIndex: 'indey',
-          key: 'indey',
-        },
-        {
-          title: '技能名称',
-          dataIndex: 'name',
-          key: 'name',
-        },
-        {
-          title: '请求次数',
-          dataIndex: 'counts',
-          key: 'counts',
-        },
-      ],
-      tabData: [
-        {
-          key: 1,
-          indey: '1',
-          name: '好好',
-          counts: '100',
-        },
-        {
-          key: 2,
-          indey: '2',
-          name: '都是',
-          counts: '28',
-        },
-        {
-          key: 3,
-          indey: '3',
-          name: '好好',
-          counts: '12',
-        },
-      ],
-    }
-  },
-  mounted() {
-    this.initEcharts()
-  },
-  methods: {
-    initEcharts() {
-      let myEcharts = this.$echarts.init(this.$refs.echarts_1)
-      let option = {
+      code: '',
+      options: [],
+      option: {
         title: {
           text: ''
         },
@@ -142,7 +98,7 @@ export default {
         xAxis: {
           type: 'category',
           boundaryGap: false,
-          data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
+          data: []
         },
         yAxis: {
           type: 'value'
@@ -152,20 +108,272 @@ export default {
             name: '设备活跃',
             type: 'line',
             stack: 'Total',
-            data: [120, 132, 101, 134, 90, 230, 210]
+            data: []
           }
         ]
-      };
+      },
+      columns: [
+        {
+          title: '排行',
+          dataIndex: 'key',
+          key: 'key',
+          width: '20%'
+        },
+        {
+          title: '技能名称',
+          dataIndex: 'title',
+          key: 'title',
+          width: '60%'
+        },
+        {
+          title: '请求次数',
+          dataIndex: 'skillnum',
+          key: 'skillnum',
+        },
+      ],
+      tabData: [],
+    }
+  },
+  created() {
+    this.getSkillList()
+    this.getSkillsRanking_1()
+  },
+  mounted() {
+    this.initEcharts()
+  },
+  computed: {
+    ...mapState('user', ['memberID'])
+  },
+  methods: {
+    onChange() {
+      console.log(this.value);
+      this.getSkillsUsed_1()
+    },
+    // 获取技能列表
+    getSkillList() {
+      const memberID = this.memberID
+      const data = {
+        memberID
+      }
+      // 发送请求 请求
+      getSkillList(data).then(res => {
+        if (!res) return
+        if (res.code != 1) return this.$message.error('获取数据失败')
+
+        console.log(res.data);
+        res.data.forEach(item => {
+          let label = item.title
+          let value = item.id
+          let code = item.skillCode
+          this.options.push({
+            value,
+            label,
+            code
+          })
+        })
+        this.code = this.options[0].code
+        this.value = this.options[0].value
+        this.getSkillsUsed_1()
+      })
+    },
+    // 获取 技能使用次数
+    getSkillsUsed_1(day = 0) {
+      this.option.series[0].data = []
+      this.option.xAxis.data = []
+
+      switch (day) {
+        case 0:
+          day = 7
+          break;
+        case 1:
+          day = 14
+          break;
+        case 2:
+          day = 30
+          break;
+      }
+      let startdate = getDate(-day) + ''
+      let enddate = getDate(0) + ''
+      let type = day + ''
+      let code = this.code + ''
+      const data = {
+        startdate,
+        enddate,
+        type,
+        code,
+      }
+      // 发送请求 技能使用次数
+      getSkillsUsed(data).then(res => {
+        if (!res) return
+        if (res.code != 1) return this.$message.error('获取数据失败')
+
+        res.data.forEach(item => {
+          let skillnum = item.skillnum;
+          let time = item.time;
+          this.option.series[0].data.push(skillnum);
+          this.option.xAxis.data.push(time)
+        })
+
+        let series = this.option.series[0].data
+        let xAxis = this.option.xAxis.data
+        this.myEcharts.hideLoading()
+        this.myEcharts.setOption({
+          xAxis: {
+            data: xAxis
+          },
+          series: [
+            {
+              // 根据名字对应到相应的系列
+              name: '次数',
+              data: series
+            },
+          ]
+        })
+      })
+    },
+    getSkillsUsed_2(day, start_date, end_date) {
+      this.option.series[0].data = []
+      this.option.xAxis.data = []
+
+      let startdate = start_date + ''
+      let enddate = end_date + ''
+      let type = day + ''
+      let code = this.code + ''
+      const data = {
+        startdate,
+        enddate,
+        type,
+        code,
+      }
+      // 发送请求 技能使用次数
+      getSkillsUsed(data).then(res => {
+        if (!res) return
+        if (res.code != 1) return this.$message.error('获取数据失败')
+        console.log(res.data);
+        res.data.forEach(item => {
+          let skillnum = item.skillnum;
+          let time = item.time;
+          this.option.series[0].data.push(skillnum);
+          this.option.xAxis.data.push(time)
+        })
+
+        let series = this.option.series[0].data
+        let xAxis = this.option.xAxis.data
+        this.myEcharts.hideLoading()
+        this.myEcharts.setOption({
+          xAxis: {
+            data: xAxis
+          },
+          series: [
+            {
+              // 根据名字对应到相应的系列
+              name: '次数',
+              data: series
+            },
+          ]
+        })
+      })
+
+    },
+    // 获取 技能调用排行榜
+    getSkillsRanking_1(day = 0) {
+      this.tabData = []
+      switch (day) {
+        case 0:
+          day = 7
+          break;
+        case 1:
+          day = 14
+          break;
+        case 2:
+          day = 30
+          break;
+      }
+
+      let startdate = getDate(-day) + ''
+      let enddate = getDate(0) + ''
+      let type = day + ''
+      const data = {
+        startdate,
+        enddate,
+        type,
+      }
+      this.loading = true
+      // 发送请求 技能调用排行榜
+      getSkillsRanking(data).then(res => {
+        if (!res) return
+        if (res.code != 1) return this.$message.error('获取数据失败')
+        console.log(res);
+        res.data.forEach((item, index) => {
+          let key = index + 1
+          let title = item.title
+          let skillnum = item.skillnum
+          this.tabData.push({
+            key,
+            title,
+            skillnum
+          })
+        })
+        this.loading = false
+      })
+    },
+    getSkillsRanking_2(day, start_date, end_date) {
+      this.tabData = []
+      let startdate = start_date + ''
+      let enddate = end_date + ''
+      let type = day + ''
+      const data = {
+        startdate,
+        enddate,
+        type,
+      }
+      this.loading = true
+      // 发送请求 技能调用排行榜
+      getSkillsRanking(data).then(res => {
+        if (!res) return
+        if (res.code != 1) return this.$message.error('获取数据失败')
+        console.log(res);
+        res.data.forEach((item, index) => {
+          let key = index + 1
+          let title = item.title
+          let skillnum = item.skillnum
+          this.tabData.push({
+            key,
+            title,
+            skillnum
+          })
+        })
+        this.loading = false
+      })
+    },
+    initEcharts() {
+      this.myEcharts = this.$echarts.init(this.$refs.echarts_1)
+      let option = this.option
+
+      let myEcharts = this.myEcharts;
+      myEcharts.showLoading()
 
       // 5. 展示数据
       option && myEcharts.setOption(option)
-    }
+    },
   },
 }
 </script>
 
 <style lang="less" scoped>
 .wrapper {
+  .loading {
+    display: flex;
+    align-items: center;
+    width: 22%;
+    ::v-deep .ant-spin-nested-loading > div > .ant-spin {
+      background-color: #fff !important;
+    }
+    .spin-content {
+      padding: 30px;
+    }
+  }
+
   .card_1 {
     > div {
       .el-row {

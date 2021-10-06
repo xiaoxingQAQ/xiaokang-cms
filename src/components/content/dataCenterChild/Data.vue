@@ -161,7 +161,7 @@ export default {
         this.accumuser = res.data.accumuser
       })
     },
-    // 获取设备 最近7天 增长数据
+    // 获取设备增长数据 （默认最近7天）
     getIncrease_1(day = 0) {
       this.option_1.series[0].data = []
       this.option_1.series[1].data = []

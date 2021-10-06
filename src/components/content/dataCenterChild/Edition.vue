@@ -31,8 +31,104 @@ export default {
   },
   data() {
     return {
-      option_1: {},
-      option_2: {},
+      option_1: {
+        title: {
+          text: 'Version of the distribution',
+          subtext: 'Dynamic Data ',
+          left: 'center'
+        },
+        tooltip: {
+          trigger: 'item',
+          formatter: '{a} <br/>{b} ({d}%)'
+        },
+        legend: {
+          orient: 'vertical',
+          left: 'left',
+        },
+        series: [
+          {
+            name: '版本',
+            type: 'pie',
+            radius: '50%',
+            center: ['75%', '60%'],
+            data: [
+
+            ],
+            emphasis: {
+              itemStyle: {
+                shadowBlur: 10,
+                shadowOffsetX: 0,
+                shadowColor: 'rgba(0, 0, 0, 0.5)'
+              }
+            }
+          }
+        ]
+      },
+      option_2: {
+        title: {
+          text: 'Version number',
+          subtext: 'Dynamic Data ',
+          left: 'center'
+        },
+        tooltip: {
+          trigger: 'axis',
+          axisPointer: {
+            type: 'shadow',
+            formatter: '{a} <br/>{b}'
+          }
+        },
+        grid: {
+          x: '30%',
+          left: '3%',
+          right: '4%',
+          bottom: '3%',
+          containLabel: true
+        },
+        xAxis: {
+          mim: 0,
+          max: 'dataMax',
+        },
+        yAxis: {
+          type: 'category',
+          data: [],
+          inverse: true,
+          position: 'left',
+          offset: 12, // y轴相对于默认位置的偏移
+        },
+        series: [
+          {
+            realtimeSort: true,
+            name: '#',
+            type: 'bar',
+            data: [],
+
+            itemStyle: {
+              normal: {
+                //这里是重点
+                color(params) {
+                  let colorList = ['#5470c6', '#91cc75', '#fac858', '#ee6666', '#73c0de', '#3ba272', '#fc8452', '#9a60b4', '#ea7ccc', '#5a75c8', '#73c0de', '#91c6ae', '#ea7ccc', '#fac858'];
+                  let index;
+                  //给大于颜色数量的柱体添加循环颜色的判断
+                  if (params.dataIndex >= colorList.length) {
+                    index = params.dataIndex - colorList.length;
+                    return colorList[index];
+                  }
+                  return colorList[params.dataIndex % colorList.length];
+                }
+              }
+            },
+            label: {
+              show: true,
+              position: 'right',
+              valueAnimation: true
+            }
+          },
+        ],
+        animationDuration: 0,
+        animationDurationUpdate: 3000,
+        animationEasing: 'linear',
+        animationEasingUpdate: 'linear'
+      },
       myEcharts_1: null,
       myEcharts_2: null,
     }
@@ -129,115 +225,19 @@ export default {
       })
     },
     initEcharts_1() {
-      let myEcharts = this.$echarts.init(this.$refs.echarts_1)
-      this.myEcharts_1 = myEcharts
-      let option = {
-        title: {
-          text: 'Version of the distribution',
-          subtext: 'Dynamic Data ',
-          left: 'center'
-        },
-        tooltip: {
-          trigger: 'item',
-          formatter: '{a} <br/>{b} ({d}%)'
-        },
-        legend: {
-          orient: 'vertical',
-          left: 'left',
-        },
-        series: [
-          {
-            name: '版本',
-            type: 'pie',
-            radius: '50%',
-            center: ['75%', '60%'],
-            data: [
+      this.myEcharts_1 = this.$echarts.init(this.$refs.echarts_1)
 
-            ],
-            emphasis: {
-              itemStyle: {
-                shadowBlur: 10,
-                shadowOffsetX: 0,
-                shadowColor: 'rgba(0, 0, 0, 0.5)'
-              }
-            }
-          }
-        ]
-      };
-      this.option_1 = option
+      let option = this.option_1
+      let myEcharts = this.myEcharts_1;
       myEcharts.showLoading() // 开启加载动画
       // 5. 展示数据
       option && myEcharts.setOption(option)
     },
     initEcharts_2() {
-      let myEcharts = this.$echarts.init(this.$refs.echarts_2)
-      this.myEcharts_2 = myEcharts
-      let option = {
-        title: {
-          text: 'Version number',
-          subtext: 'Dynamic Data ',
-          left: 'center'
-        },
-        tooltip: {
-          trigger: 'axis',
-          axisPointer: {
-            type: 'shadow',
-            formatter: '{a} <br/>{b}'
-          }
-        },
-        grid: {
-          x: '30%',
-          left: '3%',
-          right: '4%',
-          bottom: '3%',
-          containLabel: true
-        },
-        xAxis: {
-          mim: 0,
-          max: 'dataMax',
-        },
-        yAxis: {
-          type: 'category',
-          data: [],
-          inverse: true,
-          position: 'left',
-          offset: 12, // y轴相对于默认位置的偏移
-        },
-        series: [
-          {
-            realtimeSort: true,
-            name: '#',
-            type: 'bar',
-            data: [],
+      this.myEcharts_2 = this.$echarts.init(this.$refs.echarts_2)
 
-            itemStyle: {
-              normal: {
-                //这里是重点
-                color(params) {
-                  let colorList = ['#5470c6', '#91cc75', '#fac858', '#ee6666', '#73c0de', '#3ba272', '#fc8452', '#9a60b4', '#ea7ccc', '#5a75c8', '#73c0de', '#91c6ae', '#ea7ccc', '#fac858'];
-                  let index;
-                  //给大于颜色数量的柱体添加循环颜色的判断
-                  if (params.dataIndex >= colorList.length) {
-                    index = params.dataIndex - colorList.length;
-                    return colorList[index];
-                  }
-                  return colorList[params.dataIndex % colorList.length];
-                }
-              }
-            },
-            label: {
-              show: true,
-              position: 'right',
-              valueAnimation: true
-            }
-          },
-        ],
-        animationDuration: 0,
-        animationDurationUpdate: 3000,
-        animationEasing: 'linear',
-        animationEasingUpdate: 'linear'
-      };
-      this.option_2 = option
+      let option = this.option_2;
+      let myEcharts = this.myEcharts_2;
       myEcharts.showLoading() // 开启加载动画
       // 展示数据
       option && myEcharts.setOption(option);

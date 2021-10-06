@@ -62,6 +62,7 @@ export default {
   },
   methods: {
     onChange() {
+      if (!this.value) return
       let start_date = this.value[0]
       let end_date = this.value[1]
       let day = this.getDaysBetween(start_date, end_date)
