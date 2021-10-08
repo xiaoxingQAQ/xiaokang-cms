@@ -21,14 +21,16 @@
           :row-selection="removeRowSelection"
         >
           <div slot="image" slot-scope="text, record">
-            <a-button @click="preview" class="btn">预览</a-button>
+            <a-button @click="imageDialogVisible = true" class="btn"
+              >预览</a-button
+            >
           </div>
         </a-table>
       </div>
     </Card>
 
     <!-- 图片预览的 弹出框 -->
-    <a-modal
+    <!-- <a-modal
       v-model="imageDialogVisible"
       :footer="null"
       @ok="imageDialogVisible = false"
@@ -36,7 +38,15 @@
       <p>Some contents...</p>
       <p>Some contents...</p>
       <p>Some contents...</p>
-    </a-modal>
+    </a-modal> -->
+    <el-dialog
+      class="addDialog"
+      title="预览"
+      center
+      :visible.sync="imageDialogVisible"
+    >
+      aihei
+    </el-dialog>
 
     <!-- 新建的Dialog -->
     <el-dialog
@@ -83,7 +93,7 @@ import Card from '@/components/content/card/Card'
 
 export default {
   components: {
-    Card,
+    Card
   },
   data() {
     return {
@@ -104,22 +114,22 @@ export default {
           key: 'image',
           scopedSlots: { customRender: 'image' },
           width: '20%'
-        },
+        }
       ],
       tabData: [
         {
           key: 1,
-          title: 'Luck',
+          title: 'Luck'
         },
         {
           key: 2,
-          title: 'Luck',
+          title: 'Luck'
         },
         {
           key: 3,
-          title: 'Luck',
-        },
-      ],
+          title: 'Luck'
+        }
+      ]
     }
   },
   computed: {
@@ -127,11 +137,14 @@ export default {
     removeRowSelection() {
       return {
         onChange: (selectedRowKeys, selectedRows) => {
-          console.log(`selectedRowKeys: ${selectedRowKeys}`, 'selectedRows: ', selectedRows);
-
-        },
-      };
-    },
+          console.log(
+            `selectedRowKeys: ${selectedRowKeys}`,
+            'selectedRows: ',
+            selectedRows
+          )
+        }
+      }
+    }
   },
   methods: {
     // 点击预览图片
@@ -139,31 +152,29 @@ export default {
       this.imagedialogVisible = true
     },
     // 表格发生变化 执行
-    tabChange() { },
+    tabChange() {},
     // 点击关闭 图片预览Dialog
-    imageHandleClose() { },
+    imageHandleClose() {},
     // 点击删除 删除选中的表格内容
-    clearContent() {
-
-    },
+    clearContent() {},
     // 图片上传之前
     beforeUpload(file) {
-      const isImage = file.type === 'image/jpeg' || '/image/png' || 'image/jp2';
-      const isLt2M = file.size / 1024 / 1024 < 2;
+      const isImage = file.type === 'image/jpeg' || '/image/png' || 'image/jp2'
+      const isLt2M = file.size / 1024 / 1024 < 2
 
       if (!isImage) {
-        this.$message.error('只能上传图片');
+        this.$message.error('只能上传图片')
       }
       if (!isLt2M) {
-        this.$message.error('上传图片大小不能超过 2MB!');
+        this.$message.error('上传图片大小不能超过 2MB!')
       }
-      return isJPG && isLt2M;
+      return isJPG && isLt2M
     },
     // 图片上传完成
     handleSuccess(res, file) {
-      this.imageUrl = URL.createObjectURL(file.raw);
-    },
-  },
+      this.imageUrl = URL.createObjectURL(file.raw)
+    }
+  }
 }
 </script>
 
