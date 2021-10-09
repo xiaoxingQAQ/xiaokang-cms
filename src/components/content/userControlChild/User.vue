@@ -1,12 +1,12 @@
 <template>
   <div class="wrapper">
-    <Card>
+    <!-- <Card>
       <span slot="leftTitle">用户选择</span>
       <div slot="main">
         <a-form-model
           layout="inline"
           :model="SearchForm"
-          @submit="search"
+          @submit="onSearch"
           @submit.native.prevent
         >
           <a-form-model-item>
@@ -34,19 +34,19 @@
           </a-form-model-item>
         </a-form-model>
       </div>
-    </Card>
+    </Card> -->
 
     <Card>
       <span slot="leftTitle">用户列表</span>
       <div slot="main">
-        <DataRow types="string"></DataRow>
+        <DataRow @onChange="getUserList" @Change="" types="string"></DataRow>
 
         <!-- 表格 -->
         <a-table
-          :loading="false"
+          :loading="loading"
           :columns="columns"
           :data-source="tabData"
-          :pagination="false"
+          :pagination="true"
         >
           <div slot="operate" slot-scope="text, record">
             <a-button @click="goDetail(record)" class="btn">查看</a-button>
@@ -61,6 +61,10 @@
 import Card from '@/components/content/card/Card'
 import DataRow from '@/components/content/dateRow/DateRow'
 
+import { getUserList, getActive } from '@/network/home';
+import { getDate } from '@/utils/getDate'
+import { mapMutations, mapState } from 'vuex'
+
 export default {
   components: {
     Card,
@@ -68,11 +72,16 @@ export default {
   },
   data() {
     return {
+      loading: false,
       // 搜索表单对象
-      SearchForm: {
-        memberID: '',
-        equipmentID: '',
-      },
+      // SearchForm: {
+      //   memberID: '',
+      //   equipmentID: '',
+      //   startdate: '',
+      //   enddate: '',
+      //   pageIndex: '1',
+      //   pageSize: '9999999',
+      // },
       columns: [
         {
           title: '用户账号',
@@ -96,8 +105,8 @@ export default {
         },
         {
           title: '激活时间',
-          dataIndex: 'date',
-          key: 'date',
+          dataIndex: 'pubDate',
+          key: 'pubDate',
           width: '20%'
         },
         {
@@ -108,38 +117,145 @@ export default {
           width: '20%'
         }
       ],
-      tabData: [
-        {
-          key: 1,
-          memberID: '14343245432',
-          equipmentID: '83848434398',
-          counts: '200',
-          date: '2019-12-08',
-        },
-        {
-          key: 2,
-          memberID: '143243243244',
-          equipmentID: '83848434398',
-          counts: '200',
-          date: '2019-12-08',
-        },
-        {
-          key: 3,
-          memberID: '324324324321',
-          equipmentID: '83848434398',
-          counts: '200',
-          date: '2019-12-08',
-        },
-      ],
+      tabData: [],
     }
   },
+  created() {
+    this.getUserList()
+  },
+  computed: {
+    ...mapState('user', ['memberID'])
+  },
   methods: {
-    // 点击查询
-    search() { },
-    // 点击查看用户 详情信息
+    ...mapMutations('user', ['User_EquipmentID']),
+    // 获取 用户列表数据
+    getUserList(index = 0) {
+      if (index == 0) {
+        this.tabData = []
+        this.getActiveRanking()
+      } else {
+        this.tabData = []
+        this.getActivate()
+      }
+    },
+    // 获取 活跃排名数据
+    getActiveRanking() {
+      let tabData_s = JSON.parse(sessionStorage.getItem('tabData_1'));
+      if (tabData_s) {
+        if (tabData_s.length != 0) {
+          this.tabData = tabData_s
+        }
+      }
+      if (this.tabData.length == 0)
+        this.loading = true
+
+      const memberID = '';
+      const equipmentID = '';
+      const startdate = getDate(-6) + ''
+      const enddate = getDate(0) + ''
+      const pageIndex = 1;
+      const pageSize = 9999999;
+      const type = '2';
+      const data = {
+        equipmentID,
+        memberID,
+        pageIndex,
+        pageSize,
+        startdate,
+        enddate,
+        type
+      }
+      // 发送请求 获取活跃排名数据
+      getUserList(data).then(({ data, code }) => {
+        if (code != 1) {
+          this.loading = false
+          return this.$message.error('获取数据失败')
+        }
+        data.forEach((item, index) => {
+          const key = index;
+          const memberID = item.memberID;
+          const equipmentID = item.equipmentID;
+          const counts = item.counts;
+          const pubDate = item.pubDate;
+          this.tabData.push({
+            key,
+            memberID,
+            equipmentID,
+            counts,
+            pubDate
+          })
+        });
+        // 去重
+        this.tabData = _.uniqBy(this.tabData, 'memberID')
+        this.loading = false
+        // 写入本地存储
+        sessionStorage.setItem('tabData_1', JSON.stringify(this.tabData))
+      })
+    },
+    // 获取 最新激活数据
+    getActivate() {
+      let tabData_s = JSON.parse(sessionStorage.getItem('tabData_2'));
+      if (tabData_s) {
+        if (tabData_s.length != 0) {
+          this.tabData = tabData_s
+        }
+      }
+      if (this.tabData.length == 0) this.loading = true
+
+      const memberID = this.memberID;
+      const equipmentID = '';
+      const startdate = getDate(-7) + ''
+      const enddate = getDate(0) + ''
+      const pageIndex = 1;
+      const pageSize = 10;
+      const type = '1';
+      const data = {
+        equipmentID,
+        memberID,
+        pageIndex,
+        pageSize,
+        startdate,
+        enddate,
+        type
+      }
+
+      // 发送请求 获取用户列表数据
+      getUserList(data).then(({ data, code }) => {
+        if (code != 1) {
+          this.loading = false
+          return this.$message.error('获取数据失败')
+        }
+        data.forEach((item, index) => {
+          const key = index;
+          const memberID = item.memberID;
+          const equipmentID = item.equipmentID;
+          const counts = item.counts;
+          const pubDate = item.pubDate;
+          this.tabData.push({
+            key,
+            memberID,
+            equipmentID,
+            counts,
+            pubDate
+          })
+        });
+        // 去重
+        this.tabData = _.uniqBy(this.tabData, 'memberID')
+        this.loading = false
+        // 写入本地存储
+        sessionStorage.setItem('tabData_2', JSON.stringify(this.tabData))
+      })
+    },
+    // 点击查看 用户 详情信息
     goDetail(record) {
+      const equipmentID = record.equipmentID
+      this.User_EquipmentID(equipmentID)
+      sessionStorage.setItem('equipmentID', JSON.stringify(equipmentID))
       this.$emit('onChange')
     },
+    // 点击查询
+    // onSearch() {
+    // },
   },
 }
 </script>

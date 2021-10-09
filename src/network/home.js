@@ -232,7 +232,7 @@ export function getRanking(data) {
 /* --------技能中心页-------- */
 
 
-// 技能使用次数
+// 技能使用次数  "code": "6000001"
 export function getSkillsUsed(data) {
   return request({
     method: 'post',
@@ -250,7 +250,7 @@ export function getSkillsRanking(data) {
   })
 }
 
-// 问答技能使用次数
+// 问答技能使用次数 "code": "308000"
 export function getAnswerSkillsUsed(data) {
   return request({
     method: 'post',
@@ -264,6 +264,84 @@ export function getHotAnswerRanking(data) {
   return request({
     method: 'post',
     url: '/service/backequipment/answeranking',
+    data
+  })
+}
+
+/* --------产品运营页-------- */
+
+// 系统提醒添加
+export function addNews(data) {
+  return request({
+    method: 'post',
+    url: '/service/remindrule/systemremindsave',
+    data
+  })
+}
+
+// 用户列表  type: '1' 最新激活、 type: '2' 活跃排名 
+export function getUserList(data) {
+  return request({
+    method: 'post',
+    url: '/service/backequipment/userManagement',
+    data
+  })
+}
+
+// 用户信息
+export function getUserDetail(data) {
+  return request({
+    method: 'post',
+    url: '/service/backequipment/userInfo',
+    data
+  })
+}
+
+// 用户体征数据
+export function getBodyData(data) {
+  return request({
+    method: 'post',
+    url: '/service/backequipment/bodyData',
+    data
+  })
+}
+// 用户近期用药
+export function getRecentDrug(data) {
+  return request({
+    method: 'post',
+    url: '/service/backequipment/recentDrug',
+    data
+  })
+}
+// 用户常用技能
+export function getCommonSkill(data) {
+  return request({
+    method: 'post',
+    url: '/service/backequipment/commonlySkills',
+    data
+  })
+}
+// 用户标签列表
+export function getLabeList(data) {
+  return request({
+    method: 'post',
+    url: '/service/backequipment/labeList',
+    data
+  })
+}
+// 用户标签新增
+export function addLabeList(data) {
+  return request({
+    method: 'post',
+    url: '/service/backequipment/saveLabe',
+    data
+  })
+}
+// 用户标签删除
+export function deleteLabeList(data) {
+  return request({
+    method: 'post',
+    url: '/service/backequipment/deleteLabe',
     data
   })
 }

@@ -10,28 +10,28 @@
     <Card class="card">
       <span slot="leftTitle">用户信息</span>
       <main slot="main">
-        <el-form :model="{}">
+        <el-form v-model="userForm">
           <div class="left">
-            <el-form-item label="用户账号：">
-              <el-input disabled v-model="userForm"></el-input>
+            <el-form-item label="用户名称：">
+              <el-input disabled v-model="userForm.username"></el-input>
             </el-form-item>
             <el-form-item label="激活日期：">
-              <el-input disabled v-model="userForm"></el-input>
+              <el-input disabled v-model="userForm.pubDate"></el-input>
             </el-form-item>
             <el-form-item label="系统版本：">
-              <el-input disabled v-model="userForm"></el-input>
+              <el-input disabled v-model="userForm.hardVersion"></el-input>
             </el-form-item>
           </div>
 
           <div class="right">
             <el-form-item label="联系方式：">
-              <el-input disabled v-model="userForm"></el-input>
+              <el-input disabled v-model="userForm.phone"></el-input>
             </el-form-item>
             <el-form-item label="设备编码：">
-              <el-input disabled v-model="userForm"></el-input>
+              <el-input disabled v-model="userForm.mask"></el-input>
             </el-form-item>
             <el-form-item label="所属地区：">
-              <el-input disabled v-model="userForm"></el-input>
+              <el-input disabled v-model="userForm.cityIName"></el-input>
             </el-form-item>
           </div>
         </el-form>
@@ -115,6 +115,17 @@ import Table_2 from '@/components/content/userControlChild/table/Table_2'
 import Table_3 from '@/components/content/userControlChild/table/Table_3'
 import Table_4 from '@/components/content/userControlChild/table/Table_4'
 
+import {
+  getUserDetail,
+  getBodyData,
+  getRecentDrug,
+  getCommonSkill,
+  getLabeList,
+  addLabeList,
+  deleteLabeList
+} from '@/network/home'
+import { mapState } from 'vuex'
+
 export default {
   components: {
     Card,
@@ -133,11 +144,51 @@ export default {
       currentIndex_2: 0,
       currentIndex: 0,
       dateArr: ['体征数据', '近期用药', '常用技能', '标签管理'],
-      userForm: '11', // 用户表单对象
+      userForm: {
+        username: '1111',
+      }, // 用户表单对象
       isShow: true,
     }
   },
+  created() {
+    this.getUserDetail()
+  },
+  computed: {
+    ...mapState('user', ['memberID', 'equipmentID'])
+  },
   methods: {
+    // 获取 用户信息数据
+    getUserDetail() {
+      const memberID = this.memberID;
+      const equipmentID = this.equipmentID;
+      const data = {
+        memberID,
+        equipmentID
+      }
+
+      getUserDetail(data).then(({ data, code }) => {
+        if (code != 1) return this.$message.error('获取数据失败')
+        let username = data.username;
+        let pubDate = data.pubDate;
+        let hardVersion = data.hardVersion;
+        let phone = data.phone;
+        let mask = data.mask;
+        let cityIName = data.cityIName
+        this.userForm = {
+          username,
+          pubDate,
+          hardVersion,
+          phone,
+          mask,
+          cityIName
+        }
+        console.log(this.userForm);
+      })
+    },
+    // 获取 用户体征数据
+    getBodyData() {
+      
+    },
     // 返回上一级
     goBack() {
       this.isShow = false
@@ -157,7 +208,7 @@ export default {
     // 新增标签Dialog 点击 确定
     submit() {
       if (!this.message) return this.$message.info('问题不能为空')
-      
+
     },
     // 点击取消按钮 关闭对话框
     closeAddDialog() {

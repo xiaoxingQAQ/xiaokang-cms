@@ -4,7 +4,7 @@
       <span slot="leftTitle">技能使用次数</span>
       <div slot="main">
         <!-- 选择技能 select 框 -->
-        <el-row v-if="options.length != 0">
+        <!-- <el-row v-if="options.length != 0">
           <span>选择技能：</span>
           <el-select v-model="value" @change="onChange" placeholder="请选择">
             <el-option
@@ -15,14 +15,14 @@
             >
             </el-option>
           </el-select>
-        </el-row>
+        </el-row> -->
         <!-- loading -->
-        <el-row class="loading" v-else>
+        <!-- <el-row class="loading" v-else>
           <span>选择技能：</span>
           <a-spin tip="Loading...">
             <div class="spin-content"></div>
           </a-spin>
-        </el-row>
+        </el-row> -->
         <!-- 选择时间 -->
         <DateRow
           @onChange="getSkillsUsed_1"
@@ -73,8 +73,8 @@ export default {
 
       loading: false,
       value: '',
-      code: '',
-      options: [],
+      code: '6000001',
+      // options: [],
       option: {
         title: {
           text: ''
@@ -135,7 +135,8 @@ export default {
     }
   },
   created() {
-    this.getSkillList()
+    // this.getSkillList()
+    this.getSkillsUsed_1()
     this.getSkillsRanking_1()
   },
   mounted() {
@@ -145,37 +146,33 @@ export default {
     ...mapState('user', ['memberID'])
   },
   methods: {
-    onChange() {
-      console.log(this.value);
-      this.getSkillsUsed_1()
-    },
+    // onChange() {
+    //   this.getSkillsUsed_1()
+    // },
     // 获取技能列表
-    getSkillList() {
-      const memberID = this.memberID
-      const data = {
-        memberID
-      }
-      // 发送请求 请求
-      getSkillList(data).then(res => {
-        if (!res) return
-        if (res.code != 1) return this.$message.error('获取数据失败')
+    // getSkillList() {
+    //   const memberID = this.memberID
+    //   const data = {
+    //     memberID
+    //   }
+    //   // 发送请求 请求
+    //   getSkillList(data).then(res => {
+    //     if (!res) return
+    //     if (res.code != 1) return this.$message.error('获取数据失败')
 
-        console.log(res.data);
-        res.data.forEach(item => {
-          let label = item.title
-          let value = item.id
-          let code = item.skillCode
-          this.options.push({
-            value,
-            label,
-            code
-          })
-        })
-        this.code = this.options[0].code
-        this.value = this.options[0].value
-        this.getSkillsUsed_1()
-      })
-    },
+    //     console.log(res.data);
+    //     res.data.forEach(item => {
+    //       let label = item.title
+    //       let value = item.id
+    //       this.options.push({
+    //         value,
+    //         label,
+    //       })
+    //     })
+    //     this.value = this.options[0].value
+    //     this.getSkillsUsed_1()
+    //   })
+    // },
     // 获取 技能使用次数
     getSkillsUsed_1(day = 0) {
       this.option.series[0].data = []
@@ -195,7 +192,7 @@ export default {
       let startdate = getDate(-day) + ''
       let enddate = getDate(0) + ''
       let type = day + ''
-      let code = this.code + ''
+      let code = this.code
       const data = {
         startdate,
         enddate,
@@ -206,7 +203,7 @@ export default {
       getSkillsUsed(data).then(res => {
         if (!res) return
         if (res.code != 1) return this.$message.error('获取数据失败')
-
+        console.log('技能使用次数',res);
         res.data.forEach(item => {
           let skillnum = item.skillnum;
           let time = item.time;
@@ -238,7 +235,7 @@ export default {
       let startdate = start_date + ''
       let enddate = end_date + ''
       let type = day + ''
-      let code = this.code + ''
+      let code = this.code
       const data = {
         startdate,
         enddate,
