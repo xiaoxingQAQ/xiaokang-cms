@@ -305,6 +305,7 @@ export function getBodyData(data) {
     data
   })
 }
+
 // 用户近期用药
 export function getRecentDrug(data) {
   return request({
@@ -313,6 +314,7 @@ export function getRecentDrug(data) {
     data
   })
 }
+
 // 用户常用技能
 export function getCommonSkill(data) {
   return request({
@@ -321,6 +323,7 @@ export function getCommonSkill(data) {
     data
   })
 }
+
 // 用户标签列表
 export function getLabeList(data) {
   return request({
@@ -329,6 +332,7 @@ export function getLabeList(data) {
     data
   })
 }
+
 // 用户标签新增
 export function addLabeList(data) {
   return request({
@@ -337,6 +341,7 @@ export function addLabeList(data) {
     data
   })
 }
+
 // 用户标签删除
 export function deleteLabeList(data) {
   return request({
@@ -346,3 +351,29 @@ export function deleteLabeList(data) {
   })
 }
 
+// 运营位列表
+export function getOperation(data) {
+  return request({
+    method: 'post',
+    url: '/service/information/list',
+    data
+  })
+}
+
+// 新增运营位
+export function addOperation(data) {
+  return request({
+    method: 'post',
+    url: '/service/information/save',
+    data
+  })
+}
+
+// 运营位删除
+export function deleteOperation(data) {
+  return request({
+    method: 'post',
+    url: '/service/information/delete',
+    data
+  })
+}

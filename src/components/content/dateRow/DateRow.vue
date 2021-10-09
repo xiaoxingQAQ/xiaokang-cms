@@ -66,27 +66,53 @@ export default {
     }
   },
   created() {
-    this.setDate()
+    this.setDate_1()
+  },
+  mounted() {
+    this.$bus.$on('changeType', () => {
+      this.currentIndex = 0
+    })
   },
   methods: {
-    setDate() {
+    setDate_1() {
       let start_date = getDate(-6)
+      let end_date = getDate(0)
+      this.value = [start_date, end_date]
+    },
+    setDate_2() {
+      let start_date = getDate(-13)
+      let end_date = getDate(0)
+      this.value = [start_date, end_date]
+    },
+    setDate_3() {
+      let start_date = getDate(-29)
       let end_date = getDate(0)
       this.value = [start_date, end_date]
     },
     // 自定义日期改变 触发
     onChange() {
-      console.log('this.value: ', this.value);
+      this.currentIndex = -1 
       if (!this.value) return
       let start_date = this.value[0]
       let end_date = this.value[1]
-      let day = this.getDaysBetween(start_date, end_date)
+      let day = this.getDaysBetween(start_date, end_date) + 1
       this.$emit('Change', day, start_date, end_date)
     },
     // 点击改变 日期
     changeDate(index) {
       this.currentIndex = index
       this.$emit('onChange', index)
+      switch (index) {
+        case 0:
+          this.setDate_1()
+          break;
+        case 1:
+          this.setDate_2()
+          break;
+        case 2:
+          this.setDate_3()
+          break;
+      }
     },
     changeStatus(index) {
       this.currentIndex_1 = index

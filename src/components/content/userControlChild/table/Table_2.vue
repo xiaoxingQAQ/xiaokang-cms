@@ -2,7 +2,7 @@
   <div class="wrapper">
     <a-table
       :columns="columns"
-      :data-source="tabData"
+      :data-source="Table_2"
       :loading="loading"
       :pagination="false"
     >
@@ -12,6 +12,14 @@
 
 <script>
 export default {
+   props: {
+    Table_2: {
+      type: Array,
+      default() {
+        return []
+      }
+    }
+  },
   data() {
     return {
       loading: false,
@@ -23,33 +31,13 @@ export default {
         },
         {
           title: '用量',
-          dataIndex: 'dosage',
-          key: 'dosage',
+          dataIndex: 'piecesOneTime',
+          key: 'piecesOneTime',
         },
         {
           title: '服用时间',
-          dataIndex: 'date',
-          key: 'date',
-        },
-      ],
-      tabData: [
-        {
-          key: 1,
-          name: '1',
-          dosage: '好好',
-          date: '2019-12-08',
-        },
-        {
-          key: 2,
-          name: '2',
-          dosage: '都是',
-          date: '2019-12-08',
-        },
-        {
-          key: 3,
-          name: '3',
-          dosage: '好好',
-          date: '2019-12-08',
+          dataIndex: 'planTime',
+          key: 'planTime',
         },
       ],
     }

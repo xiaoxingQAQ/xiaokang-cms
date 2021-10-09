@@ -37,15 +37,15 @@ const routes = [
     redirect: '/main',
     children: [
       { path: '/main', name: HomeMain, component: HomeMain },
-      
-      { path: '/allocation', name: Allocation, component: Allocation,},
+
+      { path: '/allocation', name: Allocation, component: Allocation, },
       { path: '/skill', name: Skill, component: Skill },
       { path: '/repository', name: Repository, component: Repository },
       { path: '/edition', name: Edition, component: Edition },
 
       { path: '/dataCenter', name: DataCenter, component: DataCenter },
       { path: '/skillCenter', name: SkillCenter, component: SkillCenter },
-      
+
 
       { path: '/operation', name: Operation, component: Operation },
       { path: '/userControl', name: UserControl, component: UserControl },
@@ -57,7 +57,7 @@ const routes = [
       { path: '/dict', name: Dict, component: Dict },
       { path: '/resource', name: Resource, component: Resource },
       { path: '/data', name: Data, component: Data },
-      
+
     ]
   },
 
@@ -78,6 +78,14 @@ router.beforeEach((to, from, next) => {
   const tokenStr = JSON.parse(sessionStorage.getItem('token'));
   // 如果没有token,就强制跳转到 登录页面
   if (!tokenStr) return next('/login')
+  next()
+
+  // 获取缓存的 请求取消标识 数组，取消所有关联的请求
+  let cancelArr = window.axiosCancel;
+  cancelArr.forEach((ele, index) => {
+    ele.cancel("取消了请求")  // 在失败函数中返回这里自定义的错误信息
+    delete window.axiosCancel[index]
+  })
   next()
 })
 

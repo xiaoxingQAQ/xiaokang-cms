@@ -44,6 +44,7 @@
         :key="index"
         @click="changeTable(index, item)"
         class="changeBtn"
+        :disabled="currentIndex == index"
         :class="{ active: currentIndex == index }"
         >{{ item }}</a-button
       >
@@ -60,6 +61,7 @@
           :key="index"
           @click="changeData(index)"
           class="changeBtn"
+          :disabled="currentIndex_2 == index"
           :class="{ active: currentIndex_2 == index }"
           >{{ item }}</a-button
         >
@@ -69,17 +71,36 @@
         <el-button type="primary" @click="AddDialogVisible = true"
           >新增标签</el-button
         >
-        <el-button type="danger" @click="clearContent">删除标签</el-button>
+        <el-button type="danger" @click="clearContent" :loading="loading_2"
+          >删除标签</el-button
+        >
       </div>
 
       <div slot="main">
         <!-- 自定义时间 -->
-        <DateRow v-show="currentIndex !== 3" class="selectDate" />
+        <DateRow
+          @onChange="getBodyData_1"
+          @Change="getBodyData_2"
+          v-if="currentIndex === 0"
+          class="selectDate"
+        />
+        <DateRow
+          @onChange="getRecentDrug_1"
+          @Change="getRecentDrug_2"
+          v-else-if="currentIndex === 1"
+          class="selectDate"
+        />
+        <DateRow
+          @onChange="getCommonSkill_1"
+          @Change="getCommonSkill_2"
+          v-else-if="currentIndex === 2"
+          class="selectDate"
+        />
         <!-- 数据表格 -->
-        <Table_1 v-show="currentIndex == 0" />
-        <Table_2 v-show="currentIndex == 1" />
-        <Table_3 v-show="currentIndex == 2" />
-        <Table_4 v-show="currentIndex == 3" />
+        <Table_1 ref="Table_1" :Table_1="Table_1" v-show="currentIndex == 0" />
+        <Table_2 ref="Table_2" :Table_2="Table_2" v-show="currentIndex == 1" />
+        <Table_3 ref="Table_3" :Table_3="Table_3" v-show="currentIndex == 2" />
+        <Table_4 ref="Table_4" :Table_4="Table_4" v-show="currentIndex == 3" />
       </div>
     </Card>
     <!-- 新建的Dialog -->
@@ -90,7 +111,7 @@
       :visible.sync="AddDialogVisible"
     >
       <main>
-        <span>问题：</span>
+        <span class="problem">问题：</span>
         <el-input
           v-model="message"
           placeholder="请输入问题"
@@ -101,7 +122,9 @@
       </main>
       <div slot="footer" class="dialog-footer">
         <el-button @click="closeAddDialog">取 消</el-button>
-        <el-button type="primary" @click="submit">确 定</el-button>
+        <el-button type="primary" :loading="loading_1" @click="submit"
+          >确 定</el-button
+        >
       </div>
     </el-dialog>
   </div>
@@ -124,6 +147,7 @@ import {
   addLabeList,
   deleteLabeList
 } from '@/network/home'
+import { getDate } from '@/utils/getDate'
 import { mapState } from 'vuex'
 
 export default {
@@ -137,6 +161,12 @@ export default {
   },
   data() {
     return {
+      loading_1: false,
+      loading_2: false,
+      Table_1: [],
+      Table_2: [],
+      Table_3: [],
+      Table_4: [],
       message: '', // 问题的 input值
       AddDialogVisible: false,
       title: '体征数据',
@@ -144,23 +174,24 @@ export default {
       currentIndex_2: 0,
       currentIndex: 0,
       dateArr: ['体征数据', '近期用药', '常用技能', '标签管理'],
-      userForm: {
-        username: '1111',
-      }, // 用户表单对象
+      userForm: {}, // 用户表单对象
       isShow: true,
     }
   },
   created() {
     this.getUserDetail()
   },
+  mounted() {
+    this.getBodyData_1()
+  },
   computed: {
-    ...mapState('user', ['memberID', 'equipmentID'])
+    ...mapState('user', ['equipmentID_user', 'memberID_user'])
   },
   methods: {
     // 获取 用户信息数据
     getUserDetail() {
-      const memberID = this.memberID;
-      const equipmentID = this.equipmentID;
+      const memberID = this.memberID_user;
+      const equipmentID = this.equipmentID_user;
       const data = {
         memberID,
         equipmentID
@@ -182,12 +213,298 @@ export default {
           mask,
           cityIName
         }
-        console.log(this.userForm);
       })
     },
     // 获取 用户体征数据
-    getBodyData() {
-      
+    getBodyData_1(types = 0) {
+      this.Table_1 = []
+      this.$refs.Table_1.$data.loading = true
+      const memberID = this.memberID_user;
+      switch (types) {
+        case 0:
+          types = 7
+          break;
+        case 1:
+          types = 14
+          break;
+        case 2:
+          types = 30
+          break;
+      }
+      const startdate = getDate(-(types - 1)) + ''
+      const day = types
+      const index = this.currentIndex_2
+      let type;
+      switch (index) {
+        case 0:
+          type = 'pressure'
+          break;
+        case 1:
+          type = 'sugar'
+          break;
+      }
+      const data = {
+        memberID,
+        startdate,
+        type,
+        day
+      }
+      // 发送请求 获取 用户体征数据
+      getBodyData(data).then(({ data, code }) => {
+        if (code != 1) {
+          this.$refs.Table_1.$data.loading = false
+          return this.$message.warning('该用户暂无体征数据')
+        }
+        // 如果有
+        data.forEach(item => {
+
+        });
+
+        this.$refs.Table_1.$data.loading = false
+      })
+    },
+    getBodyData_2(types, start_date) {
+      this.Table_1 = []
+      this.$refs.Table_1.$data.loading = true
+      const memberID = this.memberID_user;
+      const startdate = start_date
+
+      const day = types
+      const index = this.currentIndex_2
+      let type = null;
+      switch (index) {
+        case 0:
+          type = 'pressure'
+          break;
+        case 1:
+          type = 'sugar'
+          break;
+      }
+      const data = {
+        memberID,
+        startdate,
+        type,
+        day
+      }
+      // 发送请求 获取 用户体征数据
+      getBodyData(data).then(({ data, code }) => {
+        if (code != 1) {
+          this.$refs.Table_1.$data.loading = false
+          return this.$message.warning('该用户暂无体征数据')
+        }
+        // 如果有
+        data.forEach(item => {
+
+        });
+
+        this.$refs.Table_1.$data.loading = false
+      })
+    },
+    // 获取 用户用药数据
+    getRecentDrug_1(type = 0) {
+      this.Table_2 = []
+      this.$refs.Table_2.$data.loading = true
+      const memberID = this.memberID_user;
+      const pageIndex = 1;
+      const pageSize = 9999999;
+      switch (type) {
+        case 0:
+          type = 7
+          break;
+        case 1:
+          type = 14
+          break;
+        case 2:
+          type = 30
+          break;
+      }
+      const startdate = getDate(-(type - 1)) + ''
+      let day = type
+
+      const data = {
+        memberID,
+        startdate,
+        day,
+        pageIndex,
+        pageSize
+      }
+      // 发送请求 获取用户用药数据
+      getRecentDrug(data).then(({ data, code }) => {
+        if (code != 1) {
+          this.$refs.Table_2.$data.loading = false
+          return this.$message.warning('该用户暂无用药数据')
+        }
+        // 如果有
+        data.forEach((item, index) => {
+          const key = index;
+          const name = item.name;
+          const piecesOneTime = item.piecesOneTime;
+          const planTime = item.planTime;
+          this.Table_2.push({
+            key,
+            name,
+            piecesOneTime,
+            planTime
+          })
+        });
+      })
+    },
+    getRecentDrug_2(type, start_date) {
+      this.Table_2 = []
+      this.$refs.Table_2.$data.loading = true
+      const memberID = this.memberID_user;
+      const pageIndex = 1;
+      const pageSize = 9999999;
+      let startdate = start_date
+      let day = type
+
+      const data = {
+        memberID,
+        startdate,
+        day,
+        pageIndex,
+        pageSize
+      }
+      // 发送请求 获取用户用药数据
+      getRecentDrug(data).then(({ data, code }) => {
+        if (code != 1) {
+          this.$refs.Table_2.$data.loading = false
+          return this.$message.warning('该用户暂无用药数据')
+        }
+        // 如果有
+        data.forEach((item, index) => {
+          const key = index;
+          const name = item.name;
+          const piecesOneTime = item.piecesOneTime;
+          const planTime = item.planTime;
+          this.Table_2.push({
+            key,
+            name,
+            piecesOneTime,
+            planTime
+          })
+        });
+      })
+    },
+    // 获取 用户常用技能
+    getCommonSkill_1(type = 0) {
+      this.Table_3 = []
+      this.$refs.Table_3.$data.loading = true
+      const memberID = this.memberID_user;
+      const pageIndex = 1;
+      const pageSize = 10;
+      switch (type) {
+        case 0:
+          type = 7
+          break;
+        case 1:
+          type = 14
+          break;
+        case 2:
+          type = 30
+          break;
+      }
+      let startdate = getDate(-(type - 1)) + ''
+      let day = type
+
+      const data = {
+        memberID,
+        startdate,
+        day,
+        pageIndex,
+        pageSize
+      }
+      // 发送请求 获取 用户常用技能
+      getCommonSkill(data).then(({ data, code }) => {
+        if (code != 1) {
+          this.$refs.Table_3.$data.loading = false
+          return this.$message.warning('该用户暂无技能数据')
+        }
+        // 如果有
+        data.forEach((item, index) => {
+          const key = index;
+          const title = item.title;
+          const counts = item.counts;
+          const time = item.time;
+          this.Table_2.push({
+            key,
+            title,
+            counts,
+            time
+          })
+        });
+        this.$refs.Table_3.$data.loading = false
+      })
+    },
+    getCommonSkill_2(type, start_date) {
+      this.Table_3 = []
+      this.$refs.Table_3.$data.loading = true
+      const memberID = this.memberID_user;
+      const pageIndex = 1;
+      const pageSize = 9999999;
+      let startdate = start_date
+      let day = type
+
+      const data = {
+        memberID,
+        startdate,
+        day,
+        pageIndex,
+        pageSize
+      }
+      // 发送请求 获取 用户常用技能
+      getCommonSkill(data).then(({ data, code }) => {
+        if (code != 1) {
+          this.$refs.Table_3.$data.loading = false
+          return this.$message.warning('该用户暂无技能数据')
+        }
+        // 如果有
+        data.forEach((item, index) => {
+          const key = index;
+          const title = item.title;
+          const counts = item.counts;
+          const time = item.time;
+          this.Table_2.push({
+            key,
+            title,
+            counts,
+            time
+          })
+        });
+        this.$refs.Table_3.$data.loading = false
+      })
+    },
+    // 获取 用户标签列表
+    getLabeList() {
+      this.Table_4 = []
+      this.$refs.Table_4.$data.loading = true
+      const memberID = this.memberID_user
+      const pageIndex = 1;
+      const pageSize = 10
+      const data = {
+        memberID,
+      }
+      // 发送请求 获取 用户标签列表
+      getLabeList(data).then(({ data, code }) => {
+        console.log(data);
+        if (code != 1) {
+          this.$refs.Table_4.$data.loading = false
+          return this.$message.warning('暂无标签数据')
+        }
+        data.forEach((item, index) => {
+          const key = index;
+          const id = item.id
+          const pubDepartmentName = item.pubDepartmentName;
+          const times = item.times;
+          this.Table_4.push({
+            key,
+            id,
+            pubDepartmentName,
+            times
+          })
+        })
+        this.$refs.Table_4.$data.loading = false
+      })
     },
     // 返回上一级
     goBack() {
@@ -196,19 +513,85 @@ export default {
     },
     // 点击展示不同的表格
     changeTable(index, title) {
+      this.$bus.$emit('changeType')
       this.currentIndex = index
       this.title = title
+      switch (index) {
+        case 0:
+          this.getBodyData_1()
+          break;
+        case 1:
+          this.getRecentDrug_1()
+          break;
+        case 2:
+          this.getCommonSkill_1()
+          break;
+        case 3:
+          this.getLabeList()
+          break;
+      }
     },
-    // 点击切换 血压 or 血糖
+    // 用户体征数据 点击切换 血压 or 血糖
     changeData(index) {
       this.currentIndex_2 = index
+      this.$bus.$emit('changeType')
+      this.getBodyData_1()
     },
     // 点击删除 删除选中的表格内容
-    clearContent() { },
+    clearContent() {
+      this.loading_2 = true
+      if (this.$refs.Table_4.$data.selectedRows.length == 0) {
+        this.loading_2 = false
+        return this.$message.info('请选择您要删除的标签')
+      }
+
+      const arr = [];
+      this.$refs.Table_4.$data.selectedRows.forEach(item => {
+        arr.push(item.id)
+      })
+      const id = arr.join(',')
+      console.log(id);
+      const data = {
+        id
+      }
+      // 发送请求 删除对应的 知识库
+      deleteLabeList(data).then(res => {
+        if (!res) return
+        if (res.code != 1) return this.$message.error('删除失败')
+
+
+        // 提示
+        this.$message.success('删除成功')
+        this.$refs.Table_4.$data.selectedRows.forEach(item => {
+          this.Table_4.forEach((ele, index) => {
+            if (item.id == ele.id) {
+              this.Table_4.splice(index, 1)
+            }
+          })
+        })
+
+        this.loading_2 = false
+      })
+    },
     // 新增标签Dialog 点击 确定
     submit() {
       if (!this.message) return this.$message.info('问题不能为空')
-
+      this.loading_1 = true
+      // 发送请求 保存
+      const memberID = this.memberID_user;
+      const name = this.message;
+      const data = {
+        memberID,
+        name
+      }
+      addLabeList(data).then(({ data, code }) => {
+        if (code != 1) {
+          this.loading_1 = false
+          return this.$message.error('添加失败')
+        }
+        this.$message.success('添加成功')
+        this.closeAddDialog()
+      })
     },
     // 点击取消按钮 关闭对话框
     closeAddDialog() {
@@ -282,6 +665,7 @@ export default {
       padding-left: 24px;
       display: flex;
       span {
+        margin-top: 5px;
         width: 50px;
       }
     }
