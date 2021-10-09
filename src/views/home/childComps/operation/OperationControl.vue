@@ -13,7 +13,7 @@
 
       <div slot="main">
         <a-table
-          :loading="false"
+          :loading="loading"
           :columns="columns"
           :data-source="tabData"
           @change="tabChange"
@@ -21,7 +21,12 @@
           :row-selection="removeRowSelection"
         >
           <div slot="image" slot-scope="text, record">
-            <a-button @click="imageDialogVisible = true" class="btn"
+            <a-button
+              @click="
+                imageDialogVisible = true
+                showPictureFn(record)
+              "
+              class="btn"
               >预览</a-button
             >
           </div>
@@ -30,22 +35,14 @@
     </Card>
 
     <!-- 图片预览的 弹出框 -->
-    <!-- <a-modal
-      v-model="imageDialogVisible"
-      :footer="null"
-      @ok="imageDialogVisible = false"
-    >
-      <p>Some contents...</p>
-      <p>Some contents...</p>
-      <p>Some contents...</p>
-    </a-modal> -->
     <el-dialog
       class="addDialog"
       title="预览"
       center
       :visible.sync="imageDialogVisible"
     >
-      aihei
+      <!-- <img :src="pubPicture" alt="" class="image" /> -->
+      <img width="100%" :src="pubPicture" alt="" />
     </el-dialog>
 
     <!-- 新建的Dialog -->
@@ -58,15 +55,50 @@
       <header>
         <span>上传图片：</span>
         <el-upload
-          class="avatar-uploader"
-          action="https://jsonplaceholder.typicode.com/posts/"
-          :show-file-list="false"
-          :on-success="handleSuccess"
-          :before-upload="beforeUpload"
+          action="#"
+          list-type="picture-card"
+          :auto-upload="false"
+          :limit="1"
+          :on-exceed="handleExceed"
         >
-          <img v-if="imageUrl" :src="imageUrl" class="avatar" />
-          <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+          <i slot="default" class="el-icon-plus"></i>
+          <div
+            slot="file"
+            slot-scope="{ file }"
+            :on-success="dialogImageUrlAdd(file)"
+          >
+            <img
+              class="el-upload-list__item-thumbnail"
+              :src="file.url"
+              alt=""
+            />
+            <span class="el-upload-list__item-actions">
+              <span
+                class="el-upload-list__item-preview"
+                @click="handlePictureCardPreview(file)"
+              >
+                <i class="el-icon-zoom-in"></i>
+              </span>
+              <span
+                v-if="!disabled"
+                class="el-upload-list__item-delete"
+                @click="handleDownload(file)"
+              >
+                <i class="el-icon-download"></i>
+              </span>
+              <span
+                v-if="!disabled"
+                class="el-upload-list__item-delete"
+                @click="handleRemove(file)"
+              >
+                <i class="el-icon-delete"></i>
+              </span>
+            </span>
+          </div>
         </el-upload>
+        <el-dialog :visible.sync="dialogVisible">
+          <img width="100%" :src="dialogImageUrl" alt="" />
+        </el-dialog>
       </header>
       <main>
         <span>名称：</span>
@@ -80,7 +112,12 @@
       </main>
       <div slot="footer" class="dialog-footer">
         <el-button @click="AddDialogVisible = false">取 消</el-button>
-        <el-button type="primary" @click="AddDialogVisible = false"
+        <el-button
+          type="primary"
+          @click="
+            AddDialogVisible = false
+            submitPicture()
+          "
           >确 定</el-button
         >
       </div>
@@ -90,6 +127,7 @@
 
 <script>
 import Card from '@/components/content/card/Card'
+import { getOperation, addOperation } from '@/network/home'
 
 export default {
   components: {
@@ -97,10 +135,18 @@ export default {
   },
   data() {
     return {
+      loading: false,
       imageUrl: '', // 图片的url
       message: '', // 名称的input值
       AddDialogVisible: false,
       imageDialogVisible: false, // 预览图片的 Dialog
+      pubPicture: '',
+
+      dialogImageUrl: '',
+      dialogVisible: false,
+      disabled: false,
+      handlePicturePreviewed: true, // 如果新增了一张图片，则隐藏
+
       columns: [
         {
           title: '名称',
@@ -116,21 +162,11 @@ export default {
           width: '20%'
         }
       ],
-      tabData: [
-        {
-          key: 1,
-          title: 'Luck'
-        },
-        {
-          key: 2,
-          title: 'Luck'
-        },
-        {
-          key: 3,
-          title: 'Luck'
-        }
-      ]
+      tabData: []
     }
+  },
+  created() {
+    this.getDataFn()
   },
   computed: {
     // 选中的 tr
@@ -146,7 +182,66 @@ export default {
       }
     }
   },
+  watch: {
+    disabled(val, oldVal) {
+      console.log('我触发了', val, oldVal)
+    }
+  },
   methods: {
+    getDataFn() {
+      this.tabData = ''
+      // 获取列表数据
+      this.loading = true
+      getOperation().then(res => {
+        // console.log('res', res.data[0].attachmentNames)
+        // this.tabData = res.data
+
+        if (res) {
+          res.data.forEach((item, index) => {
+            const key = index
+            const id = item.id
+            const name = item.name
+            const url = item.url
+            this.tabData.push({
+              key,
+              id,
+              name,
+              url
+            })
+          })
+          this.loading = false
+        } else {
+          console.log(res);
+        }
+
+        console.log('this.tabData', this.tabData)
+      })
+    },
+    dialogImageUrlAdd(file) {
+      // 上传之前添加图片地址
+      this.dialogImageUrl = file.url
+    },
+    showPictureFn(record) {
+      // 获取对应下标的图片地址
+      this.pubPicture = record.attachmentUrl
+    },
+    handleExceed(files, fileList) {
+      this.$message.warning(
+        `当前限制选择 1 个文件，本次选择了 ${
+          files.length
+        } 个文件，共选择了 ${files.length + fileList.length} 个文件`
+      )
+      console.log(files)
+    },
+    handleRemove(file) {
+      console.log(file)
+    },
+    handlePictureCardPreview(file) {
+      this.dialogVisible = true
+    },
+    handleDownload(file) {
+      console.log(file)
+    },
     // 点击预览图片
     preview() {
       this.imagedialogVisible = true
@@ -157,22 +252,9 @@ export default {
     imageHandleClose() {},
     // 点击删除 删除选中的表格内容
     clearContent() {},
-    // 图片上传之前
-    beforeUpload(file) {
-      const isImage = file.type === 'image/jpeg' || '/image/png' || 'image/jp2'
-      const isLt2M = file.size / 1024 / 1024 < 2
 
-      if (!isImage) {
-        this.$message.error('只能上传图片')
-      }
-      if (!isLt2M) {
-        this.$message.error('上传图片大小不能超过 2MB!')
-      }
-      return isJPG && isLt2M
-    },
-    // 图片上传完成
-    handleSuccess(res, file) {
-      this.imageUrl = URL.createObjectURL(file.raw)
+    submitPicture() {
+      console.log(this.message, this.dialogImageUrl)
     }
   }
 }

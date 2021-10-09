@@ -345,4 +345,29 @@ export function deleteLabeList(data) {
     data
   })
 }
-
+// 运营位列表
+export function getOperation(data) {
+    return request({
+      method: 'post',
+      url: '/service/information/list',
+      data
+    })
+  }
+  
+  // 新增运营位
+  export function addOperation(data) {
+    return request({
+      method: 'post',
+      url: '/service/information/save',
+      data
+    })
+  }
+  
+  // 运营位删除
+  export function deleteOperation(data) {
+    return request({
+      method: 'post',
+      url: '/service/information/delete',
+      data
+    })
+  }
