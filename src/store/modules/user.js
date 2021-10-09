@@ -1,10 +1,11 @@
-import { User_Login, Init_User, User_EquipmentID } from './mutations-types'
+import { User_Login, Init_User, User_ID } from './mutations-types'
 
 export default {
   namespaced: true,
   state: {
     memberID: null,
-    equipmentID: null,
+    equipmentID_user: null,
+    memberID_user: null,
   },
   getters: {
 
@@ -14,18 +15,25 @@ export default {
     [User_Login](state, userInfo) {
       state.memberID = userInfo.memberID
     },
-    [User_EquipmentID](state, id) {
-      state.equipmentID = id;
+    [User_ID](state, payload) {
+      state.equipmentID_user = payload.equipmentID;
+      state.memberID_user = payload.memberID
+      console.log('memberID_user: ',state.memberID_user);
     },
     // 下次页面刷新 数据初始化 读取本地存储 设置vuex
     [Init_User](state) {
       let memberID = JSON.parse(sessionStorage.getItem('memberID'));
-      let equipmentID = JSON.parse(sessionStorage.getItem('equipmentID'));
+      let equipmentID_user = JSON.parse(sessionStorage.getItem('equipmentID_user'));
+      let memberID_user = JSON.parse(sessionStorage.getItem('memberID_user'));
+
       if (memberID) {
         state.memberID = memberID
       }
-      if (equipmentID) {
-        state.equipmentID = equipmentID
+      if (equipmentID_user) {
+        state.equipmentID_user = equipmentID_user
+      }
+      if (memberID_user) {
+        state.memberID_user = memberID_user
       }
     },
   },

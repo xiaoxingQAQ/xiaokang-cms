@@ -1,11 +1,12 @@
 <template>
   <div class="wrapper">
     <a-table
-      :loading="false"
+      :rowKey="(record) => record.id"
+      :loading="loading"
       :columns="columns"
-      :data-source="tabData"
+      :data-source="Table_4"
       @change="tabChange"
-      :pagination="false"
+      :pagination="true"
       :row-selection="removeRowSelection"
     >
     </a-table>
@@ -14,37 +15,29 @@
 
 <script>
 export default {
+  props: {
+    Table_4: {
+      type: Array,
+      default() {
+        return []
+      }
+    }
+  },
   data() {
     return {
+      selectedRowKeys: [],
+      selectedRows: [],
+      loading: false,
       columns: [
         {
           title: '标签',
-          dataIndex: 'title',
-          key: 'title',
+          dataIndex: 'pubDepartmentName',
+          key: 'pubDepartmentName',
         },
         {
           title: '创建时间',
-          dataIndex: 'date',
-          key: 'date',
-          scopedSlots: { customRender: 'image' },
-          width: '20%'
-        },
-      ],
-      tabData: [
-        {
-          key: 1,
-          title: 'Luck',
-          date: '2019-12-08',
-        },
-        {
-          key: 2,
-          title: 'Luck',
-          date: '2019-12-16',
-        },
-        {
-          key: 3,
-          title: 'Luck',
-          date: '2019-12-22',
+          dataIndex: 'times',
+          key: 'times',
         },
       ],
     }
@@ -52,17 +45,20 @@ export default {
   computed: {
     // 选中的 tr
     removeRowSelection() {
+      const { selectedRowKeys } = this;
       return {
+        selectedRowKeys: selectedRowKeys,
         onChange: (selectedRowKeys, selectedRows) => {
           console.log(`selectedRowKeys: ${selectedRowKeys}`, 'selectedRows: ', selectedRows);
-
+          this.selectedRowKeys = selectedRowKeys
+          this.selectedRows = selectedRows
         },
       };
     },
   },
   methods: {
     // 表格数据发生变化
-    tabChange() {},
+    tabChange() { },
   },
 }
 </script>

@@ -127,7 +127,7 @@ export default {
     ...mapState('user', ['memberID'])
   },
   methods: {
-    ...mapMutations('user', ['User_EquipmentID']),
+    ...mapMutations('user', ['User_ID']),
     // 获取 用户列表数据
     getUserList(index = 0) {
       if (index == 0) {
@@ -248,9 +248,12 @@ export default {
     },
     // 点击查看 用户 详情信息
     goDetail(record) {
-      const equipmentID = record.equipmentID
-      this.User_EquipmentID(equipmentID)
-      sessionStorage.setItem('equipmentID', JSON.stringify(equipmentID))
+      const equipmentID_user = record.equipmentID
+      const memberID_user = record.memberID
+      this.User_ID(record)
+
+      sessionStorage.setItem('equipmentID_user', JSON.stringify(equipmentID_user))
+      sessionStorage.setItem('memberID_user', JSON.stringify(memberID_user))
       this.$emit('onChange')
     },
     // 点击查询

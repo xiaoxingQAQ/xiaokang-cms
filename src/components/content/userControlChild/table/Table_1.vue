@@ -2,7 +2,7 @@
   <div class="wrapper">
     <a-table
       :columns="columns"
-      :data-source="tabData"
+      :data-source="Table_1"
       :loading="loading"
       :pagination="false"
     >
@@ -12,17 +12,25 @@
 
 <script>
 export default {
+  props: {
+    Table_1: {
+      type: Array,
+      default() {
+        return []
+      }
+    }
+  },
   data() {
     return {
       loading: false,
       columns: [
         
       ],
-      tabData: [
-        
-      ],
     }
   },
+  created() {
+    console.log();
+  }
 }
 </script>
 

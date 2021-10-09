@@ -2,7 +2,7 @@
   <div class="wrapper">
     <a-table
       :columns="columns"
-      :data-source="tabData"
+      :data-source="Table_3"
       :loading="loading"
       :pagination="false"
     >
@@ -12,14 +12,22 @@
 
 <script>
 export default {
+  props: {
+    Table_3: {
+      type: Array,
+      default() {
+        return []
+      }
+    }
+  },
   data() {
     return {
       loading: false,
       columns: [
         {
           title: '技能名称',
-          dataIndex: 'name',
-          key: 'name',
+          dataIndex: 'title',
+          key: 'title',
         },
         {
           title: '使用次数',
@@ -28,28 +36,8 @@ export default {
         },
         {
           title: '使用时间',
-          dataIndex: 'date',
-          key: 'date',
-        },
-      ],
-      tabData: [
-        {
-          key: 1,
-          name: '1',
-          counts: '好好',
-          date: '2019-12-08',
-        },
-        {
-          key: 2,
-          name: '2',
-          counts: '都是',
-          date: '2019-12-08',
-        },
-        {
-          key: 3,
-          name: '3',
-          counts: '好好',
-          date: '2019-12-08',
+          dataIndex: 'time',
+          key: 'time',
         },
       ],
     }

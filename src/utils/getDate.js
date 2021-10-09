@@ -4,7 +4,7 @@ getDate(-7);//7天前日期 */
 function doHandleMonth(month) {
   var m = month;
   if (month.toString().length == 1) {
-    m = "0" + month;
+    m = "" + month;
   }
   return m;
 }
