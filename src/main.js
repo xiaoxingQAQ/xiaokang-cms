@@ -22,6 +22,8 @@ import echarts from '@/plugins/echarts'
 // 引入lodash
 import _ from 'lodash'
 Vue.prototype._ = _
+// 时间总线
+Vue.prototype.$bus = new Vue()
 
 Vue.prototype.$echarts = echarts
 

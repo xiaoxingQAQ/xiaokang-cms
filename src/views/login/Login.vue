@@ -92,7 +92,7 @@ export default {
 
         login(data).then(res => {
           if (!res) return this.$message.error('未知错误')
-          console.log(res);
+          console.log('登录',res);
           if (res.code != 1) {
             this.loading = false
             return this.$message.warning({
@@ -111,7 +111,7 @@ export default {
             memberID: res.data.id
           })
           window.sessionStorage.setItem('memberID', JSON.stringify(res.data.id))
-          window.sessionStorage.setItem('token', JSON.stringify(res.data.key))
+          window.sessionStorage.setItem('token', JSON.stringify(res.data.token))
           this.$router.push('/home')
         })
       })
@@ -123,10 +123,9 @@ export default {
 <style lang="less" scoped>
 .wrapper {
   width: 100%;
-  height: 100%;
   background: url('../../assets/images/background.png');
   background-size: 100%;
-  overflow: hidden;
+  // overflow: hidden;
 
   header {
     box-sizing: border-box;
@@ -160,9 +159,9 @@ export default {
       top: 50%;
       left: 50%;
 
-      width: 30%;
-      height: 40%;
-      min-width: 300px;
+      width: 25%;
+      height: 30%;
+      min-width: 380px;
       min-height: 350px;
       border-radius: 5px;
       border-radius: 12px;
@@ -171,8 +170,8 @@ export default {
 
       .title {
         width: 100%;
-        height: 150px;
-        line-height: 150px;
+        height: 130px;
+        line-height: 130px;
         text-align: center;
         color: #ccc;
         font-size: 25px;
@@ -181,7 +180,7 @@ export default {
 
     .login_form {
       width: 100%;
-      padding: 0 30px;
+      padding: 5% 30px;
       box-sizing: border-box;
 
       ::v-deep .el-input__inner {
@@ -199,6 +198,7 @@ export default {
     position: absolute;
     bottom: 0;
     left: 0;
+    right: 0;
     width: 100%;
     height: 72px;
     border-top: 1px solid #d8d8d870;

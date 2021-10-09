@@ -9,6 +9,7 @@
             :key="index"
             @click="changeDate(index)"
             class="changeDateBtn"
+            :disabled="currentIndex == index"
             :class="{ active: currentIndex == index }"
             >{{ item }}日</a-button
           >
@@ -19,8 +20,9 @@
             class="changeDateBtn"
             v-for="(item, index) in dateArr_text"
             :key="index"
-            @click="changeDate(index)"
-            :class="{ active: currentIndex == index }"
+            @click="changeStatus(index)"
+            :disabled="currentIndex_1 == index"
+            :class="{ active: currentIndex_1 == index }"
           >
             {{ item }}
           </a-button>
@@ -45,6 +47,8 @@
 </template>
 
 <script>
+import { getDate } from '@/utils/getDate'
+
 export default {
   props: {
     types: {
@@ -54,14 +58,25 @@ export default {
   },
   data() {
     return {
-      value: '', // 自定义日期 value值
+      value: [], // 自定义日期 value值
       dateArr: [7, 14, 30], // changdate的数组
-      dateArr_text: ['最新激活', '活跃排名'],
+      dateArr_text: ['活跃排名', '最新激活'],
       currentIndex: 0, // 当前的 index
+      currentIndex_1: 0,
     }
   },
+  created() {
+    this.setDate()
+  },
   methods: {
+    setDate() {
+      let start_date = getDate(-6)
+      let end_date = getDate(0)
+      this.value = [start_date, end_date]
+    },
+    // 自定义日期改变 触发
     onChange() {
+      console.log('this.value: ', this.value);
       if (!this.value) return
       let start_date = this.value[0]
       let end_date = this.value[1]
@@ -71,6 +86,10 @@ export default {
     // 点击改变 日期
     changeDate(index) {
       this.currentIndex = index
+      this.$emit('onChange', index)
+    },
+    changeStatus(index) {
+      this.currentIndex_1 = index
       this.$emit('onChange', index)
     },
     //根据起始日期和结束日期计算天数
@@ -86,9 +105,6 @@ export default {
       var days = (endDate - startDate) / (1 * 24 * 60 * 60 * 1000);
       return days;
     }
-
-
-
   },
 }
 </script>

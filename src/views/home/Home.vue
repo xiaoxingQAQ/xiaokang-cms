@@ -61,7 +61,9 @@
       <!-- 右侧内容主体 -->
       <el-main>
         <!-- 路由占位符 -->
-        <router-view />
+        <keep-alive>
+          <router-view />
+        </keep-alive>
       </el-main>
     </el-container>
   </el-container>

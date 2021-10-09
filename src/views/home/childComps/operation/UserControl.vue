@@ -37,14 +37,14 @@ export default {
 </script>
 
 <style lang="less" scoped>
-.slide-fade-enter-active,
-.slide-fade-leave-active {
-  transition: all 0.5s ease;
-}
+// .slide-fade-enter-active,
+// .slide-fade-leave-active {
+//   transition: all 0.2s ease;
+// }
 
 .slide-fade-enter,
 .slide-fade-leave-to {
-  transform: translate(1200px);
+  // transform: translate(1200px);
   opacity: 0;
 }
 </style>

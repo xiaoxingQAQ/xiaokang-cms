@@ -7,6 +7,9 @@ export function request(config) {
   // 1.创建axios的实例
   const instance = axios.create({
     baseURL: 'http://health.hxwch.com:8600',
+    headers: { //比如token登录鉴权，请求的时候携带token，让后端识别登录人的信息
+      token: JSON.parse(sessionStorage.getItem('token'))
+    },   //请求头
     // timeout: 15000,
   })
 
