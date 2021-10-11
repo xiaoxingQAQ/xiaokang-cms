@@ -90,7 +90,7 @@ export default {
     }
   },
   created() {
-    // this.getHomeData() // 发送请求
+    this.getHomeData() // 发送请求
   },
   mounted() {
     this.loading = true
@@ -123,9 +123,10 @@ export default {
       }
       // 请求卡片1的数据
       card_1(data).then(res_1 => {
+        console.log('res_1: ', res_1);
         if (!res_1) return 
         console.log('res_1', res_1);
-        if (res_1.code != 1) return this.$message.error('获取数据失败')
+        if (res_1.code != 0) return this.$message.error('获取数据失败')
 
         this.cardData_1 = res_1.data
       })
@@ -133,7 +134,7 @@ export default {
       card_2(data).then(res_2 => {
         if (!res_2) return 
         console.log('res_2', res_2);
-        if (res_2.code != 1) return this.$message.error('获取数据失败')
+        if (res_2.code != 0) return this.$message.error('获取数据失败')
 
         this.cardData_2 = res_2.data
       })
@@ -142,7 +143,7 @@ export default {
       card_3(data).then(res_3 => {
         if (!res_3) return 
         console.log('res_3', res_3);
-        if (res_3.code != 1) return this.$message.error('获取数据失败')
+        if (res_3.code != 0) return this.$message.error('获取数据失败')
 
         const arr = [];
         res_3.data.forEach((item, index) => {

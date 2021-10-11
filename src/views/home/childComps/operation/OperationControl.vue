@@ -192,27 +192,29 @@ export default {
       this.tabData = ''
       // 获取列表数据
       this.loading = true
-      getOperation().then(res => {
-        // console.log('res', res.data[0].attachmentNames)
-        // this.tabData = res.data
 
-        if (res) {
-          res.data.forEach((item, index) => {
-            const key = index
-            const id = item.id
-            const name = item.name
-            const url = item.url
-            this.tabData.push({
-              key,
-              id,
-              name,
-              url
-            })
-          })
+      
+      getOperation().then(({ data, code }) => {
+        console.log('data: ', data);
+
+        if (code != 0) {
           this.loading = false
-        } else {
-          console.log(res);
+          return this.$message.error('获取数据失败')
         }
+  
+        res.data.forEach((item, index) => {
+          const key = index
+          const id = item.id
+          const name = item.name
+          const url = item.url
+          this.tabData.push({
+            key,
+            id,
+            name,
+            url
+          })
+        })
+        this.loading = false
 
         console.log('this.tabData', this.tabData)
       })
@@ -227,8 +229,7 @@ export default {
     },
     handleExceed(files, fileList) {
       this.$message.warning(
-        `当前限制选择 1 个文件，本次选择了 ${
-          files.length
+        `当前限制选择 1 个文件，本次选择了 ${files.length
         } 个文件，共选择了 ${files.length + fileList.length} 个文件`
       )
       console.log(files)
@@ -247,11 +248,11 @@ export default {
       this.imagedialogVisible = true
     },
     // 表格发生变化 执行
-    tabChange() {},
+    tabChange() { },
     // 点击关闭 图片预览Dialog
-    imageHandleClose() {},
+    imageHandleClose() { },
     // 点击删除 删除选中的表格内容
-    clearContent() {},
+    clearContent() { },
 
     submitPicture() {
       console.log(this.message, this.dialogImageUrl)

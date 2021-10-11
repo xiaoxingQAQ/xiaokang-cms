@@ -5,6 +5,9 @@ export function card_1(data) {
   return request({
     method: 'post',
     url: '/service/backequipment/getinformation',
+    headers: { //请求头
+      token: JSON.parse(sessionStorage.getItem('token')),
+    },
     data
   })
 }
@@ -13,6 +16,9 @@ export function card_2(data) {
   return request({
     method: 'post',
     url: '/service/backequipment/getrequestinfo',
+    headers: { //请求头
+      token: JSON.parse(sessionStorage.getItem('token'))
+    },
     data
   })
 }
@@ -21,6 +27,9 @@ export function card_3(data) {
   return request({
     method: 'post',
     url: '/service/backequipment/requestinfoList',
+    headers: { //请求头
+      token: JSON.parse(sessionStorage.getItem('token'))
+    },
     data
   })
 }
@@ -33,6 +42,9 @@ export function getCharacter(data) {
   return request({
     method: 'post',
     url: '/service/backequipment/charactersetting',
+    headers: { //请求头
+      token: JSON.parse(sessionStorage.getItem('token'))
+    },
     data
   })
 }
@@ -41,6 +53,9 @@ export function submitCharacter(data) {
   return request({
     method: 'post',
     url: '/service/backequipment/savecharactersetting',
+    headers: { //请求头
+      token: JSON.parse(sessionStorage.getItem('token'))
+    },
     data
   })
 }
@@ -50,6 +65,9 @@ export function getSkillList(data) {
   return request({
     method: 'post',
     url: '/service/skill/list',
+    headers: { //请求头
+      token: JSON.parse(sessionStorage.getItem('token'))
+    },
     data
   })
 }
@@ -59,6 +77,9 @@ export function changeSwitch(data) {
   return request({
     method: 'post',
     url: '/service/skill/skillswitch',
+    headers: { //请求头
+      token: JSON.parse(sessionStorage.getItem('token'))
+    },
     data
   })
 }
@@ -68,6 +89,9 @@ export function addRepository(data) {
   return request({
     method: 'post',
     url: '/service/backequipment/saverepository',
+    headers: { //请求头
+      token: JSON.parse(sessionStorage.getItem('token'))
+    },
     data
   })
 }
@@ -77,6 +101,9 @@ export function getRepository(data) {
   return request({
     method: 'post',
     url: '/service/backequipment/repositorylist',
+    headers: { //请求头
+      token: JSON.parse(sessionStorage.getItem('token'))
+    },
     data
   })
 }
@@ -86,6 +113,9 @@ export function deleteRepository(data) {
   return request({
     method: 'post',
     url: '/service/backequipment/deleterepository',
+    headers: { //请求头
+      token: JSON.parse(sessionStorage.getItem('token'))
+    },
     data
   })
 }
@@ -96,6 +126,9 @@ export function getAnswer(data) {
   return request({
     method: 'post',
     url: '/service/backequipment/qalist',
+    headers: { //请求头
+      token: JSON.parse(sessionStorage.getItem('token'))
+    },
     data
   })
 }
@@ -105,6 +138,9 @@ export function addAnswer(data) {
   return request({
     method: 'post',
     url: '/service/backequipment/saverqa',
+    headers: { //请求头
+      token: JSON.parse(sessionStorage.getItem('token'))
+    },
     data
   })
 }
@@ -114,6 +150,9 @@ export function deleteAnswer(data) {
   return request({
     method: 'post',
     url: '/service/backequipment/deleteqa',
+    headers: { //请求头
+      token: JSON.parse(sessionStorage.getItem('token'))
+    },
     data
   })
 }
@@ -123,6 +162,9 @@ export function getSnifferWord(data) {
   return request({
     method: 'post',
     url: '/service/backequipment/snifferwordlist',
+    headers: { //请求头
+      token: JSON.parse(sessionStorage.getItem('token'))
+    },
     data
   })
 }
@@ -132,6 +174,9 @@ export function addSnifferWord(data) {
   return request({
     method: 'post',
     url: '/service/backequipment/saversnifferword',
+    headers: { //请求头
+      token: JSON.parse(sessionStorage.getItem('token'))
+    },
     data
   })
 }
@@ -141,6 +186,9 @@ export function deleteSnifferWord(data) {
   return request({
     method: 'post',
     url: '/service/backequipment/snifferdelete',
+    headers: { //请求头
+      token: JSON.parse(sessionStorage.getItem('token'))
+    },
     data
   })
 }
@@ -150,6 +198,9 @@ export function getKnowledge(data) {
   return request({
     method: 'post',
     url: '/service/backequipment/radarlist',
+    headers: { //请求头
+      token: JSON.parse(sessionStorage.getItem('token'))
+    },
     data
   })
 }
@@ -159,6 +210,9 @@ export function editionPush(data) {
   return request({
     method: 'post',
     url: '/service/versions/save',
+    headers: { //请求头
+      token: JSON.parse(sessionStorage.getItem('token'))
+    },
     data
   })
 }
@@ -168,6 +222,9 @@ export function getEditionInfo(data) {
   return request({
     method: 'post',
     url: '/service/versions/list',
+    headers: { //请求头
+      token: JSON.parse(sessionStorage.getItem('token'))
+    },
     data
   })
 }
@@ -180,6 +237,9 @@ export function getUserData(data) {
   return request({
     method: 'post',
     url: '/service/backequipment/userData',
+    headers: { //请求头
+      token: JSON.parse(sessionStorage.getItem('token'))
+    },
     data
   })
 }
@@ -189,6 +249,9 @@ export function getIncrease(data) {
   return request({
     method: 'post',
     url: '/service/backequipment/eqmentincrease',
+    headers: { //请求头
+      token: JSON.parse(sessionStorage.getItem('token'))
+    },
     data
   })
 }
@@ -198,6 +261,9 @@ export function getActive(data) {
   return request({
     method: 'post',
     url: '/service/backequipment/eqmentactive',
+    headers: { //请求头
+      token: JSON.parse(sessionStorage.getItem('token'))
+    },
     data
   })
 }
@@ -207,6 +273,9 @@ export function getMessageList(data) {
   return request({
     method: 'post',
     url: '/service/remindrule/systemlist',
+    headers: { //请求头
+      token: JSON.parse(sessionStorage.getItem('token'))
+    },
     data
   })
 }
@@ -216,6 +285,9 @@ export function getDistribution(data) {
   return request({
     method: 'post',
     url: '/service/backequipment/versionPie',
+    headers: { //请求头
+      token: JSON.parse(sessionStorage.getItem('token'))
+    },
     data
   })
 }
@@ -225,6 +297,9 @@ export function getRanking(data) {
   return request({
     method: 'post',
     url: '/service/backequipment/versionRanking',
+    headers: { //请求头
+      token: JSON.parse(sessionStorage.getItem('token'))
+    },
     data
   })
 }
@@ -237,6 +312,9 @@ export function getSkillsUsed(data) {
   return request({
     method: 'post',
     url: '/service/skill/useskill',
+    headers: { //请求头
+      token: JSON.parse(sessionStorage.getItem('token'))
+    },
     data
   })
 }
@@ -246,6 +324,9 @@ export function getSkillsRanking(data) {
   return request({
     method: 'post',
     url: '/service/skill/skillranking',
+    headers: { //请求头
+      token: JSON.parse(sessionStorage.getItem('token'))
+    },
     data
   })
 }
@@ -255,6 +336,9 @@ export function getAnswerSkillsUsed(data) {
   return request({
     method: 'post',
     url: '/service/skill/useskill',
+    headers: { //请求头
+      token: JSON.parse(sessionStorage.getItem('token'))
+    },
     data
   })
 }
@@ -264,6 +348,9 @@ export function getHotAnswerRanking(data) {
   return request({
     method: 'post',
     url: '/service/backequipment/answeranking',
+    headers: { //请求头
+      token: JSON.parse(sessionStorage.getItem('token'))
+    },
     data
   })
 }
@@ -275,6 +362,9 @@ export function addNews(data) {
   return request({
     method: 'post',
     url: '/service/remindrule/systemremindsave',
+    headers: { //请求头
+      token: JSON.parse(sessionStorage.getItem('token'))
+    },
     data
   })
 }
@@ -284,6 +374,9 @@ export function getUserList(data) {
   return request({
     method: 'post',
     url: '/service/backequipment/userManagement',
+    headers: { //请求头
+      token: JSON.parse(sessionStorage.getItem('token'))
+    },
     data
   })
 }
@@ -293,6 +386,9 @@ export function getUserDetail(data) {
   return request({
     method: 'post',
     url: '/service/backequipment/userInfo',
+    headers: { //请求头
+      token: JSON.parse(sessionStorage.getItem('token'))
+    },
     data
   })
 }
@@ -302,6 +398,9 @@ export function getBodyData(data) {
   return request({
     method: 'post',
     url: '/service/backequipment/bodyData',
+    headers: { //请求头
+      token: JSON.parse(sessionStorage.getItem('token'))
+    },
     data
   })
 }
@@ -311,6 +410,9 @@ export function getRecentDrug(data) {
   return request({
     method: 'post',
     url: '/service/backequipment/recentDrug',
+    headers: { //请求头
+      token: JSON.parse(sessionStorage.getItem('token'))
+    },
     data
   })
 }
@@ -320,6 +422,9 @@ export function getCommonSkill(data) {
   return request({
     method: 'post',
     url: '/service/backequipment/commonlySkills',
+    headers: { //请求头
+      token: JSON.parse(sessionStorage.getItem('token'))
+    },
     data
   })
 }
@@ -329,6 +434,9 @@ export function getLabeList(data) {
   return request({
     method: 'post',
     url: '/service/backequipment/labeList',
+    headers: { //请求头
+      token: JSON.parse(sessionStorage.getItem('token'))
+    },
     data
   })
 }
@@ -338,6 +446,9 @@ export function addLabeList(data) {
   return request({
     method: 'post',
     url: '/service/backequipment/saveLabe',
+    headers: { //请求头
+      token: JSON.parse(sessionStorage.getItem('token'))
+    },
     data
   })
 }
@@ -347,32 +458,44 @@ export function deleteLabeList(data) {
   return request({
     method: 'post',
     url: '/service/backequipment/deleteLabe',
+    headers: { //请求头
+      token: JSON.parse(sessionStorage.getItem('token'))
+    },
     data
   })
 }
 // 运营位列表
-export function getOperation(data) {
-    return request({
-      method: 'post',
-      url: '/service/information/list',
-      data
-    })
-  }
-  
-  // 新增运营位
-  export function addOperation(data) {
-    return request({
-      method: 'post',
-      url: '/service/information/save',
-      data
-    })
-  }
-  
-  // 运营位删除
-  export function deleteOperation(data) {
-    return request({
-      method: 'post',
-      url: '/service/information/delete',
-      data
-    })
-  }
+export function getOperation(data) {
+  return request({
+    method: 'post',
+    url: '/service/information/list',
+    headers: { //请求头
+      token: JSON.parse(sessionStorage.getItem('token'))
+    },
+    data
+  })
+}
+
+// 新增运营位
+export function addOperation(data) {
+  return request({
+    method: 'post',
+    url: '/service/information/save',
+    headers: { //请求头
+      token: JSON.parse(sessionStorage.getItem('token'))
+    },
+    data
+  })
+}
+
+// 运营位删除
+export function deleteOperation(data) {
+  return request({
+    method: 'post',
+    url: '/service/information/delete',
+    headers: { //请求头
+      token: JSON.parse(sessionStorage.getItem('token'))
+    },
+    data
+  })
+}

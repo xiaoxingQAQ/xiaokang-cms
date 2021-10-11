@@ -69,7 +69,7 @@ export default {
       // 发送请求
       getMessageList(data).then(res => {
         if (!res) return
-        if (res.code != 1) return this.$message.error('数据请求失败')
+        if (res.code != 0) return this.$message.error('数据请求失败')
 
         console.log(res);
         res.data.forEach((item, index) => {

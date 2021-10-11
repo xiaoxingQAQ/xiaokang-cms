@@ -158,7 +158,7 @@ export default {
     //   // 发送请求 请求
     //   getSkillList(data).then(res => {
     //     if (!res) return
-    //     if (res.code != 1) return this.$message.error('获取数据失败')
+    //     if (res.code != 0) return this.$message.error('获取数据失败')
 
     //     console.log(res.data);
     //     res.data.forEach(item => {
@@ -202,7 +202,7 @@ export default {
       // 发送请求 技能使用次数
       getSkillsUsed(data).then(res => {
         if (!res) return
-        if (res.code != 1) return this.$message.error('获取数据失败')
+        if (res.code != 0) return this.$message.error('获取数据失败')
         console.log('技能使用次数',res);
         res.data.forEach(item => {
           let skillnum = item.skillnum;
@@ -245,7 +245,7 @@ export default {
       // 发送请求 技能使用次数
       getSkillsUsed(data).then(res => {
         if (!res) return
-        if (res.code != 1) return this.$message.error('获取数据失败')
+        if (res.code != 0) return this.$message.error('获取数据失败')
         console.log(res.data);
         res.data.forEach(item => {
           let skillnum = item.skillnum;
@@ -299,7 +299,7 @@ export default {
       // 发送请求 技能调用排行榜
       getSkillsRanking(data).then(res => {
         if (!res) return
-        if (res.code != 1) return this.$message.error('获取数据失败')
+        if (res.code != 0) return this.$message.error('获取数据失败')
         console.log(res);
         res.data.forEach((item, index) => {
           let key = index + 1
@@ -328,7 +328,7 @@ export default {
       // 发送请求 技能调用排行榜
       getSkillsRanking(data).then(res => {
         if (!res) return
-        if (res.code != 1) return this.$message.error('获取数据失败')
+        if (res.code != 0) return this.$message.error('获取数据失败')
         console.log(res);
         res.data.forEach((item, index) => {
           let key = index + 1

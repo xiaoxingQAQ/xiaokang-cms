@@ -337,7 +337,7 @@ export default {
       // 发送请求
       getSnifferWord(data).then(res => {
         if (!res) return
-        if (res.code != 1) return this.$message.error('获取数据失败')
+        if (res.code != 0) return this.$message.error('获取数据失败')
         console.log('res: ', res);
         res.data.forEach((item, index) => {
           let key = index + 1;
@@ -375,7 +375,7 @@ export default {
       // 发送请求
       getKnowledge(data).then(res => {
         if (!res) return
-        if (res.code != 1) {
+        if (res.code != 0) {
           this.TableLoading_2 = false
           return this.$message.warning(res.data)
         }
@@ -407,7 +407,7 @@ export default {
       // 发送请求
       getRepository(data).then(res => {
         if (!res) return
-        if (res.code != 1) return this.$message.error('获取数据失败')
+        if (res.code != 0) return this.$message.error('获取数据失败')
         console.log(res);
         res.data.forEach(item => {
           let value = item.id;
@@ -457,7 +457,7 @@ export default {
       // 发送请求
       addSnifferWord(data).then(res => {
         if (!res) return
-        if (res.code != 1) {
+        if (res.code != 0) {
           this.loading_1 = false
           return this.$message.warning('保存失败，可能是 名称重复啦')
         }
@@ -511,7 +511,7 @@ export default {
         // 发送请求 删除对应的 知识库
         deleteSnifferWord(data).then(res => {
           if (!res) return
-          if (res.code != 1) return this.$message.error('删除失败')
+          if (res.code != 0) return this.$message.error('删除失败')
 
           // 提示
           this.$message.success('删除成功')
@@ -555,7 +555,7 @@ export default {
         // 发送请求
         addAnswer(data).then(res => {
           if (!res) return
-          if (res.code != 1) return this.$message.error('添加失败')
+          if (res.code != 0) return this.$message.error('添加失败')
           console.log('res: ', res);
 
           this.$message.success('添加成功')
@@ -588,7 +588,7 @@ export default {
         // 发送请求
         addRepository(data_1).then(res => {
           if (!res) return
-          if (res.code != 1) {
+          if (res.code != 0) {
             this.loading_4 = false
             return this.$message.warning('保存失败，可能是 名称重复啦')
           }
@@ -604,7 +604,7 @@ export default {
           // 发送请求
           addAnswer(data_2).then(res => {
             if (!res) return
-            if (res.code != 1) return this.$message.error('添加失败')
+            if (res.code != 0) return this.$message.error('添加失败')
             console.log('res: ', res);
 
             this.$message.success('添加成功')

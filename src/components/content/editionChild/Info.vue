@@ -71,7 +71,7 @@ export default {
       // 发送请求
       getEditionInfo(data).then(res => {
         if (!res) return
-        if (res.code != 1) return this.$message.error('获取数据失败')
+        if (res.code != 0) return this.$message.error('获取数据失败')
 
         console.log(res);
         res.data.forEach(itme => {

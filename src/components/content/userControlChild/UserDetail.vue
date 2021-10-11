@@ -198,7 +198,7 @@ export default {
       }
 
       getUserDetail(data).then(({ data, code }) => {
-        if (code != 1) return this.$message.error('获取数据失败')
+        if (code != 0) return this.$message.error('获取数据失败')
         let username = data.username;
         let pubDate = data.pubDate;
         let hardVersion = data.hardVersion;
@@ -251,14 +251,14 @@ export default {
       }
       // 发送请求 获取 用户体征数据
       getBodyData(data).then(({ data, code }) => {
-        if (code != 1) {
+        if (code != 0) {
           this.$refs.Table_1.$data.loading = false
           return this.$message.warning('该用户暂无体征数据')
         }
         // 如果有
-        data.forEach(item => {
+        // data.forEach(item => {
 
-        });
+        // });
 
         this.$refs.Table_1.$data.loading = false
       })
@@ -288,14 +288,14 @@ export default {
       }
       // 发送请求 获取 用户体征数据
       getBodyData(data).then(({ data, code }) => {
-        if (code != 1) {
+        if (code != 0) {
           this.$refs.Table_1.$data.loading = false
           return this.$message.warning('该用户暂无体征数据')
         }
         // 如果有
-        data.forEach(item => {
+        // data.forEach(item => {
 
-        });
+        // });
 
         this.$refs.Table_1.$data.loading = false
       })
@@ -330,7 +330,7 @@ export default {
       }
       // 发送请求 获取用户用药数据
       getRecentDrug(data).then(({ data, code }) => {
-        if (code != 1) {
+        if (code != 0) {
           this.$refs.Table_2.$data.loading = false
           return this.$message.warning('该用户暂无用药数据')
         }
@@ -367,7 +367,7 @@ export default {
       }
       // 发送请求 获取用户用药数据
       getRecentDrug(data).then(({ data, code }) => {
-        if (code != 1) {
+        if (code != 0) {
           this.$refs.Table_2.$data.loading = false
           return this.$message.warning('该用户暂无用药数据')
         }
@@ -416,7 +416,7 @@ export default {
       }
       // 发送请求 获取 用户常用技能
       getCommonSkill(data).then(({ data, code }) => {
-        if (code != 1) {
+        if (code != 0) {
           this.$refs.Table_3.$data.loading = false
           return this.$message.warning('该用户暂无技能数据')
         }
@@ -454,7 +454,7 @@ export default {
       }
       // 发送请求 获取 用户常用技能
       getCommonSkill(data).then(({ data, code }) => {
-        if (code != 1) {
+        if (code != 0) {
           this.$refs.Table_3.$data.loading = false
           return this.$message.warning('该用户暂无技能数据')
         }
@@ -487,7 +487,7 @@ export default {
       // 发送请求 获取 用户标签列表
       getLabeList(data).then(({ data, code }) => {
         console.log(data);
-        if (code != 1) {
+        if (code != 0) {
           this.$refs.Table_4.$data.loading = false
           return this.$message.warning('暂无标签数据')
         }
@@ -557,7 +557,7 @@ export default {
       // 发送请求 删除对应的 知识库
       deleteLabeList(data).then(res => {
         if (!res) return
-        if (res.code != 1) return this.$message.error('删除失败')
+        if (res.code != 0) return this.$message.error('删除失败')
 
 
         // 提示
@@ -585,7 +585,7 @@ export default {
         name
       }
       addLabeList(data).then(({ data, code }) => {
-        if (code != 1) {
+        if (code != 0) {
           this.loading_1 = false
           return this.$message.error('添加失败')
         }

@@ -72,7 +72,7 @@ export default {
       // 发送请求
       getSkillList(data).then(res => {
         if (!res) return
-        if (res.code != 1) return this.$message.error('获取数据失败')
+        if (res.code != 0) return this.$message.error('获取数据失败')
 
         res.data.forEach((item, index) => {
           let key = index
@@ -106,7 +106,7 @@ export default {
       // 发送请求
       changeSwitch(data).then(res => {
         if (!res) return
-        if (res.code != 1) return this.$message.error('关闭失败')
+        if (res.code != 0) return this.$message.error('关闭失败')
 
         this.$message.success({
           message: res.data,

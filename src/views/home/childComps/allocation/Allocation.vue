@@ -132,7 +132,7 @@ export default {
       getCharacter(data).then(res => {
         if (!res) return
         console.log(res.data);
-        if (res.code != 1) return this.$message.error('获取数据失败')
+        if (res.code != 0) return this.$message.error('获取数据失败')
         const Form = res.data
         this.detailForm = {
           name: Form.name.trim(),
@@ -156,7 +156,7 @@ export default {
         submitCharacter(data).then(res => {
           if (!res) return
           console.log(res.data);
-          if (res.code != 1) return this.$message.error('修改失败')
+          if (res.code != 0) return this.$message.error('修改失败')
 
           this.$message.success('修改成功')
           this.loading = false

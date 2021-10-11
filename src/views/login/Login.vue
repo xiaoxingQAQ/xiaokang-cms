@@ -93,7 +93,7 @@ export default {
         login(data).then(res => {
           if (!res) return this.$message.error('未知错误')
           console.log('登录',res);
-          if (res.code != 1) {
+          if (res.code != 0) {
             this.loading = false
             return this.$message.warning({
               message: '登录失败',
@@ -122,6 +122,7 @@ export default {
 
 <style lang="less" scoped>
 .wrapper {
+  position: relative;
   width: 100%;
   background: url('../../assets/images/background.png');
   background-size: 100%;
@@ -205,6 +206,7 @@ export default {
     color: #d8d8d8;
     line-height: 72px;
     text-align: center;
+    // background: #fff;
   }
 }
 </style>

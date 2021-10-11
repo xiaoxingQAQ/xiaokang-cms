@@ -114,7 +114,7 @@ export default {
           // 发送请求
           editionPush(data).then(res => {
             if (!res) return
-            if (res.code != 1) return this.$message.error('推送失败')
+            if (res.code != 0) return this.$message.error('推送失败')
 
             console.log(res);
             this.$message.success('推送成功')

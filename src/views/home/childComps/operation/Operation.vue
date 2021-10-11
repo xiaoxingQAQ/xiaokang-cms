@@ -144,7 +144,7 @@ export default {
       this.$message.warning('正在推送')
       // 发送请求 添加系统提醒
       addNews(data).then(({ code, data }) => {
-        if (code != 1) {
+        if (code != 0) {
           this.loading = false
           this.disabled = false
           return this.$message.error('推送失败')

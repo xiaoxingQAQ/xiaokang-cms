@@ -156,7 +156,7 @@ export default {
       // 发送请求
       getUserData(data).then(res => {
         if (!res) return
-        if (res.code != 1) return this.$message.error('获取数据失败')
+        if (res.code != 0) return this.$message.error('获取数据失败')
         this.yestuser = res.data.yestuser
         this.accumuser = res.data.accumuser
       })
@@ -189,7 +189,7 @@ export default {
       // 发送请求
       getIncrease(data).then(res => {
         if (!res) return
-        if (res.code != 1) return this.$message.error('获取数据失败')
+        if (res.code != 0) return this.$message.error('获取数据失败')
 
         res.data.forEach(item => {
           let newlate = item.newlate;
@@ -241,7 +241,7 @@ export default {
       // 发送请求
       getIncrease(data).then(res => {
         if (!res) return
-        if (res.code != 1) return this.$message.error('获取数据失败')
+        if (res.code != 0) return this.$message.error('获取数据失败')
 
         res.data.forEach(item => {
           let newlate = item.newlate;
@@ -304,7 +304,7 @@ export default {
       getActive(data).then(res => {
         console.log(res);
         if (!res) return
-        if (res.code != 1) return this.$message.error('获取数据失败')
+        if (res.code != 0) return this.$message.error('获取数据失败')
 
         res.data.forEach(item => {
           let time = item.time
@@ -344,7 +344,7 @@ export default {
       // 发送请求
       getActive(data).then(res => {
         if (!res) return
-        if (res.code != 1) return this.$message.error('获取数据失败')
+        if (res.code != 0) return this.$message.error('获取数据失败')
 
         res.data.forEach(item => {
           let time = item.time

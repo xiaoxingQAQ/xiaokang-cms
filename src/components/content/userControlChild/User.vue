@@ -167,7 +167,7 @@ export default {
       }
       // 发送请求 获取活跃排名数据
       getUserList(data).then(({ data, code }) => {
-        if (code != 1) {
+        if (code != 0) {
           this.loading = false
           return this.$message.error('获取数据失败')
         }
@@ -221,7 +221,7 @@ export default {
 
       // 发送请求 获取用户列表数据
       getUserList(data).then(({ data, code }) => {
-        if (code != 1) {
+        if (code != 0) {
           this.loading = false
           return this.$message.error('获取数据失败')
         }

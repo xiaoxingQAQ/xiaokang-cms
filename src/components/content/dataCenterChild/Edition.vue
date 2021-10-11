@@ -154,7 +154,7 @@ export default {
       // 发送请求 
       getDistribution(data).then(res => {
         if (!res) return
-        if (res.code != 1) return this.$message.error('获取数据失败')
+        if (res.code != 0) return this.$message.error('获取数据失败')
 
         res.data.forEach(item => {
           let value = item.counts
@@ -194,7 +194,7 @@ export default {
       // 发送请求
       getRanking(data).then(res => {
         if (!res) return
-        if (res.code != 1) return this.$message.error('获取数据失败')
+        if (res.code != 0) return this.$message.error('获取数据失败')
         console.log(res.data);
         res.data.forEach(item => {
           let value = item.counts
