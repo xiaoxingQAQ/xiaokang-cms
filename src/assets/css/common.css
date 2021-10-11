@@ -76,6 +76,9 @@ li {
   background-color: #fcae7312;
 }
 
+.el-message-box__title,
+.el-message-box__message,
+.el-message-box__status .el-icon-warning,
 .ant-input,
 .el-input__inner,
 .el-textarea__inner,

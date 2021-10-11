@@ -8,7 +8,9 @@
         <el-button type="primary" @click="AddDialogVisible = true"
           >新增</el-button
         >
-        <el-button type="danger" @click="clearContent">删除</el-button>
+        <el-button type="danger" :loading="loading_2" @click="clearContent"
+          >删除</el-button
+        >
       </div>
 
       <div slot="main">
@@ -16,19 +18,11 @@
           :loading="loading"
           :columns="columns"
           :data-source="tabData"
-          @change="tabChange"
           :pagination="false"
           :row-selection="removeRowSelection"
         >
           <div slot="image" slot-scope="text, record">
-            <a-button
-              @click="
-                imageDialogVisible = true
-                showPictureFn(record)
-              "
-              class="btn"
-              >预览</a-button
-            >
+            <a-button @click="showImage(record)" class="btn">预览</a-button>
           </div>
         </a-table>
       </div>
@@ -41,8 +35,7 @@
       center
       :visible.sync="imageDialogVisible"
     >
-      <!-- <img :src="pubPicture" alt="" class="image" /> -->
-      <img width="100%" :src="pubPicture" alt="" />
+      <img width="100%" src="@/assets/images/Git常用命令速查表.jpg" alt="" />
     </el-dialog>
 
     <!-- 新建的Dialog -->
@@ -53,57 +46,35 @@
       :visible.sync="AddDialogVisible"
     >
       <header>
-        <span>上传图片：</span>
-        <el-upload
-          action="#"
+        <span class="title">上传图片：</span>
+        <a-upload
+          class="uploader"
+          :action="uploadUrl"
+          :headers="headers"
           list-type="picture-card"
-          :auto-upload="false"
-          :limit="1"
-          :on-exceed="handleExceed"
+          :file-list="fileList"
+          @preview="handlePreview"
+          @change="handleChange"
         >
-          <i slot="default" class="el-icon-plus"></i>
-          <div
-            slot="file"
-            slot-scope="{ file }"
-            :on-success="dialogImageUrlAdd(file)"
-          >
-            <img
-              class="el-upload-list__item-thumbnail"
-              :src="file.url"
-              alt=""
-            />
-            <span class="el-upload-list__item-actions">
-              <span
-                class="el-upload-list__item-preview"
-                @click="handlePictureCardPreview(file)"
-              >
-                <i class="el-icon-zoom-in"></i>
-              </span>
-              <span
-                v-if="!disabled"
-                class="el-upload-list__item-delete"
-                @click="handleDownload(file)"
-              >
-                <i class="el-icon-download"></i>
-              </span>
-              <span
-                v-if="!disabled"
-                class="el-upload-list__item-delete"
-                @click="handleRemove(file)"
-              >
-                <i class="el-icon-delete"></i>
-              </span>
-            </span>
+          <div v-if="fileList.length < 1">
+            <a-icon type="plus" />
+            <div class="ant-upload-text">Upload</div>
           </div>
-        </el-upload>
-        <el-dialog :visible.sync="dialogVisible">
-          <img width="100%" :src="dialogImageUrl" alt="" />
-        </el-dialog>
+        </a-upload>
+        <!-- 新增的预览图片 -->
+        <a-modal
+          class="preview"
+          :visible="previewVisible"
+          :footer="null"
+          @cancel="handleCancel"
+        >
+          <img alt="example" style="width: 100%" :src="previewImage" />
+        </a-modal>
       </header>
       <main>
-        <span>名称：</span>
+        <span style="margin: 5px 0 0 2px">名称：</span>
         <el-input
-          v-model="message"
+          v-model="updateForm.message"
           placeholder="请输入名称"
           type="textarea"
           :autosize="{ minRows: 2, maxRows: 6 }"
@@ -112,12 +83,7 @@
       </main>
       <div slot="footer" class="dialog-footer">
         <el-button @click="AddDialogVisible = false">取 消</el-button>
-        <el-button
-          type="primary"
-          @click="
-            AddDialogVisible = false
-            submitPicture()
-          "
+        <el-button type="primary" @click="submitPicture" :loading="loading_1"
           >确 定</el-button
         >
       </div>
@@ -128,30 +94,46 @@
 <script>
 import Card from '@/components/content/card/Card'
 import { getOperation, addOperation } from '@/network/home'
+import { mapState } from 'vuex';
 
+const token = JSON.parse(sessionStorage.getItem('token'));
+function getBase64(file) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onload = () => resolve(reader.result);
+    reader.onerror = error => reject(error);
+  });
+}
 export default {
   components: {
     Card
   },
   data() {
     return {
+      imageUrl: '', // 对应行数 图片的url
+      loading_2: false,
+      loading_1: false,
       loading: false,
-      imageUrl: '', // 图片的url
-      message: '', // 名称的input值
+      updateForm: { // 提交的表单
+        message: '', // 编号
+        attachmentID: ''
+      },
       AddDialogVisible: false,
-      imageDialogVisible: false, // 预览图片的 Dialog
-      pubPicture: '',
-
-      dialogImageUrl: '',
-      dialogVisible: false,
-      disabled: false,
-      handlePicturePreviewed: true, // 如果新增了一张图片，则隐藏
-
+      imageDialogVisible: false,
+      previewVisible: false,
+      previewImage: '', // 预览图片
+      file: {},
+      fileList: [], // 上传文件列表
+      uploadUrl: 'http://114.116.253.112:9600/service/attachment/upload',
+      headers: {
+        token,
+      },
       columns: [
         {
           title: '名称',
-          dataIndex: 'title',
-          key: 'title',
+          dataIndex: 'name',
+          key: 'name',
           width: '70%'
         },
         {
@@ -166,47 +148,39 @@ export default {
     }
   },
   created() {
-    this.getDataFn()
+    this.getOperation()
   },
   computed: {
+    ...mapState('user', ['memberID']),
     // 选中的 tr
     removeRowSelection() {
       return {
         onChange: (selectedRowKeys, selectedRows) => {
           console.log(
-            `selectedRowKeys: ${selectedRowKeys}`,
-            'selectedRows: ',
-            selectedRows
+            `selectedRowKeys: ${selectedRowKeys}`, 'selectedRows: ', selectedRows
           )
         }
       }
     }
   },
-  watch: {
-    disabled(val, oldVal) {
-      console.log('我触发了', val, oldVal)
-    }
-  },
   methods: {
-    getDataFn() {
-      this.tabData = ''
+    getOperation() {
+      this.tabData = []
       // 获取列表数据
       this.loading = true
-
-      
+      // 发送请求 获取 运营列表
       getOperation().then(({ data, code }) => {
-        console.log('data: ', data);
-
+        console.log(data);
         if (code != 0) {
           this.loading = false
           return this.$message.error('获取数据失败')
         }
-  
-        res.data.forEach((item, index) => {
+
+        data.forEach((item, index) => {
           const key = index
           const id = item.id
           const name = item.name
-          const url = item.url
+          const url = item.attachmentNames[0].webUrl
           this.tabData.push({
             key,
             id,
@@ -219,44 +193,63 @@ export default {
         console.log('this.tabData', this.tabData)
       })
     },
-    dialogImageUrlAdd(file) {
-      // 上传之前添加图片地址
-      this.dialogImageUrl = file.url
-    },
-    showPictureFn(record) {
-      // 获取对应下标的图片地址
-      this.pubPicture = record.attachmentUrl
-    },
-    handleExceed(files, fileList) {
-      this.$message.warning(
-        `当前限制选择 1 个文件，本次选择了 ${files.length
-        } 个文件，共选择了 ${files.length + fileList.length} 个文件`
-      )
-      console.log(files)
-    },
-    handleRemove(file) {
-      console.log(file)
-    },
-    handlePictureCardPreview(file) {
-      this.dialogVisible = true
-    },
-    handleDownload(file) {
-      console.log(file)
-    },
     // 点击预览图片
-    preview() {
-      this.imagedialogVisible = true
+    showImage(record) {
+      console.log('record: ', record);
+      this.imageUrl = record.url
+      this.imageDialogVisible = true
     },
-    // 表格发生变化 执行
-    tabChange() { },
-    // 点击关闭 图片预览Dialog
-    imageHandleClose() { },
-    // 点击删除 删除选中的表格内容
-    clearContent() { },
-
+    // 处理预览
+    async handlePreview(file) {
+      this.AddDialogVisible = false
+      if (!file.url && !file.preview) {
+        file.preview = await getBase64(file.originFileObj);
+      }
+      this.previewImage = file.url || file.preview;
+      this.previewVisible = true;
+    },
+    // 处理状态 改变
+    handleChange({ file, fileList }) {
+      console.log(file);
+      this.fileList = fileList;
+      setTimeout(() => {
+        if (file.response)
+          this.updateForm.attachmentID = file.response.data.id
+      }, 2000)
+    },
+    // 点击确定 提交
     submitPicture() {
-      console.log(this.message, this.dialogImageUrl)
-    }
+      if (!this.updateForm.message) return this.$message.warning('请输入名称')
+      const name = this.updateForm.message;
+      console.log('name: ', name);
+      const attachmentID = this.updateForm.attachmentID
+      console.log('attachmentID: ', attachmentID);
+      const data = {
+        name,
+        attachmentID
+      }
+      if (!attachmentID) {
+        return this.$message.warning('请上传图片')
+      }
+      this.loading_1 = true
+
+      // 发送请求 添加运营
+      addOperation(data).then(res => {
+        console.log(res);
+        
+        this.loading_1 = true
+      })
+    },
+    // 处理删除
+    handleCancel() {
+      this.previewVisible = false;
+    },
+    // 点击关闭 图片预览Dialog
+
+    // 点击删除 删除选中的表格内容
+    clearContent() {
+
+    },
   }
 }
 </script>
@@ -277,31 +270,17 @@ export default {
     header {
       display: flex;
       padding: 0 0 30px;
-      .avatar-uploader {
-        width: 150px;
-        height: 150px;
-        border: 1px dashed #d9d9d9;
-        border-radius: 6px;
-        cursor: pointer;
-        position: relative;
-        background-color: #e0e0e013;
-        overflow: hidden;
-        .avatar {
-          width: 150px;
-          height: 150px;
-          display: block;
-        }
-        .avatar-uploader-icon {
-          font-size: 28px;
-          color: #8c939d;
-          width: 150px;
-          height: 150px;
-          line-height: 150px;
-          text-align: center;
-        }
+      .title {
+        width: 82px;
       }
-      .avatar-uploader:hover {
-        border-color: #409eff;
+      .ant-upload-select-picture-card i {
+        font-size: 32px;
+        color: #999;
+      }
+
+      .ant-upload-select-picture-card .ant-upload-text {
+        margin-top: 8px;
+        color: #666;
       }
     }
 

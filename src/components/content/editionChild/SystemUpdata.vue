@@ -68,7 +68,7 @@ export default {
         updateLog: '', // 更新日志
         attachmentID: ''
       },
-      uploadUrl: 'http://health.hxwch.com:8600/service/attachment/upload',
+      uploadUrl: 'http://114.116.253.112:9600/service/attachment/upload',
       headers: {
         token,
       },
@@ -106,7 +106,7 @@ export default {
           attachmentID
         }
         if (!attachmentID) {
-          return this.$message.warning('请先上传版本文件')
+          return this.$message.warning('请上传版本文件')
         }
         this.$message.info('正在推送...')
         // 防抖
@@ -124,6 +124,7 @@ export default {
       })
     },
     handleChange(info) {
+      console.log(info);
       let fileList = [...info.fileList];
       fileList = fileList.slice(-1);
       fileList = fileList.map(file => {

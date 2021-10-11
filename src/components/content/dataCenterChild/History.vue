@@ -63,12 +63,13 @@ export default {
       const data = {
         memberID,
         pageIndex: 1,
-        pageSize: 999999,
+        pageSize: 10,
       }
       this.loading = true
       // 发送请求
       getMessageList(data).then(res => {
         if (!res) return
+        console.log(res);
         if (res.code != 0) return this.$message.error('数据请求失败')
 
         console.log(res);

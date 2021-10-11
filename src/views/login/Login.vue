@@ -51,7 +51,6 @@
         </div>
       </div>
     </main>
-
     <footer>
       <span> Copyright 2021 </span>
     </footer>
@@ -92,7 +91,7 @@ export default {
 
         login(data).then(res => {
           if (!res) return this.$message.error('未知错误')
-          console.log('登录',res);
+          console.log('登录', res);
           if (res.code != 0) {
             this.loading = false
             return this.$message.warning({
@@ -106,11 +105,14 @@ export default {
             message: '登录成功',
             offset: 72,
           })
-
-          this.User_Login({
-            memberID: res.data.id
-          })
-          window.sessionStorage.setItem('memberID', JSON.stringify(res.data.id))
+          const userInfo = {
+            memberID: res.data.id,
+            username: res.data.username,
+            systemIcon: res.data.systemIcon,
+            systemName: res.data.systemName
+          }
+          this.User_Login(userInfo)
+          window.sessionStorage.setItem('userInfo', JSON.stringify(userInfo))
           window.sessionStorage.setItem('token', JSON.stringify(res.data.token))
           this.$router.push('/home')
         })
@@ -126,7 +128,6 @@ export default {
   width: 100%;
   background: url('../../assets/images/background.png');
   background-size: 100%;
-  // overflow: hidden;
 
   header {
     box-sizing: border-box;
@@ -196,7 +197,7 @@ export default {
     }
   }
   footer {
-    position: absolute;
+    position: fixed;
     bottom: 0;
     left: 0;
     right: 0;

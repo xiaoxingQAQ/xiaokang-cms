@@ -50,7 +50,7 @@ export default {
             name: '版本',
             type: 'pie',
             radius: '50%',
-            center: ['75%', '60%'],
+            center: ['60%', '60%'],
             data: [
 
             ],
@@ -106,7 +106,7 @@ export default {
               normal: {
                 //这里是重点
                 color(params) {
-                  let colorList = ['#5470c6', '#91cc75', '#fac858', '#ee6666', '#73c0de', '#3ba272', '#fc8452', '#9a60b4', '#ea7ccc', '#5a75c8', '#73c0de', '#91c6ae', '#ea7ccc', '#fac858'];
+                  let colorList = ['#5470c6', '#91cc75', '#fac858', '#ee6666', '#73c0de', '#3ba272', '#fc8452', '#9a60b4', '#ea7ccc', '#5a75c8', '#73c0de', '#91c6ae', '#ea7ccc', '#fac858','#5470c6', '#91cc75', '#fac858', '#ee6666', '#73c0de', '#3ba272', '#fc8452', '#9a60b4', '#ea7ccc', '#5a75c8', '#73c0de', '#91c6ae', '#ea7ccc', '#fac858','#5470c6', '#91cc75', '#fac858', '#ee6666', '#73c0de', '#3ba272', '#fc8452', '#9a60b4', '#ea7ccc', '#5a75c8', '#73c0de', '#91c6ae', '#ea7ccc', '#fac858','#5470c6', '#91cc75', '#fac858', '#ee6666', '#73c0de', '#3ba272', '#fc8452', '#9a60b4', '#ea7ccc', '#5a75c8', '#73c0de', '#91c6ae', '#ea7ccc', '#fac858'];
                   let index;
                   //给大于颜色数量的柱体添加循环颜色的判断
                   if (params.dataIndex >= colorList.length) {
@@ -276,7 +276,7 @@ export default {
     }
     .echarts {
       width: 1000px;
-      height: 400px;
+      min-height: 800px;
     }
   }
 

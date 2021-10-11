@@ -15,8 +15,8 @@
         <div class="via" v-show="isShow">
           <div>
             <div class="left">
-              <div>admin</div>
-              <div style="margin-bottom: 5px">系统管理员</div>
+              <div>{{ username }}</div>
+              <div style="margin-bottom: 5px">{{ systemName }}</div>
             </div>
             <div class="avatar">
               <img src="@/assets/images/avatar.png" alt="" />
@@ -24,15 +24,15 @@
           </div>
 
           <div class="list">
-            <div>
+            <div @click="">
               <i class="iconfont icon-shezhi2"></i>
               <span>修改资料</span>
             </div>
-            <div>
+            <div @click="">
               <i class="iconfont icon-suo"></i>
               <span>修改密码</span>
             </div>
-            <div>
+            <div @click="logout">
               <i class="iconfont icon-logout"></i>
               <span>退出账号</span>
             </div>
@@ -42,7 +42,7 @@
       <!-- 导航栏 -->
       <NavBar class="NavBar" />
       <div class="btn">
-        <el-button size="mini" class="toggle-button" type="info"
+        <el-button size="mini" class="toggle-button" type="info" @click="logout"
           >退出</el-button
         >
       </div>
@@ -76,6 +76,7 @@ import AllocationAside from '@/components/content/aside/AllocationAside'
 import DataCenterAside from '@/components/content/aside/DataCenterAside'
 import OperationAside from '@/components/content/aside/OperationAside'
 import ManageAside from '@/components/content/aside/ManageAside'
+import { mapState } from 'vuex'
 
 
 export default {
@@ -87,7 +88,19 @@ export default {
     OperationAside,
     ManageAside,
   },
+  data() {
+    return {
+      isShow: false,
+      isCollapse: true,
+    }
+  },
+  watch: {
+    '$route'(to, from) {
+      sessionStorage.setItem('tabsIndex', JSON.stringify(0))
+    }
+  },
   computed: {
+    ...mapState('user', ['username', 'systemIcon', 'systemName']),
     showAsideA() {
       const path = this.$route.path;
       const APath = '/allocation';
@@ -153,21 +166,30 @@ export default {
       }
     },
   },
-  data() {
-    return {
-      isShow: false,
-      isCollapse: true,
-    }
-  },
-  watch: {
-    '$route'(to, from) {
-      sessionStorage.setItem('tabsIndex', JSON.stringify(0))
-    }
-  },
   methods: {
     showInfo() {
       this.isShow = !this.isShow
     },
+    // 退出登录
+    logout() {
+      this.$confirm('此操作将注销登录, 是否继续?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        this.$message({
+          type: 'success',
+          message: '已退出登录'
+        });
+        sessionStorage.clear()
+        this.$router.push('/login')
+      }).catch(() => {
+        this.$message({
+          type: 'info',
+          message: '已取消操作'
+        });
+      });
+    }
   }
 }
 </script>

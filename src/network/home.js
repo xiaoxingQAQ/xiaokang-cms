@@ -499,3 +499,16 @@ export function deleteOperation(data) {
     data
   })
 }
+
+// 文件上传
+export function uploadFile(data) {
+  return request({
+    method: 'post',
+    url: '/service/attachment/upload',
+    headers: { //请求头
+      token: JSON.parse(sessionStorage.getItem('token')),
+      'Content-Type': 'multipart/form-data'
+    },
+    data
+  })
+}
