@@ -51,9 +51,10 @@
         </div>
       </div>
     </main>
-    <footer>
-      <span> Copyright 2021 </span>
-    </footer>
+    
+    <div class="footer">
+      <div> Copyright 2021 </div>
+    </div>
   </div>
 </template>
 
@@ -98,6 +99,7 @@ export default {
             return this.$message.warning({
               message: '登录失败',
               offset: 46,
+              duration: '700',
             })
           }
 
@@ -105,6 +107,7 @@ export default {
           this.$message.success({
             message: '登录成功',
             offset: 72,
+            duration: '700',
           })
           const userInfo = {
             memberID: res.data.id,
@@ -127,6 +130,7 @@ export default {
 .wrapper {
   position: relative;
   width: 100%;
+  height: 100vh;
   background: url('../../assets/images/background.png');
   background-size: 100%;
 
@@ -197,18 +201,17 @@ export default {
       justify-content: flex-end;
     }
   }
-  footer {
+  .footer {
     position: fixed;
     bottom: 0;
     left: 0;
-    right: 0;
     width: 100%;
     height: 72px;
     border-top: 1px solid #d8d8d870;
     color: #d8d8d8;
     line-height: 72px;
     text-align: center;
-    // background: #fff;
+    background: #fff;
   }
 }
 </style>

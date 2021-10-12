@@ -107,11 +107,12 @@ export default {
       this.cancel()
       // 发送请求
       changeSwitch(data).then(res => {
+        console.log('res: ', res);
         if (!res) return
         if (res.code != 0) return this.$message.error('关闭失败')
 
         this.$message.success({
-          message: res.data,
+          message: res.message,
           offset: 46
         })
         this.switchLoading = false

@@ -1,6 +1,8 @@
 <template>
   <div id="app">
-    <router-view />
+    <transition name="slide-fade">
+      <router-view />
+    </transition>
   </div>
 </template>
 
@@ -12,10 +14,22 @@ export default {
     this.Init_User()
   },
   methods: {
-    ...mapMutations('user', ['Init_User']),    
+    ...mapMutations('user', ['Init_User']),
   },
 }
 </script>
 
 <style lang="less">
+// 动画
+.slide-fade-enter-active {
+  transition: all 0.6s ease-in;
+}
+.slide-fade-leave-active {
+  transition: all 0.6s ease-in-out;
+}
+.slide-fade-enter,
+.slide-fade-leave-to {
+  transform: translate(-50px);
+  opacity: 0.6;
+}
 </style>

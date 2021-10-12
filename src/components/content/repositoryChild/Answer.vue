@@ -184,10 +184,10 @@ export default {
       selectedRows_2: [],
       title: '',
       answerForm: {
-        repository: '',
         questions: '',
         answers: ''
       },
+      repository: '',
       answerDialogVisible: false,
       addDialogVisible: false, // 对话框 显示 / 隐藏
       removeDialogVisible: false,
@@ -265,11 +265,11 @@ export default {
   methods: {
     /* 点击tag标签 跳转 */
     toTable(item) {
-      console.log(item);
+      this.data = []
       this.selectedRowKeys_2 = []
       this.title = item.name
       this.disabled = false
-      this.answerForm.repository = item.id
+      this.repository = item.id
       this.getAnswer()
     },
     // 获取 知识库的数据 列表
@@ -309,19 +309,21 @@ export default {
     },
     // 获取问答的数据列表
     getAnswer() {
+      this.selectedRowKeys_2 = []
       this.data = []
       const memberID = this.memberID
-      const repository = this.answerForm.repository
+      const repository = this.repository
       const data = {
         memberID,
         repository
       }
+      console.log('dai', data);
       console.log(data);
       this.TableLoading_2 = true
       this.cancel()
       // 发送请求
       getAnswer(data).then(res => {
-        console.log(res);
+        console.log('问答',res);
         if (!res) return
         if (res.code != 0) return this.$message.error('获取数据失败')
 
@@ -330,7 +332,7 @@ export default {
           let id = item.id
           let questions = item.questions;
           let answers = item.answers
-          this.data.unshift({
+          this.data.push({
             key,
             id,
             questions,
@@ -463,7 +465,7 @@ export default {
       const memberID = this.memberID
       const Form = _.cloneDeep(this.answerForm)
       Form.memberID = memberID
-      console.log(Form);
+      Form.repository = this.repository
 
       this.loading_3 = true;
       this.cancel()
@@ -479,13 +481,9 @@ export default {
       })
 
       setTimeout(() => {
-        this.data = _.uniqBy(this.data, 'questions')
-      }, 500);
-
-      setTimeout(() => {
         this.loading_3 = false;
         this.answerDialogClosed()
-      }, 600);
+      }, 300);
     },
     /* 点击删除问答 */
     clearAnswer() {
@@ -504,6 +502,8 @@ export default {
         const data = {
           id
         }
+
+        console.log(data);
         this.cancel()
         // 发送请求 删除对应的 知识库
         deleteAnswer(data).then(res => {
@@ -521,6 +521,7 @@ export default {
           //     }
           //   })
           // })
+          console.log(this.repository);
           this.getAnswer()
 
           this.loading_4 = false
