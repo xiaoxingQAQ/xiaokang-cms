@@ -69,6 +69,7 @@ export default {
         memberID
       }
       this.loading = true
+      this.cancel()
       // 发送请求
       getSkillList(data).then(res => {
         if (!res) return
@@ -103,6 +104,7 @@ export default {
       }
 
       this.switchLoading = true
+      this.cancel()
       // 发送请求
       changeSwitch(data).then(res => {
         if (!res) return

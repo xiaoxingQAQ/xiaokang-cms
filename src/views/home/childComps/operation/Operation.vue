@@ -142,6 +142,7 @@ export default {
       this.loading = true
       this.disabled = true
       this.$message.warning('正在推送')
+      this.cancel()
       // 发送请求 添加系统提醒
       addNews(data).then(({ code, data }) => {
         if (code != 0) {

@@ -151,6 +151,7 @@ export default {
       const data = {
         memberID
       }
+      this.cancel()
       // 发送请求 
       getDistribution(data).then(res => {
         if (!res) return
@@ -191,6 +192,7 @@ export default {
       const data = {
         memberID
       }
+      this.cancel()
       // 发送请求
       getRanking(data).then(res => {
         if (!res) return

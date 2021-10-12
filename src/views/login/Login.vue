@@ -88,7 +88,8 @@ export default {
         if (!valid) return
         this.loading = true
         const data = this.loginForm;
-
+        this.cancel()
+        // 发送请求 登录
         login(data).then(res => {
           if (!res) return this.$message.error('未知错误')
           console.log('登录', res);

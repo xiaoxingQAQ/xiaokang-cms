@@ -1,6 +1,7 @@
 import { request } from './request'
 
 /* --------首页-------- */
+// 获取设备数据
 export function card_1(data) {
   return request({
     method: 'post',
@@ -12,6 +13,7 @@ export function card_1(data) {
   })
 }
 
+// 获取请求数据
 export function card_2(data) {
   return request({
     method: 'post',
@@ -23,6 +25,8 @@ export function card_2(data) {
   })
 }
 
+
+// 获取请求数据列表
 export function card_3(data) {
   return request({
     method: 'post',

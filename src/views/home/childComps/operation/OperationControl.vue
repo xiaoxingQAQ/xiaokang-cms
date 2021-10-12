@@ -15,6 +15,7 @@
 
       <div slot="main">
         <a-table
+          :rowKey="(record) => record.id"
           :loading="loading"
           :columns="columns"
           :data-source="tabData"
@@ -51,6 +52,7 @@
           class="uploader"
           :action="uploadUrl"
           :headers="headers"
+          :remove="onRemove"
           list-type="picture-card"
           :file-list="fileList"
           @preview="handlePreview"
@@ -93,7 +95,7 @@
 
 <script>
 import Card from '@/components/content/card/Card'
-import { getOperation, addOperation } from '@/network/home'
+import { getOperation, addOperation, deleteOperation } from '@/network/home'
 import { mapState } from 'vuex';
 
 const token = JSON.parse(sessionStorage.getItem('token'));
@@ -111,6 +113,8 @@ export default {
   },
   data() {
     return {
+      selectedRows: [],
+      selectedRowKeys: [],
       imageUrl: '', // 对应行数 图片的url
       loading_2: false,
       loading_1: false,
@@ -159,15 +163,19 @@ export default {
           console.log(
             `selectedRowKeys: ${selectedRowKeys}`, 'selectedRows: ', selectedRows
           )
+          this.selectedRowKeys = selectedRowKeys;
+          this.selectedRows = selectedRows;
         }
       }
     }
   },
   methods: {
+    // 获取运营列表
     getOperation() {
       this.tabData = []
       // 获取列表数据
       this.loading = true
+      this.cancel()
       // 发送请求 获取 运营列表
       getOperation().then(({ data, code }) => {
         console.log(data);
@@ -208,6 +216,31 @@ export default {
       this.previewImage = file.url || file.preview;
       this.previewVisible = true;
     },
+    // 处理删除
+    onRemove() {
+      let flag = false;
+      this.$confirm('此操作将永久删除该文件, 是否继续?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        this.$message({
+          type: 'success',
+          message: '删除成功!'
+        });
+        this.fileList = [];
+        flag = true
+        this.updateForm.attachmentID = ''
+      }).catch(() => {
+        this.$message({
+          type: 'info',
+          message: '已取消删除'
+        });
+        flag = false
+      });
+      console.log(this.updateForm.attachmentID);
+      return flag
+    },
     // 处理状态 改变
     handleChange({ file, fileList }) {
       console.log(file);
@@ -219,35 +252,66 @@ export default {
     },
     // 点击确定 提交
     submitPicture() {
-      if (!this.updateForm.message) return this.$message.warning('请输入名称')
       const name = this.updateForm.message;
-      console.log('name: ', name);
       const attachmentID = this.updateForm.attachmentID
-      console.log('attachmentID: ', attachmentID);
       const data = {
         name,
         attachmentID
       }
+      console.log(data);
       if (!attachmentID) {
         return this.$message.warning('请上传图片')
       }
+      if (!this.updateForm.message) return this.$message.warning('请输入名称')
       this.loading_1 = true
-
+      this.cancel()
       // 发送请求 添加运营
       addOperation(data).then(res => {
-        console.log(res);
-        
-        this.loading_1 = true
+        if (!res) return
+        if (res.code != 0) return this.$message.error('添加失败')
+
+        this.$message.success('添加成功')
+        this.getOperation()
+        this.loading_1 = false
       })
     },
     // 处理删除
     handleCancel() {
       this.previewVisible = false;
+      this.AddDialogVisible = true
     },
     // 点击关闭 图片预览Dialog
 
     // 点击删除 删除选中的表格内容
     clearContent() {
+      this.loading_2 = true
+      if (this.selectedRows.length == 0) {
+        this.loading_2 = false
+        return this.$message.info('请选择您要删除的')
+      }
+
+      const arr = [];
+      this.selectedRows.forEach(item => {
+        arr.push(item.id)
+      })
+      const id = arr.join(',')
+      const data = {
+        id
+      }
+      this.cancel()
+      // 发送请求 删除对应的 知识库
+      deleteOperation(data).then(res => {
+        console.log('res: ', res);
+        if (!res) return
+        if (res.code != 0) {
+          this.loading_2 = false
+          return this.$message.error('删除失败')
+        }
+        // 提示
+        this.$message.success('删除成功')
+        this.getOperation()
+        this.loading_2 = false
+      })
 
     },
   }

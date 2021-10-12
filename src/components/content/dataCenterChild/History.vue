@@ -66,13 +66,17 @@ export default {
         pageSize: 10,
       }
       this.loading = true
+      this.cancel()
       // 发送请求
       getMessageList(data).then(res => {
+        console.log('系统消息res: ', res);
         if (!res) return
         console.log(res);
-        if (res.code != 0) return this.$message.error('数据请求失败')
+        if (res.code != 0) {
+          this.loading = false
+          return this.$message.warning('暂无消息！')
+        }
 
-        console.log(res);
         res.data.forEach((item, index) => {
           let key = index + 1
           let id = item.id

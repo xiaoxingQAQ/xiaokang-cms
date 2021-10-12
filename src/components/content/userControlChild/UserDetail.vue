@@ -196,7 +196,8 @@ export default {
         memberID,
         equipmentID
       }
-
+      this.cancel()
+      // 发送请求
       getUserDetail(data).then(({ data, code }) => {
         if (code != 0) return this.$message.error('获取数据失败')
         let username = data.username;
@@ -249,6 +250,7 @@ export default {
         type,
         day
       }
+      this.cancel()
       // 发送请求 获取 用户体征数据
       getBodyData(data).then(({ data, code }) => {
         if (code != 0) {
@@ -286,6 +288,7 @@ export default {
         type,
         day
       }
+      this.cancel()
       // 发送请求 获取 用户体征数据
       getBodyData(data).then(({ data, code }) => {
         if (code != 0) {
@@ -328,6 +331,7 @@ export default {
         pageIndex,
         pageSize
       }
+      this.cancel()
       // 发送请求 获取用户用药数据
       getRecentDrug(data).then(({ data, code }) => {
         if (code != 0) {
@@ -365,6 +369,7 @@ export default {
         pageIndex,
         pageSize
       }
+      this.cancel()
       // 发送请求 获取用户用药数据
       getRecentDrug(data).then(({ data, code }) => {
         if (code != 0) {
@@ -414,6 +419,7 @@ export default {
         pageIndex,
         pageSize
       }
+      this.cancel()
       // 发送请求 获取 用户常用技能
       getCommonSkill(data).then(({ data, code }) => {
         if (code != 0) {
@@ -452,6 +458,7 @@ export default {
         pageIndex,
         pageSize
       }
+      this.cancel()
       // 发送请求 获取 用户常用技能
       getCommonSkill(data).then(({ data, code }) => {
         if (code != 0) {
@@ -484,6 +491,7 @@ export default {
       const data = {
         memberID,
       }
+      this.cancel()
       // 发送请求 获取 用户标签列表
       getLabeList(data).then(({ data, code }) => {
         console.log(data);
@@ -554,6 +562,7 @@ export default {
       const data = {
         id
       }
+      this.cancel()
       // 发送请求 删除对应的 知识库
       deleteLabeList(data).then(res => {
         if (!res) return
@@ -584,6 +593,7 @@ export default {
         memberID,
         name
       }
+      this.cancel()
       addLabeList(data).then(({ data, code }) => {
         if (code != 0) {
           this.loading_1 = false

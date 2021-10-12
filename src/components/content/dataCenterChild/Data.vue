@@ -149,6 +149,7 @@ export default {
   methods: {
     // 获取用户数据
     getUserData() {
+      this.cancel()
       const memberID = this.memberID
       const data = {
         memberID
@@ -163,6 +164,7 @@ export default {
     },
     // 获取设备增长数据 （默认最近7天）
     getIncrease_1(day = 0) {
+      this.cancel()
       this.option_1.series[0].data = []
       this.option_1.series[1].data = []
       this.option_1.xAxis.data = []
@@ -225,6 +227,7 @@ export default {
 
     },
     getIncrease_2(day, start_date, end_date) {
+      this.cancel()
       this.option_1.series[0].data = []
       this.option_1.series[1].data = []
       this.option_1.xAxis.data = []
@@ -278,6 +281,7 @@ export default {
     },
     // 获取设备活跃数据
     getActive_1(day = 0) {
+      this.cancel()
       this.option_2.series[0].data = []
       this.option_2.xAxis.data = []
 
@@ -330,6 +334,7 @@ export default {
       })
     },
     getActive_2(day, start_date, end_date) {
+      this.cancel()
       this.option_2.series[0].data = []
       this.option_2.xAxis.data = []
 

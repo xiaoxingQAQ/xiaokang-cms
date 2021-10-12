@@ -137,6 +137,7 @@ export default {
         type,
         code
       }
+      this.cancel()
       // 发送请求 获取 问答使用次数
       getAnswerSkillsUsed(data).then(res => {
         if (!res) return
@@ -181,6 +182,7 @@ export default {
         type,
         code,
       }
+      this.cancel()
       // 发送请求 获取 问答使用次数
       getAnswerSkillsUsed(data).then(res => {
         if (!res) return
@@ -234,6 +236,7 @@ export default {
         enddate,
         type,
       }
+      this.cancel()
       // 发送请求 获取 热问排行榜
       getHotAnswerRanking(data).then(res => {
         if (!res) return
@@ -265,6 +268,7 @@ export default {
         enddate,
         type,
       }
+      this.cancel()
       // 发送请求 获取 热问排行榜
       getHotAnswerRanking(data).then(res => {
         if (!res) return

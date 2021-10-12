@@ -48,6 +48,7 @@
 
       <div slot="main">
         <a-table
+          :rowKey="(record) => record.id"
           style="margin-top: 10px"
           :columns="columns"
           :data-source="data"
@@ -167,6 +168,7 @@ export default {
   },
   data() {
     return {
+      currentIndex: null,
       TableLoading_2: false,
       TableLoading_1: false,
       loading_4: false,
@@ -204,11 +206,6 @@ export default {
           dataIndex: 'answers',
           key: 'answers',
           width: '60%',
-        },
-        {
-          title: '导入时间',
-          dataIndex: 'pubDate',
-          key: 'pubDate',
         },
       ],
       data: [ // 对应知识库的数据
@@ -268,8 +265,8 @@ export default {
   methods: {
     /* 点击tag标签 跳转 */
     toTable(item) {
+      console.log(item);
       this.selectedRowKeys_2 = []
-      this.data = []
       this.title = item.name
       this.disabled = false
       this.answerForm.repository = item.id
@@ -283,8 +280,10 @@ export default {
       }
       this.TableLoading_1 = true
       this.TableLoading_2 = true
+      this.cancel()
       // 发送请求
       getRepository(data).then(res => {
+        console.log('res: ', res);
         if (!res) return
         if (res.code != 0) return this.$message.error('获取数据失败')
         res.data.forEach((item, index) => {
@@ -308,37 +307,38 @@ export default {
         this.TableLoading_2 = false
       })
     },
-    // 获取请求问答的数据列表
+    // 获取问答的数据列表
     getAnswer() {
+      this.data = []
       const memberID = this.memberID
       const repository = this.answerForm.repository
       const data = {
         memberID,
         repository
       }
+      console.log(data);
       this.TableLoading_2 = true
+      this.cancel()
       // 发送请求
       getAnswer(data).then(res => {
+        console.log(res);
         if (!res) return
         if (res.code != 0) return this.$message.error('获取数据失败')
-        console.log(res);
 
         res.data.forEach((item, index) => {
           let key = index;
           let id = item.id
           let questions = item.questions;
           let answers = item.answers
-          let pubDate = item.pubDate
-          this.data.push({
+          this.data.unshift({
             key,
             id,
             questions,
             answers,
-            pubDate
           })
         });
         // 去重
-        this.data = _.uniqBy(this.data, 'key')
+        this.data = _.uniqBy(this.data, 'id')
         this.TableLoading_2 = false
       })
     },
@@ -369,7 +369,7 @@ export default {
         memberID
       }
       this.loading_1 = true
-
+      this.cancel()
       // 发送请求
       addRepository(data).then(res => {
         if (!res) return
@@ -380,13 +380,11 @@ export default {
 
         this.$message.success('保存成功')
 
-        this.nameArr.unshift({
-          name: val
-        })
         this.loading_1 = false
+        this.addDialogClosed()
+        this.getRepositorys()
+        this.getAnswer()
       })
-
-      this.addDialogClosed()
     },
     /* 点击按钮 删除知识库 */
     clearRepository() {
@@ -405,8 +403,11 @@ export default {
         const data = {
           id
         }
+        console.log(data);
+        this.cancel()
         // 发送请求 删除对应的 知识库
         deleteRepository(data).then(res => {
+          console.log('res: ', res);
           if (!res) return
           if (res.code != 0) return this.$message.error('删除失败')
 
@@ -465,6 +466,7 @@ export default {
       console.log(Form);
 
       this.loading_3 = true;
+      this.cancel()
       // 发送请求
       addAnswer(Form).then(res => {
         if (!res) return
@@ -472,18 +474,8 @@ export default {
         console.log('res: ', res);
 
         this.$message.success('添加成功')
-        let key = res.data.uptDate
-        let id = res.data.id
-        let questions = res.data.questions;
-        let answers = res.data.answers
-        let pubDate = res.data.pubDate
-        this.data.unshift({
-          key,
-          id,
-          questions,
-          answers,
-          pubDate
-        })
+        // 获取问答的数据列表
+        this.getAnswer()
       })
 
       setTimeout(() => {
@@ -512,21 +504,24 @@ export default {
         const data = {
           id
         }
+        this.cancel()
         // 发送请求 删除对应的 知识库
         deleteAnswer(data).then(res => {
+          console.log('res: ', res);
           if (!res) return
           if (res.code != 0) return this.$message.error('删除失败')
 
 
           // 提示
           this.$message.success('删除成功')
-          this.selectedRows_2.forEach(item => {
-            this.data.forEach((ele, index) => {
-              if (item.id == ele.id) {
-                this.data.splice(index, 1)
-              }
-            })
-          })
+          // this.selectedRows_2.forEach(item => {
+          //   this.data.forEach((ele, index) => {
+          //     if (item.id == ele.id) {
+          //       this.data.splice(index, 1)
+          //     }
+          //   })
+          // })
+          this.getAnswer()
 
           this.loading_4 = false
         })
@@ -559,7 +554,7 @@ export default {
 
     .loading {
       width: 22%;
-       ::v-deep .ant-spin-nested-loading > div > .ant-spin {
+      ::v-deep .ant-spin-nested-loading > div > .ant-spin {
         background-color: #eaedf1 !important;
       }
       .spin-content {

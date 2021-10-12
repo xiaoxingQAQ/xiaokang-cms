@@ -66,7 +66,7 @@ export default {
         memberID: '',
         number: '', // 编号
         updateLog: '', // 更新日志
-        attachmentID: ''
+        attachmentID: '' // 文件id
       },
       uploadUrl: 'http://114.116.253.112:9600/service/attachment/upload',
       headers: {
@@ -111,12 +111,13 @@ export default {
         this.$message.info('正在推送...')
         // 防抖
         this.timer = setTimeout(() => {
+          this.cancel()
           // 发送请求
           editionPush(data).then(res => {
+            console.log('推送res: ', res);
             if (!res) return
             if (res.code != 0) return this.$message.error('推送失败')
 
-            console.log(res);
             this.$message.success('推送成功')
           })
         }, 800);

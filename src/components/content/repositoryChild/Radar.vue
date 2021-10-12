@@ -32,6 +32,7 @@
       </span>
       <div slot="main">
         <a-table
+          :rowKey="(record) => record.id"
           :loading="TableLoading_2"
           :columns="columns"
           :data-source="data"
@@ -323,7 +324,6 @@ export default {
     // 点击 tag标签 触发
     toTable(item) {
       this.title = item.name
-      this.data = []
       this.getProblem(item)
     },
     // 获取 嗅探词列表
@@ -334,6 +334,7 @@ export default {
       }
       this.TableLoading_2 = true
       this.TableLoading_1 = true
+      this.cancel()
       // 发送请求
       getSnifferWord(data).then(res => {
         if (!res) return
@@ -363,21 +364,24 @@ export default {
     },
     // 点击 获取 问题数据列表
     getProblem(item) {
+      this.data = []
       const memberID = this.memberID;
       const snifferName = item.name;
       const data = {
         memberID,
         snifferName,
         pageIndex: 1,
-        pageSize: 999999999,
+        pageSize: 10,
       }
       this.TableLoading_2 = true
+      this.cancel()
       // 发送请求
       getKnowledge(data).then(res => {
+        console.log('res: ', res);
         if (!res) return
         if (res.code != 0) {
           this.TableLoading_2 = false
-          return this.$message.warning(res.data)
+          return this.$message.warning(res.message)
         }
 
         console.log(res);
@@ -404,6 +408,7 @@ export default {
         memberID
       }
       this.TableLoading_1 = true
+      this.cancel()
       // 发送请求
       getRepository(data).then(res => {
         if (!res) return
@@ -454,6 +459,7 @@ export default {
         memberID
       }
       this.loading_1 = true
+      this.cancel()
       // 发送请求
       addSnifferWord(data).then(res => {
         if (!res) return
@@ -464,14 +470,13 @@ export default {
         console.log(res);
         // 成功
         this.$message.success('保存成功')
-        this.nameArr.unshift({
-          name: val
-        })
         this.loading_1 = false
         this.nameArr = _.uniqBy(this.nameArr, 'name')
+        this.addDialogClosed()
+        this.getSnifferWord()
+        this.data = []
       })
 
-      this.addDialogClosed()
     },
 
     // 关闭 添加嗅探词 Dialog
@@ -508,11 +513,14 @@ export default {
         const data = {
           id
         }
+        this.cancel()
         // 发送请求 删除对应的 知识库
         deleteSnifferWord(data).then(res => {
           if (!res) return
-          if (res.code != 0) return this.$message.error('删除失败')
-
+          if (res.code != 0) {
+            this.loading_2 = false
+            return this.$message.error('删除失败')
+          }
           // 提示
           this.$message.success('删除成功')
           this.nameArr = []
@@ -552,6 +560,7 @@ export default {
           questions,
           answers
         }
+        this.cancel()
         // 发送请求
         addAnswer(data).then(res => {
           if (!res) return
@@ -585,6 +594,7 @@ export default {
           name,
           memberID
         }
+        this.cancel()
         // 发送请求
         addRepository(data_1).then(res => {
           if (!res) return
@@ -601,6 +611,7 @@ export default {
             questions,
             answers
           }
+          this.cancel()
           // 发送请求
           addAnswer(data_2).then(res => {
             if (!res) return
@@ -633,7 +644,7 @@ export default {
 
     .loading {
       width: 22%;
-       ::v-deep .ant-spin-nested-loading > div > .ant-spin {
+      ::v-deep .ant-spin-nested-loading > div > .ant-spin {
         background-color: #eaedf1 !important;
       }
       .spin-content {

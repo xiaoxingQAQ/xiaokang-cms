@@ -90,10 +90,9 @@ export default {
     }
   },
   created() {
-    this.getHomeData() // 发送请求
   },
   mounted() {
-    this.loading = true
+    this.getHomeData() // 发送请求
     // 获取时间
     this.getDate()
   },
@@ -117,31 +116,31 @@ export default {
     // 获取首页的数据
     getHomeData() {
       const memberID = this.memberID
-      console.log(memberID);
       const data = {
         memberID
       }
+      this.cancel()
       // 请求卡片1的数据
       card_1(data).then(res_1 => {
         console.log('res_1: ', res_1);
-        if (!res_1) return 
-        console.log('res_1', res_1);
+        if (!res_1) return
         if (res_1.code != 0) return this.$message.error('获取数据失败')
 
         this.cardData_1 = res_1.data
       })
+      this.cancel()
       // 请求卡片2的数据
       card_2(data).then(res_2 => {
-        if (!res_2) return 
-        console.log('res_2', res_2);
+        if (!res_2) return
         if (res_2.code != 0) return this.$message.error('获取数据失败')
 
         this.cardData_2 = res_2.data
       })
-
+      this.loading = true
+      this.cancel()
       // 请求卡片3的数据
       card_3(data).then(res_3 => {
-        if (!res_3) return 
+        if (!res_3) return
         console.log('res_3', res_3);
         if (res_3.code != 0) return this.$message.error('获取数据失败')
 

@@ -35,7 +35,6 @@
         </a-form-model>
       </div>
     </Card> -->
-
     <Card>
       <span slot="leftTitle">用户列表</span>
       <div slot="main">
@@ -149,12 +148,13 @@ export default {
       if (this.tabData.length == 0)
         this.loading = true
 
-      const memberID = '';
-      const equipmentID = '';
+      const memberID = this.memberID;
+      console.log('memberID: ', memberID);
+      const equipmentID = '8770';
       const startdate = getDate(-6) + ''
       const enddate = getDate(0) + ''
       const pageIndex = 1;
-      const pageSize = 9999999;
+      const pageSize = 10;
       const type = '2';
       const data = {
         equipmentID,
@@ -165,6 +165,7 @@ export default {
         enddate,
         type
       }
+      this.cancel()
       // 发送请求 获取活跃排名数据
       getUserList(data).then(({ data, code }) => {
         if (code != 0) {
@@ -204,7 +205,7 @@ export default {
 
       const memberID = this.memberID;
       const equipmentID = '';
-      const startdate = getDate(-7) + ''
+      const startdate = getDate(-6) + ''
       const enddate = getDate(0) + ''
       const pageIndex = 1;
       const pageSize = 10;
@@ -218,7 +219,7 @@ export default {
         enddate,
         type
       }
-
+      this.cancel()
       // 发送请求 获取用户列表数据
       getUserList(data).then(({ data, code }) => {
         if (code != 0) {

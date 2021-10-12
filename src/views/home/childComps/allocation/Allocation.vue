@@ -128,6 +128,7 @@ export default {
       const data = {
         memberID
       }
+      this.cancel()
       // 发送请求
       getCharacter(data).then(res => {
         if (!res) return
@@ -152,6 +153,7 @@ export default {
         if (!valid) return
         this.loading = true
         const data = this.detailForm
+        this.cancel()
         // 发送请求
         submitCharacter(data).then(res => {
           if (!res) return
