@@ -24,7 +24,9 @@ export default {
         { id: 0, title: '人设管理', icon: 'icon-jiaose' },
         { id: 1, title: '技能管理', icon: 'icon-jineng' },
         { id: 2, title: '知识库', icon: 'icon-ziyuan' },
-        { id: 3, title: '系统版本', icon: 'icon-details' },
+        { id: 3, title: '收音机', icon: 'icon-shebei1' },
+        { id: 4, title: '养生知识', icon: 'icon-yangsheng' },
+        { id: 5, title: '系统版本', icon: 'icon-details' },
       ],
     }
   },
@@ -55,6 +57,16 @@ export default {
           break;
         case '3':
           this.activeIndex = indey
+          if (path == '/radio') return
+          this.$router.replace('/radio')
+          break;
+        case '4':
+          this.activeIndex = indey
+          if (path == '/goodHealth') return
+          this.$router.replace('/goodHealth')
+          break;
+        case '5':
+          this.activeIndex = indey
           if (path == '/edition') return
           this.$router.replace('/edition')
           break;
@@ -67,7 +79,9 @@ export default {
       let path = this.$route.path;
       let allocation = '/allocation';
       let allocationS = '/skill';
-      let allocationR = '/repository';
+      let allocationR_1 = '/repository';
+      let allocationR_2 = '/radio'
+      let allocationG = '/goodHealth'
       let allocationE = '/edition';
 
       switch (path) {
@@ -77,11 +91,17 @@ export default {
         case allocationS:
           this.activeIndex = '1'
           break;
-        case allocationR:
+        case allocationR_1:
           this.activeIndex = '2'
           break;
-        case allocationE:
+        case allocationR_2:
           this.activeIndex = '3'
+          break;
+        case allocationG:
+          this.activeIndex = '4'
+          break;
+        case allocationE:
+          this.activeIndex = '5'
           break;
       }
     },
@@ -126,11 +146,4 @@ export default {
     background-color: #edf4fc;
   }
 }
-
-// ::v-deep .el-menu-item {
-//   i {
-//     color: #409eff;
-//   }
-//   background: #ecf5ff;
-// }
 </style>

@@ -12,6 +12,8 @@ const Allocation = () => import('@/views/home/childComps/allocation/Allocation')
 const Skill = () => import('@/views/home/childComps/allocation/Skill')
 const Repository = () => import('@/views/home/childComps/allocation/Repository')
 const Edition = () => import('@/views/home/childComps/allocation/Edition')
+const Radio =() => import('@/views/home/childComps/allocation/Radio')
+const GoodHealth =() => import('@/views/home/childComps/allocation/GoodHealth')
 
 const DataCenter = () => import('@/views/home/childComps/dataCenter/DataCenter')
 const SkillCenter = () => import('@/views/home/childComps/dataCenter/SkillCenter')
@@ -41,11 +43,12 @@ const routes = [
       { path: '/allocation', name: Allocation, component: Allocation, },
       { path: '/skill', name: Skill, component: Skill },
       { path: '/repository', name: Repository, component: Repository },
+      { path: '/radio', name: Radio, component: Radio },
+      { path: '/goodHealth', name: GoodHealth, component: GoodHealth },
       { path: '/edition', name: Edition, component: Edition },
 
       { path: '/dataCenter', name: DataCenter, component: DataCenter },
       { path: '/skillCenter', name: SkillCenter, component: SkillCenter },
-
 
       { path: '/operation', name: Operation, component: Operation },
       { path: '/userControl', name: UserControl, component: UserControl },

@@ -103,7 +103,9 @@ export default {
       const path = this.$route.path;
       const APath = '/allocation';
       const SPath = '/skill';
-      const RPath = '/repository';
+      const R_1Path = '/repository';
+      const R_2Path = '/radio';
+      const GPath = '/goodHealth';
       const EPath = '/edition';
 
       switch (path) {
@@ -111,7 +113,11 @@ export default {
           return true
         case SPath:
           return true
-        case RPath:
+        case R_1Path:
+          return true
+        case R_2Path:
+          return true
+        case GPath:
           return true
         case EPath:
           return true

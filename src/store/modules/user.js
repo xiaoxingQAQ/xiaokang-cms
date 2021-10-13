@@ -29,9 +29,10 @@ export default {
     // 下次页面刷新 数据初始化 读取本地存储 设置vuex
     [Init_User](state) {
       let userInfo = JSON.parse(sessionStorage.getItem('userInfo'));
+      console.log();
       let equipmentID_user = JSON.parse(sessionStorage.getItem('equipmentID_user'));
       let memberID_user = JSON.parse(sessionStorage.getItem('memberID_user'));
-      if (JSON.stringify(userInfo) !== '{}') {
+      if (userInfo instanceof Object) {
         state.memberID = userInfo.memberID
         state.username = userInfo.username
         state.systemIcon = userInfo.systemIcon

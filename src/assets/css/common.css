@@ -76,6 +76,7 @@ li {
   background-color: #fcae7312;
 }
 
+.el-menu,
 .el-message-box__title,
 .el-message-box__message,
 .el-message-box__status .el-icon-warning,
