@@ -13,8 +13,10 @@ import {
   Icon,
   Spin, 
   Upload,
+  Alert,
 } from 'ant-design-vue';
 
+Vue.use(Alert)
 Vue.use(Upload)
 Vue.use(Popover)
 Vue.use(Button)

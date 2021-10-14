@@ -1,6 +1,6 @@
 <template>
   <div class="wrapper">
-    <!-- <Card>
+    <Card>
       <span slot="leftTitle">用户选择</span>
       <div slot="main">
         <a-form-model
@@ -10,7 +10,10 @@
           @submit.native.prevent
         >
           <a-form-model-item>
-            <a-input v-model="SearchForm.memberID" placeholder="用户账号">
+            <a-input
+              v-model="SearchForm.memberID_user"
+              placeholder="用户MemberID"
+            >
               <a-icon
                 slot="prefix"
                 type="user"
@@ -19,7 +22,10 @@
             </a-input>
           </a-form-model-item>
           <a-form-model-item>
-            <a-input v-model="SearchForm.equipmentID" placeholder="设备编码">
+            <a-input
+              v-model="SearchForm.equipmentID_user"
+              placeholder="设备编码"
+            >
               <a-icon
                 slot="prefix"
                 type="android"
@@ -34,7 +40,7 @@
           </a-form-model-item>
         </a-form-model>
       </div>
-    </Card> -->
+    </Card>
     <Card>
       <span slot="leftTitle">用户列表</span>
       <div slot="main">
@@ -73,14 +79,10 @@ export default {
     return {
       loading: false,
       // 搜索表单对象
-      // SearchForm: {
-      //   memberID: '',
-      //   equipmentID: '',
-      //   startdate: '',
-      //   enddate: '',
-      //   pageIndex: '1',
-      //   pageSize: '9999999',
-      // },
+      SearchForm: {
+        memberID_user: '',
+        equipmentID_user: '',
+      },
       columns: [
         {
           title: '用户账号',
@@ -120,96 +122,51 @@ export default {
     }
   },
   created() {
-    this.getUserList()
+    this.setData()
   },
   computed: {
     ...mapState('user', ['memberID'])
   },
   methods: {
     ...mapMutations('user', ['User_ID']),
+    // 页面加载获取 本地数据
+    setData() {
+      let User = JSON.parse(sessionStorage.getItem('User'));
+      console.log('User: ', User);
+      if (User instanceof Object) {
+        this.tabData.push(User)
+      }
+    },
     // 获取 用户列表数据
     getUserList(index = 0) {
       if (index == 0) {
         this.tabData = []
-        this.getActiveRanking()
+        // 获取 活跃排名数据
+        this.searchUser('2')
       } else {
         this.tabData = []
-        this.getActivate()
+        // 获取 最新激活数据
+        this.searchUser('1')
       }
     },
-    // 获取 活跃排名数据
-    getActiveRanking() {
-      let tabData_s = JSON.parse(sessionStorage.getItem('tabData_1'));
-      if (tabData_s) {
-        if (tabData_s.length != 0) {
-          this.tabData = tabData_s
-        }
-      }
-      if (this.tabData.length == 0)
-        this.loading = true
-
-      const memberID = this.memberID;
-      console.log('memberID: ', memberID);
-      const equipmentID = '8770';
-      const startdate = getDate(-6) + ''
-      const enddate = getDate(0) + ''
-      const pageIndex = 1;
-      const pageSize = 10;
-      const type = '2';
-      const data = {
-        equipmentID,
-        memberID,
-        pageIndex,
-        pageSize,
-        startdate,
-        enddate,
-        type
-      }
-      this.cancel()
-      // 发送请求 获取活跃排名数据
-      getUserList(data).then(({ data, code }) => {
-        if (code != 0) {
-          this.loading = false
-          return this.$message.error('获取数据失败')
-        }
-        data.forEach((item, index) => {
-          const key = index;
-          const memberID = item.memberID;
-          const equipmentID = item.equipmentID;
-          const counts = item.counts;
-          const pubDate = item.pubDate;
-          this.tabData.push({
-            key,
-            memberID,
-            equipmentID,
-            counts,
-            pubDate
-          })
-        });
-        // 去重
-        this.tabData = _.uniqBy(this.tabData, 'memberID')
-        this.loading = false
-        // 写入本地存储
-        sessionStorage.setItem('tabData_1', JSON.stringify(this.tabData))
-      })
-    },
-    // 获取 最新激活数据
-    getActivate() {
-      let tabData_s = JSON.parse(sessionStorage.getItem('tabData_2'));
-      if (tabData_s) {
-        if (tabData_s.length != 0) {
-          this.tabData = tabData_s
-        }
-      }
+    // 查找用户
+    searchUser(indey) {
       if (this.tabData.length == 0) this.loading = true
 
-      const memberID = this.memberID;
-      const equipmentID = '';
+      const memberID = this.SearchForm.memberID_user;
+      const equipmentID = this.SearchForm.equipmentID_user;
+
+      if (indey == '0') {
+        memberID = '';
+        equipmentID = '';
+        indey = ''
+      }
+
       const startdate = getDate(-6) + ''
       const enddate = getDate(0) + ''
       const pageIndex = 1;
       const pageSize = 10;
-      const type = '1';
+      const type = indey;
       const data = {
         equipmentID,
         memberID,
@@ -220,13 +177,13 @@ export default {
         type
       }
       this.cancel()
-      // 发送请求 获取用户列表数据
+      // 发送请求 获取活跃排名数据 
       getUserList(data).then(({ data, code }) => {
         if (code != 0) {
           this.loading = false
           return this.$message.error('获取数据失败')
         }
-        data.forEach((item, index) => {
+        data.records.forEach((item, index) => {
           const key = index;
           const memberID = item.memberID;
           const equipmentID = item.equipmentID;
@@ -243,23 +200,21 @@ export default {
         // 去重
         this.tabData = _.uniqBy(this.tabData, 'memberID')
         this.loading = false
-        // 写入本地存储
-        sessionStorage.setItem('tabData_2', JSON.stringify(this.tabData))
       })
     },
     // 点击查看 用户 详情信息
     goDetail(record) {
-      const equipmentID_user = record.equipmentID
-      const memberID_user = record.memberID
       this.User_ID(record)
-
-      sessionStorage.setItem('equipmentID_user', JSON.stringify(equipmentID_user))
-      sessionStorage.setItem('memberID_user', JSON.stringify(memberID_user))
       this.$emit('onChange')
+      // 写入本地存储
+      sessionStorage.setItem('User', JSON.stringify(record))
     },
     // 点击查询
-    // onSearch() {
-    // },
+    onSearch() {
+      if (this.SearchForm.memberID_user == '') return this.$message.warning('请完善表单')
+      if (this.SearchForm.equipmentID_user == '') return this.$message.warning('请完善表单')
+      this.searchUser('0')
+    },
   },
 }
 </script>

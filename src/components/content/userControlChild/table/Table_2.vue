@@ -4,15 +4,17 @@
       :columns="columns"
       :data-source="Table_2"
       :loading="loading"
-      :pagination="false"
+      :pagination="pagination"
+      @change="handleChange"
     >
+    {{pagination}}
     </a-table>
   </div>
 </template>
 
 <script>
 export default {
-   props: {
+  props: {
     Table_2: {
       type: Array,
       default() {
@@ -23,6 +25,11 @@ export default {
   data() {
     return {
       loading: false,
+      pagination: {
+        total: 0,
+        pageSize: 10, //每页中显示10条数据
+        showSizeChanger: false,
+      },
       columns: [
         {
           title: '药品名称',
@@ -40,6 +47,14 @@ export default {
           key: 'planTime',
         },
       ],
+    }
+  },
+  created() {
+    
+  },
+  methods: {
+    handleChange() {
+
     }
   },
 }

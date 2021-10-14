@@ -7,7 +7,7 @@
     <main>
       <div class="img-wrapper">
         <div>
-          <img src="@/assets/images/show.png" alt="" />
+          <img src="@/assets/images/image.png" alt="" />
         </div>
       </div>
       <!-- 登录 -->
@@ -130,7 +130,7 @@ export default {
 .wrapper {
   position: relative;
   width: 100%;
-  height: 100vh;
+  height: 100%;
   background: url('../../assets/images/background.png');
   background-size: 100%;
 
@@ -157,7 +157,7 @@ export default {
 
       img {
         width: 85%;
-        transform: translate(16%, 8%);
+        transform: translate(16%, -8%);
       }
     }
 
@@ -202,7 +202,7 @@ export default {
     }
   }
   .footer {
-    position: fixed;
+    position: relative;
     bottom: 0;
     left: 0;
     width: 100%;

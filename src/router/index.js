@@ -22,12 +22,9 @@ const Operation = () => import('@/views/home/childComps/operation/Operation')
 const UserControl = () => import('@/views/home/childComps/operation/UserControl')
 const OperationControl = () => import('@/views/home/childComps/operation/OperationControl')
 
-const Manage = () => import('@/views/home/childComps/manage/Manage')
-const Role = () => import('@/views/home/childComps/manage/Role')
-const Menu = () => import('@/views/home/childComps/manage/Menu')
-const Dict = () => import('@/views/home/childComps/manage/Dict')
-const Resource = () => import('@/views/home/childComps/manage/Resource')
-const Data = () => import('@/views/home/childComps/manage/Data')
+const Service = () => import('@/views/home/childComps/manage/Service')
+const CallSettings = () => import('@/views/home/childComps/manage/CallSettings')
+const RestSettings = () => import('@/views/home/childComps/manage/RestSettings')
 
 const routes = [
   { path: '', redirect: '/login', },
@@ -54,13 +51,9 @@ const routes = [
       { path: '/userControl', name: UserControl, component: UserControl },
       { path: '/operationControl', name: OperationControl, component: OperationControl },
 
-      { path: '/manage', name: Manage, component: Manage },
-      { path: '/role', name: Role, component: Role },
-      { path: '/menu', name: Menu, component: Menu },
-      { path: '/dict', name: Dict, component: Dict },
-      { path: '/resource', name: Resource, component: Resource },
-      { path: '/data', name: Data, component: Data },
-
+      { path: '/service', name: Service, component: Service },
+      { path: '/callSettings', name: CallSettings, component: CallSettings },
+      { path: '/restSettings', name: RestSettings, component: RestSettings },
     ]
   },
 

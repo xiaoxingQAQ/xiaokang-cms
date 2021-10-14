@@ -148,25 +148,16 @@ export default {
     },
     showAsideM() {
       const path = this.$route.path;
-      const M1Path = '/manage';
-      const R1Path = '/role';
-      const M2Path = '/menu';
-      const D1Path = '/dict';
-      const R2Path = '/resource';
-      const D2Path = '/data';
+      const MPath = '/service';
+      const CPath = '/callSettings';
+      const RPath = '/restSettings';
 
       switch (path) {
-        case M1Path:
+        case MPath:
           return true
-        case R1Path:
+        case CPath:
           return true
-        case M2Path:
-          return true
-        case D1Path:
-          return true
-        case R2Path:
-          return true
-        case D2Path:
+        case RPath:
           return true
       }
     },

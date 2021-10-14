@@ -6,6 +6,7 @@ body,
   height: 100%;
   margin: 0;
   padding: 0;
+  height: 100%;
   min-width: 1055px;
 }
 
@@ -85,7 +86,11 @@ li {
   cursor: text;
 }
 
+.el-select-dropdown__item,
+.ant-alert-message,
+.ant-alert-description,
 .el-menu,
+.ant-btn,
 .el-message-box__title,
 .el-message-box__message,
 .el-message-box__status .el-icon-warning,

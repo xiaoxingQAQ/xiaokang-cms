@@ -97,7 +97,7 @@
           class="selectDate"
         />
         <!-- 数据表格 -->
-        <Table_1 ref="Table_1" :Table_1="Table_1" v-show="currentIndex == 0" />
+        <Table_1 ref="Table_1" :Table_1="Table_1" :Table_1_a="Table_1_a" v-show="currentIndex == 0" />
         <Table_2 ref="Table_2" :Table_2="Table_2" v-show="currentIndex == 1" />
         <Table_3 ref="Table_3" :Table_3="Table_3" v-show="currentIndex == 2" />
         <Table_4 ref="Table_4" :Table_4="Table_4" v-show="currentIndex == 3" />
@@ -164,6 +164,7 @@ export default {
       loading_1: false,
       loading_2: false,
       Table_1: [],
+      Table_1_a: [],
       Table_2: [],
       Table_3: [],
       Table_4: [],
@@ -191,13 +192,16 @@ export default {
     // 获取 用户信息数据
     getUserDetail() {
       const memberID = this.memberID_user;
+      console.log('memberID: ', memberID);
       const equipmentID = this.equipmentID_user;
+      console.log('equipmentID: ', equipmentID);
+
       const data = {
         memberID,
         equipmentID
       }
       this.cancel()
-      // 发送请求
+      // 发送请求 
       getUserDetail(data).then(({ data, code }) => {
         if (code != 0) return this.$message.error('获取数据失败')
         let username = data.username;
@@ -239,32 +243,29 @@ export default {
       switch (index) {
         case 0:
           type = 'pressure'
+          this.$refs.Table_1.$data.isChange = false
+          const data_1 = {
+            memberID,
+            startdate,
+            type,
+            day
+          }
+          this.getBodyData_a(data_1)
           break;
         case 1:
           type = 'sugar'
+          this.$refs.Table_1.$data.isChange = true
+          const data_2 = {
+            memberID,
+            startdate,
+            type,
+            day
+          }
+          this.getBodyData_b(data_2)
           break;
       }
-      const data = {
-        memberID,
-        startdate,
-        type,
-        day
-      }
-      this.cancel()
-      // 发送请求 获取 用户体征数据
-      getBodyData(data).then(({ data, code }) => {
-        if (code != 0) {
-          this.$refs.Table_1.$data.loading = false
-          return this.$message.warning('该用户暂无体征数据')
-        }
-        // 如果有
-        // data.forEach(item => {
-
-        // });
-
-        this.$refs.Table_1.$data.loading = false
-      })
     },
+
     getBodyData_2(types, start_date) {
       this.Table_1 = []
       this.$refs.Table_1.$data.loading = true
@@ -288,17 +289,97 @@ export default {
         type,
         day
       }
-      this.cancel()
-      // 发送请求 获取 用户体征数据
+      // 发送请求 获取 用户体征数据 
       getBodyData(data).then(({ data, code }) => {
         if (code != 0) {
           this.$refs.Table_1.$data.loading = false
           return this.$message.warning('该用户暂无体征数据')
         }
         // 如果有
-        // data.forEach(item => {
+        data.forEach((item, index) => {
+          let key = index
+          let systolic = item.systolic;
+          let notEatMedicine = item.notEatMedicine;
+          let sequenceNo = item.sequenceNo;
+          let statusID = item.statusID;
+          let time = item.time
+          this.Table_1.push({
+            key,
+            systolic,
+            notEatMedicine,
+            sequenceNo,
+            statusID,
+            time
+          })
+        });
 
-        // });
+        this.$refs.Table_1.$data.loading = false
+      })
+    },
+    // 获取体征数据
+    getBodyData_a(data_1) {
+      this.Table_1 = []
+      // 发送请求 获取 用户体征数据
+      getBodyData(data_1).then(({ data, code }) => {
+        if (code != 0) {
+          this.$refs.Table_1.$data.loading = false
+          return this.$message.warning('该用户暂无体征数据')
+        }
+        // 如果有
+        data.forEach((item, index) => {
+          let key = index
+          let systolic = item.systolic;
+          let notEatMedicine = item.notEatMedicine;
+          let sequenceNo = item.sequenceNo;
+          let statusID = item.statusID;
+          let time = item.time
+          this.Table_1.push({
+            key,
+            systolic,
+            notEatMedicine,
+            sequenceNo,
+            statusID,
+            time
+          })
+        });
+
+        this.$refs.Table_1.$data.loading = false
+      })
+    },
+    getBodyData_b(data_2) {
+      this.Table_1_a = []
+      // 发送请求 获取 用户体征数据
+      getBodyData(data_2).then(({ data, code }) => {
+        if (code != 0) {
+          this.$refs.Table_1.$data.loading = false
+          return this.$message.warning('该用户暂无体征数据')
+        }
+        console.log(data);
+        // // 如果有
+        data.forEach((item, index) => {
+          let key = index;
+          let avgAfterSugar = item.avgAfterSugar + 'mmol/L'; // 餐后血糖平均值
+          let after = item.after + 'mmol/L'; // 餐后血糖
+          let afterRemindNum = item.afterRemindNum // 餐后的状态码
+          let afterRemindTitle = item.afterRemindTitle // 餐后 状态提醒
+          
+          let avgEmptySugar = item.avgEmptySugar + 'mmol/L' // 空腹血糖平均值腹
+          let empty = item.empty + 'mmol/L' // 空腹的血糖
+          let emptyRemindNum = item.emptyRemindNum // 空腹的状态码
+
+          let remindNum = item.remindNum; // 整体状态
+          this.Table_1_a.push({
+            key,
+            avgEmptySugar,
+            avgAfterSugar,
+            empty,
+            after,
+            afterRemindNum,
+            emptyRemindNum,
+            afterRemindTitle,
+            remindNum
+          })
+        });
 
         this.$refs.Table_1.$data.loading = false
       })
@@ -309,7 +390,7 @@ export default {
       this.$refs.Table_2.$data.loading = true
       const memberID = this.memberID_user;
       const pageIndex = 1;
-      const pageSize = 9999999;
+      const pageSize = 999999;
       switch (type) {
         case 0:
           type = 7
@@ -338,8 +419,9 @@ export default {
           this.$refs.Table_2.$data.loading = false
           return this.$message.warning('该用户暂无用药数据')
         }
+        this.$refs.Table_2.$data.pagination.total = data.total
         // 如果有
-        data.forEach((item, index) => {
+        data.records.forEach((item, index) => {
           const key = index;
           const name = item.name;
           const piecesOneTime = item.piecesOneTime;
@@ -351,6 +433,7 @@ export default {
             planTime
           })
         });
+        this.$refs.Table_2.$data.loading = false
       })
     },
     getRecentDrug_2(type, start_date) {
@@ -358,7 +441,7 @@ export default {
       this.$refs.Table_2.$data.loading = true
       const memberID = this.memberID_user;
       const pageIndex = 1;
-      const pageSize = 9999999;
+      const pageSize = 10;
       let startdate = start_date
       let day = type
 
@@ -376,8 +459,9 @@ export default {
           this.$refs.Table_2.$data.loading = false
           return this.$message.warning('该用户暂无用药数据')
         }
+        this.$refs.Table_2.$data.pagination.total = data.total
         // 如果有
-        data.forEach((item, index) => {
+        data.records.forEach((item, index) => {
           const key = index;
           const name = item.name;
           const piecesOneTime = item.piecesOneTime;
@@ -389,6 +473,7 @@ export default {
             planTime
           })
         });
+        this.$refs.Table_2.$data.loading = false
       })
     },
     // 获取 用户常用技能
@@ -397,7 +482,7 @@ export default {
       this.$refs.Table_3.$data.loading = true
       const memberID = this.memberID_user;
       const pageIndex = 1;
-      const pageSize = 10;
+      const pageSize = 999999;
       switch (type) {
         case 0:
           type = 7
@@ -563,7 +648,7 @@ export default {
         id
       }
       this.cancel()
-      // 发送请求 删除对应的 知识库
+      // 发送请求 删除对应的
       deleteLabeList(data).then(res => {
         if (!res) return
         if (res.code != 0) return this.$message.error('删除失败')

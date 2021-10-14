@@ -517,14 +517,14 @@ export function deleteOperation(data) {
   })
 }
 
-// 文件上传
-export function uploadFile(data) {
+
+// 客服信息
+export function getServiceInfo(data) {
   return request({
     method: 'post',
-    url: '/service/attachment/upload',
+    url: '/service/supportStaff/list',
     headers: { //请求头
-      token: JSON.parse(sessionStorage.getItem('token')),
-      'Content-Type': 'multipart/form-data'
+      token: JSON.parse(sessionStorage.getItem('token'))
     },
     data
   })

@@ -23,7 +23,7 @@ export default {
         { id: 1, title: '设备配置', icon: 'icon-science' },
         { id: 2, title: '数据中心', icon: 'icon-commission' },
         { id: 3, title: '产品运营', icon: 'icon-server1' },
-        // { id: 4, title: '系统管理', icon: 'icon-shezhi3' },
+        { id: 4, title: '系统管理', icon: 'icon-shezhi3' },
       ],
       currentIndex: 0,
     }
@@ -56,11 +56,8 @@ export default {
           break;
         case 4:
           this.currentIndex = index
-          if (this.$route.path == '/manage') return
-          this.$router.replace('/manage')
-          break;
-
-        default:
+          if (this.$route.path == '/service') return
+          this.$router.replace('/service')
           break;
       }
     },
@@ -80,12 +77,9 @@ export default {
       let operationU = '/userControl';
       let operationO = '/operationControl'
 
-      let manage = '/manage';
-      let manageR1 = '/role';
-      let manageM = '/menu'
-      let manageD1 = '/dict'
-      let manageR2 = '/resource'
-      let manageD2 = '/data'
+      let manage = '/service';
+      let manageC = '/callSettings';
+      let manageR = '/restSettings'
       /* 如果当前处于 xxx 路由就进行判断 否则不判断 */
       switch (path) {
         case home:
@@ -125,19 +119,10 @@ export default {
         case manage:
           this.currentIndex = 4
           break;
-        case manageR1:
+        case manageC:
           this.currentIndex = 4
           break;
-        case manageM:
-          this.currentIndex = 4
-          break;
-        case manageD1:
-          this.currentIndex = 4
-          break;
-        case manageR2:
-          this.currentIndex = 4
-          break;
-        case manageD2:
+        case manageR:
           this.currentIndex = 4
           break;
       }

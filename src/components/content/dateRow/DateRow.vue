@@ -62,7 +62,7 @@ export default {
       dateArr: [7, 14, 30], // changdate的数组
       dateArr_text: ['活跃排名', '最新激活'],
       currentIndex: 0, // 当前的 index
-      currentIndex_1: 0,
+      currentIndex_1: null,
     }
   },
   created() {

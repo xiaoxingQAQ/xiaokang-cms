@@ -215,7 +215,7 @@ import {
   getKnowledge,
   getRepository,
   addAnswer,
-  addRepository
+  addRepository,
 } from '@/network/home'
 import { mapState } from 'vuex'
 
@@ -552,15 +552,17 @@ export default {
       this.$refs.addForm_1Ref.validate(valid => {
         if (!valid) return
         this.loading_3 = true
-
+        const memberID = this.memberID
         let repository = this.addForm_1.name
         let questions = this.addForm_1.questions
         let answers = this.addForm_1.answers
         const data = {
+          memberID,
           repository,
           questions,
           answers
         }
+        console.log(data);
         this.cancel()
         // 发送请求
         addAnswer(data).then(res => {
@@ -596,32 +598,38 @@ export default {
           memberID
         }
         this.cancel()
-        // 发送请求
+        // 发送请求 添加知识库
         addRepository(data_1).then(res => {
+          console.log('res: ', res);
           if (!res) return
           if (res.code != 0) {
             this.loading_4 = false
-            return this.$message.warning('保存失败，可能是 名称重复啦')
+            return this.$message.warning(res.message)
           }
-          this.$message.success('保存成功')
-          let repository = res.data.id
-          let questions = this.addForm_1.questions
-          let answers = this.addForm_1.answers
-          const data_2 = {
-            repository,
-            questions,
-            answers
-          }
-          this.cancel()
-          // 发送请求
-          addAnswer(data_2).then(res => {
-            if (!res) return
-            if (res.code != 0) return this.$message.error('添加失败')
-            console.log('res: ', res);
+          // 发送请求 获取知识库列表
+          getRepository({ memberID }).then(({ data, code }) => {
+            data = data.filter(item => {
+              return item.name == name
+            })
+            let repository = data[0].id
+            let questions = this.addForm_1.questions
+            let answers = this.addForm_1.answers
+            const data_2 = {
+              memberID,
+              repository,
+              questions,
+              answers
+            }
+            this.cancel()
+            // 发送请求 添加问答
+            addAnswer(data_2).then(res => {
+              if (!res) return
+              if (res.code != 0) return this.$message.error('添加失败')
 
-            this.$message.success('添加成功')
-            this.loading_4 = false
-            this.addDialogVisible_2 = false
+              this.$message.success('添加成功')
+              this.loading_4 = false
+              this.addDialogVisible_2 = false
+            })
           })
         })
       })

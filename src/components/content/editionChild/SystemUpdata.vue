@@ -128,7 +128,6 @@ export default {
     handleChange(info) {
       console.log(info);
       let fileList = [...info.fileList];
-      fileList = fileList.slice(-1);
       fileList = fileList.map(file => {
 
         if (file.response) {

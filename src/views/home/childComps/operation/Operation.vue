@@ -6,6 +6,15 @@
       <h1>新建消息推送</h1>
     </div>
 
+    <!-- 提示 -->
+   <a-alert
+      style="margin-top: 30px;"
+      message="提示："
+      description="此功能会推送到所有小康设备"
+      type="info"
+      show-icon
+    />
+
     <!-- Dialog 对话框 -->
     <a-modal
       width="800px"
@@ -49,7 +58,7 @@
           </a-row>
           <a-textarea placeholder="请输入推送内容" :rows="4" />
         </a-tab-pane> -->
-        <a-tab-pane key="1" tab="推送所有人" force-render>
+        <a-tab-pane key="1" tab="推送所有设备" force-render>
           <div class="aim content">推送内容：</div>
           <a-textarea
             v-model="message"

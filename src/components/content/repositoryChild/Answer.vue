@@ -318,7 +318,6 @@ export default {
         repository
       }
       console.log('dai', data);
-      console.log(data);
       this.TableLoading_2 = true
       this.cancel()
       // 发送请求
