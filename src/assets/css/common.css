@@ -62,18 +62,27 @@ li {
   font-weight: 500;
 }
 
- .ant-table-thead > tr > th {
+.ant-table-thead > tr > th {
   text-align: center;
   color: #fff;
   background-color: #73c4fc;
 }
 
- .ant-table-row-level-0 {
+.ant-table-row-level-0 {
   text-align: center;
 }
 
- .ant-table-row-level-0:nth-child(2n) {
+.ant-table-row-level-0:nth-child(2n) {
   background-color: #fcae7312;
+}
+.el-breadcrumb,
+.el-breadcrumb__item:last-child .el-breadcrumb__inner,
+.el-breadcrumb__item:last-child .el-breadcrumb__inner a,
+.el-breadcrumb__item:last-child .el-breadcrumb__inner a:hover,
+.el-breadcrumb__item:last-child .el-breadcrumb__inner:hover {
+  font-weight: 500;
+  color: hsl(220deg 3% 39%);
+  cursor: text;
 }
 
 .el-menu,
@@ -92,4 +101,3 @@ li {
 .el-message__content {
   font-weight: 700;
 }
-

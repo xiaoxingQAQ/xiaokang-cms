@@ -28,9 +28,13 @@ import {
   Select,
   Option,
   DatePicker,
-  MessageBox
+  MessageBox,
+  Breadcrumb,
+  BreadcrumbItem,
 } from 'element-ui'
 
+Vue.use(BreadcrumbItem)
+Vue.use(Breadcrumb)
 Vue.use(DatePicker)
 Vue.use(Option)
 Vue.use(Select)

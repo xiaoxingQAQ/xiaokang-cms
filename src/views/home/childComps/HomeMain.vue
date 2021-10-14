@@ -1,42 +1,81 @@
 /* Home主要页面 */
 <template>
   <div class="wrapper">
-    <!-- 时间 -->
+    <transition name="slide-fade" v-if="!isChange">
+    <div>
+      <!-- 时间 -->
     <el-row>
       <el-col class="date" :span="6">
         <span>{{ date }}</span>
       </el-col>
     </el-row>
     <!-- 卡片1-->
-    <Card>
+    <Card class="Card">
       <span slot="leftTitle">设备数据</span></span>
-      <span slot="rightTitle">查看更多数据</span></span>
+      <span slot="rightTitle" @click="$router.replace('/dataCenter')">查看更多数据</span></span>
 
-      <div slot="data_1" v-if="JSON.stringify(cardData_1) != '{}'">{{cardData_1.upcount}}</div>
-      <div slot="data_1" v-else>0</div>
-      <div slot="title_1">最近更新</div>
+      <div slot="data_1" >
+      <span v-if="JSON.stringify(cardData_1) != '{}'">{{cardData_1.upcount}}</span>
+      <div class="loading" slot="data_1" v-else>
+        <a-spin tip="Loading...">
+          <div class="spin-content"></div>
+        </a-spin>
+      </div>
+      </div>
+     
+      <div slot="title_1" v-if="JSON.stringify(cardData_1) != '{}'">最近更新</div>
+      <div slot="title_1" v-else></div>
 
-      <div slot="data_2" v-if="JSON.stringify(cardData_1) != '{}'">{{cardData_1.account}}</div>
-      <div slot="data_2"  v-else>0</div>
-      <div slot="title_2">近期动态</div>
+      <div slot="data_2">
+        <span v-if="JSON.stringify(cardData_1) != '{}'">{{cardData_1.upcount}}</span>
+        <div class="loading" slot="data_1" v-else>
+          <a-spin tip="Loading...">
+            <div class="spin-content"></div>
+          </a-spin>
+        </div>
+      </div>
+      <div slot="title_2" v-if="JSON.stringify(cardData_1) != '{}'">近期动态</div>
+      <div slot="title_2" v-else></div>
 
-      <div slot="data_3" v-if="JSON.stringify(cardData_1) != '{}'">{{cardData_1.sumcount}}</div>
-      <div slot="data_3" v-else>0</div>
-      <div slot="title_3">累积激活</div>
+      <div slot="data_3">
+        <span v-if="JSON.stringify(cardData_1) != '{}'">{{cardData_1.upcount}}</span>
+        <div class="loading" slot="data_1" v-else>
+          <a-spin tip="Loading...">
+            <div class="spin-content"></div>
+          </a-spin>
+        </div>
+      </div>
+      <div slot="title_3" v-if="JSON.stringify(cardData_1) != '{}'">累积激活</div>
+      <div slot="title_3" v-else></div>
     </Card>
     <!-- 卡片2 -->
-    <Card>
+    <Card class="Card">
       <span slot="leftTitle">请求数据</span></span>
-      <span slot="rightTitle">查看更多数据</span></span>
+      <span slot="rightTitle" @click="goDetail">查看更多数据</span></span>
 
-      <div slot="data_1" v-if="JSON.stringify(cardData_2) != '{}'">{{cardData_2.account}}</div>
-      <div slot="data_1"  v-else>0</div>
-      <div slot="title_1">近日请求</div>
+      <div slot="data_1">
+        <span v-if="JSON.stringify(cardData_2) != '{}'">{{cardData_1.upcount}}</span>
+        <div class="loading" slot="data_1" v-else>
+          <a-spin tip="Loading...">
+            <div class="spin-content"></div>
+          </a-spin>
+        </div>
+      </div>
+      <div slot="title_1" v-if="JSON.stringify(cardData_2) != '{}'">近日请求</div>
+      <div slot="title_1" v-else></div>
 
 
-      <div slot="data_3" v-if="JSON.stringify(cardData_2) != '{}'">{{cardData_2.sumcount}}</div>
-      <div slot="data_3"  v-else>0</div>
-      <div slot="title_3">累积请求</div>
+      <div slot="data_3">
+        <span v-if="JSON.stringify(cardData_2) != '{}'">{{cardData_1.upcount}}</span>
+        <div class="loading" slot="data_1" v-else>
+          <a-spin tip="Loading...">
+            <div class="spin-content"></div>
+          </a-spin>
+        </div>
+      </div>
+      
+      <div slot="title_3" v-if="JSON.stringify(cardData_2) != '{}'">累积请求</div>
+      <div slot="title_3" v-else></div>
     </Card>
     
     <Card>
@@ -46,6 +85,11 @@
         </a-table>
       </div>
     </Card>
+    </div>
+    </transition>
+    <transition name="slide-fade" v-else="isChange">
+      <RequestTrend @onChange="onChange" />
+    </transition>
   </div>
 </template>
 
@@ -53,13 +97,16 @@
 import Card from '@/components/content/card/Card'
 import { card_1, card_2, card_3 } from '@/network/home'
 import { mapState } from 'vuex'
+import RequestTrend from '@/components/content/homeMainChild/RequestTrend'
 
 export default {
   components: {
     Card,
+    RequestTrend
   },
   data() {
     return {
+      isChange: false,
       date: '', // 日期
       cardData_1: {},
       cardData_2: {},
@@ -115,11 +162,11 @@ export default {
     },
     // 获取首页的数据
     getHomeData() {
+      this.cancel()
       const memberID = this.memberID
       const data = {
         memberID
       }
-      this.cancel()
       // 请求卡片1的数据
       card_1(data).then(res_1 => {
         console.log('res_1: ', res_1);
@@ -128,7 +175,6 @@ export default {
 
         this.cardData_1 = res_1.data
       })
-      this.cancel()
       // 请求卡片2的数据
       card_2(data).then(res_2 => {
         if (!res_2) return
@@ -137,7 +183,6 @@ export default {
         this.cardData_2 = res_2.data
       })
       this.loading = true
-      this.cancel()
       // 请求卡片3的数据
       card_3(data).then(res_3 => {
         if (!res_3) return
@@ -157,7 +202,13 @@ export default {
         this.TabData = arr
         this.loading = false
       })
-    }
+    },
+    goDetail() {
+      this.isChange = !this.isChange
+    },
+    onChange() {
+      this.isChange = !this.isChange
+    },
   },
 }
 </script>
@@ -174,6 +225,20 @@ export default {
       font-size: 20px;
       line-height: 50px;
     }
+  }
+  ::v-deep .el-card__body {
+    min-height: 181.96px !important;
+  }
+
+  .loading {
+    transform: translate(0, 50px);
+  }
+  ::v-deep .ant-spin-dot-spin {
+    margin-left: 20px !important;
+  }
+  .slide-fade-enter,
+  .slide-fade-leave-to {
+    opacity: 0;
   }
 }
 </style>

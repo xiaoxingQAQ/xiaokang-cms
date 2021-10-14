@@ -75,14 +75,18 @@ export default {
         if (!res) return
         if (res.code != 0) return this.$message.error('获取数据失败')
 
-        console.log(res);
-        res.data.forEach(itme => {
-          let versionNumber = item.versionNumber
-          let pubDate = item.pubDate
-          let attachmentID = item.attachmentID
+
+        res.data.forEach(item => {
+          let key = item.id
+          let versionNumber = item.versionNumber // 版本号
+          let updateLog = item.updateLog // 更新日志
+          let uptDate = item.pubDate // 更新日期
+          let attachmentID = item.attachmentID // 文件id
           this.TabData.push({
+            key,
             versionNumber,
-            pubDate,
+            updateLog,
+            uptDate,
             attachmentID
           })
         });

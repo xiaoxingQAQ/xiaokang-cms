@@ -32,7 +32,6 @@
       </span>
       <div slot="main">
         <a-table
-          :rowKey="(record) => record.id"
           :loading="TableLoading_2"
           :columns="columns"
           :data-source="data"
@@ -414,11 +413,13 @@ export default {
         if (!res) return
         if (res.code != 0) return this.$message.error('获取数据失败')
         console.log(res);
-        res.data.forEach(item => {
+        res.data.forEach((item, index) => {
+          let key = index;
           let value = item.id;
           let label = item.name
           let id = item.id
           this.options.push({
+            key,
             id,
             value,
             label,

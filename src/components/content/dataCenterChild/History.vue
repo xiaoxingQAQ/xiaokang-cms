@@ -44,8 +44,8 @@ export default {
         },
         {
           title: '发送时间',
-          dataIndex: 'pubDate',
-          key: 'pubDate',
+          dataIndex: 'remindDate',
+          key: 'remindDate',
         },
       ],
       tabData: [],
@@ -58,6 +58,7 @@ export default {
     this.getMessageList()
   },
   methods: {
+    // 获取系统消息
     getMessageList() {
       const memberID = this.memberID
       const data = {
@@ -71,22 +72,21 @@ export default {
       getMessageList(data).then(res => {
         console.log('系统消息res: ', res);
         if (!res) return
-        console.log(res);
         if (res.code != 0) {
           this.loading = false
           return this.$message.warning('暂无消息！')
         }
 
-        res.data.forEach((item, index) => {
+        res.data.records.forEach((item, index) => {
           let key = index + 1
           let id = item.id
           let message = item.message
-          let pubDate = item.pubDate
+          let remindDate = item.remindDate
           this.tabData.push({
             id,
             key,
             message,
-            pubDate
+            remindDate
           })
         });
         this.tabData = _.uniqBy(this.tabData, 'id')

@@ -40,7 +40,7 @@
         </div>
       </transition>
       <!-- 导航栏 -->
-      <NavBar class="NavBar" />
+      <NavBar ref="NavBar" class="NavBar" />
       <div class="btn">
         <el-button size="mini" class="toggle-button" type="info" @click="logout"
           >退出</el-button
@@ -94,6 +94,7 @@ export default {
   },
   watch: {
     '$route'(to, from) {
+      this.$refs.NavBar.selected()
       sessionStorage.setItem('tabsIndex', JSON.stringify(0))
     }
   },

@@ -35,16 +35,22 @@ export default {
       return
     }
 
-    this.$emit('onChange',  this.currentIndex)
-
+    this.$emit('onChange', this.currentIndex)
+  },
+  mounted() {
+    this.$bus.$on('handle', () => {
+      this.currentIndex = 1;
+      // 传数据给父组件
+      this.$emit('onChange', this.currentIndex)
+    })
   },
   methods: {
     btnClick(index) {
       this.currentIndex = index
-      sessionStorage.setItem('tabsIndex', JSON.stringify(index))
+      sessionStorage.setItem('tabsIndex', JSON.stringify(this.currentIndex))
 
       // 传数据给父组件
-      this.$emit('onChange', index)
+      this.$emit('onChange', this.currentIndex)
     },
     selected() {
       let tabsIndex = JSON.parse(sessionStorage.getItem('tabsIndex'));

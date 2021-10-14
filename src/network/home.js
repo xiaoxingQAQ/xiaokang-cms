@@ -38,6 +38,19 @@ export function card_3(data) {
   })
 }
 
+
+// 请求趋势
+export function getTrend(data) {
+  return request({
+    method: 'post',
+    url: '/service/backequipment/userTendency',
+    headers: { //请求头
+      token: JSON.parse(sessionStorage.getItem('token'))
+    },
+    data
+  })
+}
+
 /* --------设备配置页-------- */
 
 
@@ -197,7 +210,7 @@ export function deleteSnifferWord(data) {
   })
 }
 
-// 知识雷达列表
+// 嗅探词 探测结果列表
 export function getKnowledge(data) {
   return request({
     method: 'post',

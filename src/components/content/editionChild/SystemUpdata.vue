@@ -72,6 +72,7 @@ export default {
       headers: {
         token,
       },
+      fileList: [],
       // 表单验证对象
       updateFormRules: {
         number: [
@@ -81,8 +82,6 @@ export default {
           { required: true, message: '请输入更新日志', trigger: 'blur' }
         ]
       },
-      fileList: [
-      ],
     }
   },
   computed: {
@@ -119,6 +118,8 @@ export default {
             if (res.code != 0) return this.$message.error('推送失败')
 
             this.$message.success('推送成功')
+            let index = 1
+            this.$bus.$emit('handle', index)
           })
         }, 800);
 
@@ -151,6 +152,7 @@ export default {
           message: '删除成功!'
         });
         this.fileList = [];
+        this.updateForm.attachmentID = ''
         flag = true
       }).catch(() => {
         this.$message({

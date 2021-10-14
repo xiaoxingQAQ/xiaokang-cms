@@ -491,7 +491,7 @@ export default {
       setTimeout(() => {
         if (this.selectedRows_2.length == 0) {
           this.loading_4 = false
-          return this.$message.info('请选择您要删除的知识库')
+          return this.$message.info('请选择您要删除的问答')
         }
 
         const arr = [];
