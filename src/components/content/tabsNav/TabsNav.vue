@@ -5,10 +5,11 @@
       <div
         v-for="(item, index) in tabs_nav"
         :key="item.id"
-        :class="{ active: currentIndex == index }"
         @click="btnClick(index)"
       >
-        <slot :name="item.name"></slot>
+        <span :class="{ active: currentIndex == index }">
+          <slot :name="item.name"></slot>
+        </span>
       </div>
     </div>
   </div>
@@ -71,13 +72,20 @@ export default {
     box-sizing: border-box;
     display: flex;
     flex-direction: column;
+    justify-content: space-around;
     align-items: center;
-    margin-right: 15px;
     width: 65px;
+
     color: #000;
     > div {
+      display: flex;
+      align-items: center;
       padding: 10px 0;
       transition: all 0.3s;
+      span {
+        border-bottom: 2px solid transparent;
+        transition: all 0.3s;
+      }
     }
     > div:hover {
       color: #40a0ff83;
@@ -87,6 +95,7 @@ export default {
 
   .active {
     color: #409eff;
+    border-bottom: 2px dashed #409eff !important;
   }
 }
 </style>

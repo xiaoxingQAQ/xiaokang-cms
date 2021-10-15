@@ -44,7 +44,12 @@
     <Card>
       <span slot="leftTitle">用户列表</span>
       <div slot="main">
-        <DataRow @onChange="getUserList" @Change="" types="string"></DataRow>
+        <DataRow
+          @onChange="getUserList_1"
+          @Change="getUserList_2"
+          types="string"
+          ref="DataRow"
+        ></DataRow>
 
         <!-- 表格 -->
         <a-table
@@ -71,12 +76,14 @@ import { getDate } from '@/utils/getDate'
 import { mapMutations, mapState } from 'vuex'
 
 export default {
+  name: 'User',
   components: {
     Card,
     DataRow
   },
   data() {
     return {
+      type_index: null,
       loading: false,
       // 搜索表单对象
       SearchForm: {
@@ -121,7 +128,7 @@ export default {
       tabData: [],
     }
   },
-  created() {
+  mounted() {
     this.setData()
   },
   computed: {
@@ -134,39 +141,78 @@ export default {
       let User = JSON.parse(sessionStorage.getItem('User'));
       console.log('User: ', User);
       if (User instanceof Object) {
+        this.tabData = []
         this.tabData.push(User)
+        this.$refs.DataRow.$data.currentIndex_1 = null;
+      } else {
+        this.getUserList_1()
       }
     },
     // 获取 用户列表数据
-    getUserList(index = 0) {
+    getUserList_1(index = 0) {
+      this.type_index = index
       if (index == 0) {
         this.tabData = []
         // 获取 活跃排名数据
-        this.searchUser('2')
+        this.searchUser('2', 1)
       } else {
         this.tabData = []
         // 获取 最新激活数据
-        this.searchUser('1')
+        this.searchUser('1', 1)
+      }
+    },
+    getUserList_2(day, start_date, end_date) {
+      const index = this.type_index
+      console.log('index: ', index);
+      if (!index) {
+        this.$refs.DataRow.$data.currentIndex_1 = 0
+        this.tabData = []
+        // 获取 活跃排名数据
+        return this.searchUser('3', 2, day, start_date, end_date)
+      }
+
+      if (index == 0) {
+        this.tabData = []
+        // 获取 活跃排名数据
+        this.searchUser('2', 2, day, start_date, end_date)
+      } else {
+        this.tabData = []
+        // 获取 最新激活数据
+        this.searchUser('1', 2, day, start_date, end_date)
       }
     },
     // 查找用户
-    searchUser(indey) {
+    searchUser(indey, typx, day, start_date, end_date) {
       if (this.tabData.length == 0) this.loading = true
 
-      const memberID = this.SearchForm.memberID_user;
-      const equipmentID = this.SearchForm.equipmentID_user;
+      let memberID = this.SearchForm.memberID_user;
+      let equipmentID = this.SearchForm.equipmentID_user;
 
       if (indey == '0') {
+        indey = ''
+      } else {
         memberID = '';
         equipmentID = '';
-        indey = ''
       }
 
-      const startdate = getDate(-6) + ''
-      const enddate = getDate(0) + ''
-      const pageIndex = 1;
-      const pageSize = 10;
-      const type = indey;
+      let startdate;
+      let enddate;
+      let pageIndex = 1;
+      let pageSize = 9999999;
+      let type;
+
+      if (typx == 1) {
+        startdate = getDate(-6) + ''
+        enddate = getDate(0) + ''
+        type = indey;
+      } else {
+        startdate = start_date
+        enddate = end_date
+        type = this.type_index;
+      }
+      if (indey == '3') {
+        type = '2'
+      }
       const data = {
         equipmentID,
         memberID,
@@ -211,9 +257,9 @@ export default {
     },
     // 点击查询
     onSearch() {
-      if (this.SearchForm.memberID_user == '') return this.$message.warning('请完善表单')
-      if (this.SearchForm.equipmentID_user == '') return this.$message.warning('请完善表单')
-      this.searchUser('0')
+      // if (this.SearchForm.memberID_user == '') return this.$message.warning('请完善表单')
+      // if (this.SearchForm.equipmentID_user == '') return this.$message.warning('请完善表单')
+      this.searchUser('0', 1)
     },
   },
 }

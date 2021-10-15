@@ -68,9 +68,7 @@
       </div>
       <!-- 标签管理的右侧按钮 -->
       <div v-show="currentIndex == 3" slot="rightTitle">
-        <el-button type="primary" @click="AddDialogVisible = true"
-          >新增标签</el-button
-        >
+        <el-button type="primary" @click="showDialog">新增标签</el-button>
         <el-button type="danger" @click="clearContent" :loading="loading_2"
           >删除标签</el-button
         >
@@ -97,7 +95,12 @@
           class="selectDate"
         />
         <!-- 数据表格 -->
-        <Table_1 ref="Table_1" :Table_1="Table_1" :Table_1_a="Table_1_a" v-show="currentIndex == 0" />
+        <Table_1
+          ref="Table_1"
+          :Table_1="Table_1"
+          :Table_1_a="Table_1_a"
+          v-show="currentIndex == 0"
+        />
         <Table_2 ref="Table_2" :Table_2="Table_2" v-show="currentIndex == 1" />
         <Table_3 ref="Table_3" :Table_3="Table_3" v-show="currentIndex == 2" />
         <Table_4 ref="Table_4" :Table_4="Table_4" v-show="currentIndex == 3" />
@@ -111,13 +114,13 @@
       :visible.sync="AddDialogVisible"
     >
       <main>
-        <span class="problem">问题：</span>
+        <span class="problem">名称：</span>
         <el-input
           v-model="message"
-          placeholder="请输入问题"
-          type="textarea"
-          :autosize="{ minRows: 2, maxRows: 6 }"
+          placeholder="请输入标签名称"
           autocomplete="off"
+          ref="input"
+          @keyup.enter.native="submit"
         ></el-input>
       </main>
       <div slot="footer" class="dialog-footer">
@@ -172,7 +175,7 @@ export default {
       AddDialogVisible: false,
       title: '体征数据',
       dataArr_2: ['血压', '血糖'],
-      currentIndex_2: 0,
+      currentIndex_2: 0, // 血压，血糖
       currentIndex: 0,
       dateArr: ['体征数据', '近期用药', '常用技能', '标签管理'],
       userForm: {}, // 用户表单对象
@@ -265,9 +268,7 @@ export default {
           break;
       }
     },
-
     getBodyData_2(types, start_date) {
-      this.Table_1 = []
       this.$refs.Table_1.$data.loading = true
       const memberID = this.memberID_user;
       const startdate = start_date
@@ -278,43 +279,27 @@ export default {
       switch (index) {
         case 0:
           type = 'pressure'
+          this.$refs.Table_1.$data.isChange = false
+          const data_1 = {
+            memberID,
+            startdate,
+            type,
+            day
+          }
+          this.getBodyData_a(data_1)
           break;
         case 1:
           type = 'sugar'
+          this.$refs.Table_1.$data.isChange = true
+          const data_2 = {
+            memberID,
+            startdate,
+            type,
+            day
+          }
+          this.getBodyData_b(data_2)
           break;
       }
-      const data = {
-        memberID,
-        startdate,
-        type,
-        day
-      }
-      // 发送请求 获取 用户体征数据 
-      getBodyData(data).then(({ data, code }) => {
-        if (code != 0) {
-          this.$refs.Table_1.$data.loading = false
-          return this.$message.warning('该用户暂无体征数据')
-        }
-        // 如果有
-        data.forEach((item, index) => {
-          let key = index
-          let systolic = item.systolic;
-          let notEatMedicine = item.notEatMedicine;
-          let sequenceNo = item.sequenceNo;
-          let statusID = item.statusID;
-          let time = item.time
-          this.Table_1.push({
-            key,
-            systolic,
-            notEatMedicine,
-            sequenceNo,
-            statusID,
-            time
-          })
-        });
-
-        this.$refs.Table_1.$data.loading = false
-      })
     },
     // 获取体征数据
     getBodyData_a(data_1) {
@@ -323,7 +308,7 @@ export default {
       getBodyData(data_1).then(({ data, code }) => {
         if (code != 0) {
           this.$refs.Table_1.$data.loading = false
-          return this.$message.warning('该用户暂无体征数据')
+          return this.$message.warning('暂无体征数据')
         }
         // 如果有
         data.forEach((item, index) => {
@@ -352,7 +337,7 @@ export default {
       getBodyData(data_2).then(({ data, code }) => {
         if (code != 0) {
           this.$refs.Table_1.$data.loading = false
-          return this.$message.warning('该用户暂无体征数据')
+          return this.$message.warning('暂无体征数据')
         }
         console.log(data);
         // // 如果有
@@ -362,7 +347,7 @@ export default {
           let after = item.after + 'mmol/L'; // 餐后血糖
           let afterRemindNum = item.afterRemindNum // 餐后的状态码
           let afterRemindTitle = item.afterRemindTitle // 餐后 状态提醒
-          
+
           let avgEmptySugar = item.avgEmptySugar + 'mmol/L' // 空腹血糖平均值腹
           let empty = item.empty + 'mmol/L' // 空腹的血糖
           let emptyRemindNum = item.emptyRemindNum // 空腹的状态码
@@ -441,7 +426,7 @@ export default {
       this.$refs.Table_2.$data.loading = true
       const memberID = this.memberID_user;
       const pageIndex = 1;
-      const pageSize = 10;
+      const pageSize = 999999;
       let startdate = start_date
       let day = type
 
@@ -482,7 +467,7 @@ export default {
       this.$refs.Table_3.$data.loading = true
       const memberID = this.memberID_user;
       const pageIndex = 1;
-      const pageSize = 999999;
+      const pageSize = 10;
       switch (type) {
         case 0:
           type = 7
@@ -566,39 +551,6 @@ export default {
         this.$refs.Table_3.$data.loading = false
       })
     },
-    // 获取 用户标签列表
-    getLabeList() {
-      this.Table_4 = []
-      this.$refs.Table_4.$data.loading = true
-      const memberID = this.memberID_user
-      const pageIndex = 1;
-      const pageSize = 10
-      const data = {
-        memberID,
-      }
-      this.cancel()
-      // 发送请求 获取 用户标签列表
-      getLabeList(data).then(({ data, code }) => {
-        console.log(data);
-        if (code != 0) {
-          this.$refs.Table_4.$data.loading = false
-          return this.$message.warning('暂无标签数据')
-        }
-        data.forEach((item, index) => {
-          const key = index;
-          const id = item.id
-          const pubDepartmentName = item.pubDepartmentName;
-          const times = item.times;
-          this.Table_4.push({
-            key,
-            id,
-            pubDepartmentName,
-            times
-          })
-        })
-        this.$refs.Table_4.$data.loading = false
-      })
-    },
     // 返回上一级
     goBack() {
       this.isShow = false
@@ -630,11 +582,46 @@ export default {
       this.$bus.$emit('changeType')
       this.getBodyData_1()
     },
+    showDialog() {
+      this.AddDialogVisible = true
+      this.$nextTick(() => {
+        this.$refs.input.focus()
+      })
+    },
+    // 获取 用户标签列表
+    getLabeList() {
+      this.Table_4 = []
+      this.$refs.Table_4.$data.loading = true
+      const memberID = this.memberID_user
+      const data = {
+        memberID,
+      }
+      this.cancel()
+      // 发送请求 获取 用户标签列表
+      getLabeList(data).then(({ data, code }) => {
+        console.log(data);
+        if (code != 0) {
+          this.$refs.Table_4.$data.loading = false
+          return this.$message.warning('暂无标签数据')
+        }
+        data.forEach((item, index) => {
+          const key = index;
+          const id = item.id
+          const name = item.name;
+          const counts = item.counts
+          this.Table_4.unshift({
+            key,
+            id,
+            name,
+            counts
+          })
+        })
+        this.$refs.Table_4.$data.loading = false
+      })
+    },
     // 点击删除 删除选中的表格内容
     clearContent() {
-      this.loading_2 = true
       if (this.$refs.Table_4.$data.selectedRows.length == 0) {
-        this.loading_2 = false
         return this.$message.info('请选择您要删除的标签')
       }
 
@@ -650,9 +637,9 @@ export default {
       this.cancel()
       // 发送请求 删除对应的
       deleteLabeList(data).then(res => {
+        console.log('res: ', res);
         if (!res) return
         if (res.code != 0) return this.$message.error('删除失败')
-
 
         // 提示
         this.$message.success('删除成功')
@@ -663,13 +650,19 @@ export default {
             }
           })
         })
-
+        // this.getLabeList()
         this.loading_2 = false
       })
     },
     // 新增标签Dialog 点击 确定
     submit() {
-      if (!this.message) return this.$message.info('问题不能为空')
+      if (!this.message) return this.$message.info('名称不能为空')
+      const newArr = this.Table_4.filter(item => {
+        return item.name == this.message
+      })
+      if (newArr.length != 0) {
+        if (newArr[0].name = this.message) return this.$message.warning('名称重复')
+      }
       this.loading_1 = true
       // 发送请求 保存
       const memberID = this.memberID_user;
@@ -685,6 +678,7 @@ export default {
           return this.$message.error('添加失败')
         }
         this.$message.success('添加成功')
+        this.getLabeList()
         this.closeAddDialog()
       })
     },

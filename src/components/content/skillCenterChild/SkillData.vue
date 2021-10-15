@@ -34,7 +34,7 @@
       </div>
     </Card>
 
-    <Card class="card_2">
+    <!-- <Card class="card_2">
       <span slot="leftTitle">技能调用排行</span>
       <div slot="main">
         <DateRow
@@ -49,7 +49,7 @@
           :pagination="false"
         />
       </div>
-    </Card>
+    </Card> -->
   </div>
 </template>
 

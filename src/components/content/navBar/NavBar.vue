@@ -23,7 +23,7 @@ export default {
         { id: 1, title: '设备配置', icon: 'icon-science' },
         { id: 2, title: '数据中心', icon: 'icon-commission' },
         { id: 3, title: '产品运营', icon: 'icon-server1' },
-        { id: 4, title: '系统管理', icon: 'icon-shezhi3' },
+        // { id: 4, title: '系统管理', icon: 'icon-shezhi3' },
       ],
       currentIndex: 0,
     }

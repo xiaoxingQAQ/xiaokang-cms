@@ -5,7 +5,7 @@
       :columns="columns_1"
       :data-source="Table_1"
       :loading="loading"
-      :pagination="false"
+      :pagination="true"
     >
       <template slot="tag" slot-scope="text, record, index">
         <el-tag type="success" v-if="status">已读</el-tag>
@@ -18,7 +18,7 @@
       :columns="columns_2"
       :data-source="Table_1_a"
       :loading="loading"
-      :pagination="false"
+      :pagination="true"
     >
       <template slot="tag_1" slot-scope="text, record, index">
         <el-tag v-if="type_1 == 0" type="success">正常</el-tag>

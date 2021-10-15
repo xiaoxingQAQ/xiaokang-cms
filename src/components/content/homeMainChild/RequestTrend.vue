@@ -91,6 +91,7 @@ export default {
     },
     // 获取 请求趋势的数据
     getTrend_1(day = 0) {
+      this.cancel()
       this.option.series[0].data = []
       this.option.series[1].data = []
       this.option.xAxis.data = []
@@ -127,12 +128,12 @@ export default {
           this.option.series[1].data.push(sumcount)
           this.option.xAxis.data.push(time)
         });
-        let series_1 = this.option_1.series[0].data
-        let series_2 = this.option_1.series[1].data
-        let xAxis_1 = this.option_1.xAxis.data
+        let series_1 = this.option.series[0].data
+        let series_2 = this.option.series[1].data
+        let xAxis_1 = this.option.xAxis.data
 
-        this.myEcharts_1.hideLoading(); // 隐藏加载动画
-        this.myEcharts_1.setOption({ // 加载数据图表
+        this.myEcharts.hideLoading(); // 隐藏加载动画
+        this.myEcharts.setOption({ // 加载数据图表
           xAxis: {
             data: xAxis_1
           },
@@ -153,6 +154,7 @@ export default {
 
     },
     getTrend_2(day, start_date) {
+      this.cancel()
       this.option.series[0].data = []
       this.option.series[1].data = []
       this.option.xAxis.data = []
@@ -182,8 +184,8 @@ export default {
         let series_2 = this.option_1.series[1].data
         let xAxis_1 = this.option_1.xAxis.data
 
-        this.myEcharts_1.hideLoading(); // 隐藏加载动画
-        this.myEcharts_1.setOption({ // 加载数据图表
+        this.myEcharts.hideLoading(); // 隐藏加载动画
+        this.myEcharts.setOption({ // 加载数据图表
           xAxis: {
             data: xAxis_1
           },

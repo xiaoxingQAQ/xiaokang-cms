@@ -5,6 +5,7 @@ function doHandleMonth(month) {
   var m = month;
   if (month.toString().length == 1) {
     m = "" + month;
+    m = month < 10 ? ('0' + month) : month;
   }
   return m;
 }

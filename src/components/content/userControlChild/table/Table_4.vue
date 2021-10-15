@@ -31,13 +31,13 @@ export default {
       columns: [
         {
           title: '标签',
-          dataIndex: 'pubDepartmentName',
-          key: 'pubDepartmentName',
+          dataIndex: 'name',
+          key: 'name',
         },
         {
-          title: '创建时间',
-          dataIndex: 'times',
-          key: 'times',
+          title: '次数',
+          dataIndex: 'counts',
+          key: 'counts',
         },
       ],
     }

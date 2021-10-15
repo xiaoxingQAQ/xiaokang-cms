@@ -10,7 +10,7 @@
       </div>
     </Card>
 
-    <Card class="card_2">
+    <!-- <Card class="card_2">
       <span slot="leftTitle">热问排行榜</span>排行</span>
       <div slot="main">
         <DateRow @onChange="getHotAnswerRanking_1" @Change="getHotAnswerRanking_2" class="date_row" />
@@ -21,7 +21,7 @@
           :pagination="false"
         />
       </div>
-    </Card>
+    </Card> -->
   </div>
 </template>
 

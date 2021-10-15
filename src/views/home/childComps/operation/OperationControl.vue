@@ -36,7 +36,7 @@
       center
       :visible.sync="imageDialogVisible"
     >
-      <img width="100%" src="@/assets/images/Git常用命令速查表.jpg" alt="" />
+      <img width="100%" :src="imageUrl" alt="" />
     </el-dialog>
 
     <!-- 新建的Dialog -->
@@ -44,6 +44,7 @@
       class="addDialog"
       title="新增"
       center
+      @close="dialogClosed"
       :visible.sync="AddDialogVisible"
     >
       <header>
@@ -81,10 +82,11 @@
           type="textarea"
           :autosize="{ minRows: 2, maxRows: 6 }"
           autocomplete="off"
+          @keyup.enter.native="submitPicture"
         ></el-input>
       </main>
       <div slot="footer" class="dialog-footer">
-        <el-button @click="AddDialogVisible = false">取 消</el-button>
+        <el-button @click="dialogClosed">取 消</el-button>
         <el-button type="primary" @click="submitPicture" :loading="loading_1"
           >确 定</el-button
         >
@@ -124,8 +126,8 @@ export default {
         attachmentID: ''
       },
       AddDialogVisible: false,
-      imageDialogVisible: false,
-      previewVisible: false,
+      imageDialogVisible: false, // table预览图片 打开 or 关闭
+      previewVisible: false, // 预览 打开 or 关闭
       previewImage: '', // 预览图片
       file: {},
       fileList: [], // 上传文件列表
@@ -167,7 +169,7 @@ export default {
           this.selectedRows = selectedRows;
         }
       }
-    }
+    },
   },
   methods: {
     // 获取运营列表
@@ -245,21 +247,24 @@ export default {
     handleChange({ file, fileList }) {
       console.log(file);
       this.fileList = fileList;
-      setTimeout(() => {
-        if (file.response)
-          this.updateForm.attachmentID = file.response.data.id
-      }, 2000)
+      if (file.response)
+        this.updateForm.attachmentID = file.response.data.id
+    },
+    // 处理关闭预览
+    handleCancel() {
+      this.previewVisible = false;
+      this.AddDialogVisible = true
     },
     // 点击确定 提交
     submitPicture() {
       const name = this.updateForm.message;
-      const attachmentID = this.updateForm.attachmentID
+      const AttachmentIDs = this.updateForm.attachmentID
       const data = {
         name,
-        attachmentID
+        AttachmentIDs
       }
       console.log(data);
-      if (!attachmentID) {
+      if (!AttachmentIDs) {
         return this.$message.warning('请上传图片')
       }
       if (!this.updateForm.message) return this.$message.warning('请输入名称')
@@ -267,18 +272,22 @@ export default {
       this.cancel()
       // 发送请求 添加运营
       addOperation(data).then(res => {
+        console.log('res: ', res);
         if (!res) return
         if (res.code != 0) return this.$message.error('添加失败')
 
         this.$message.success('添加成功')
         this.getOperation()
         this.loading_1 = false
+        this.dialogClosed()
       })
     },
-    // 处理删除
-    handleCancel() {
-      this.previewVisible = false;
-      this.AddDialogVisible = true
+    // 处理关闭 table 图片预览
+    dialogClosed() {
+      this.updateForm.message = ''
+      this.updateForm.attachmentID = ''
+      this.fileList = [] // 清空上传文件
+      this.AddDialogVisible = false
     },
     // 点击关闭 图片预览Dialog
 

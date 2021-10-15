@@ -1,7 +1,7 @@
 <template>
   <div class="wrapper">
     <TabsNav :indey="currentIndex" @onChange="onChange" class="tabs_nav">
-      <span slot="top">技能数据</span>
+      <span class="top" slot="top">技能数据</span>
       <span slot="center">技能问答</span>
     </TabsNav>
 
@@ -40,5 +40,4 @@ export default {
 </script>
 
 <style lang="less" scoped>
-
 </style>
