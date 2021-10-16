@@ -149,13 +149,10 @@ export default {
     showAsideM() {
       const path = this.$route.path;
       const MPath = '/service';
-      const CPath = '/callSettings';
       const RPath = '/restSettings';
 
       switch (path) {
         case MPath:
-          return true
-        case CPath:
           return true
         case RPath:
           return true

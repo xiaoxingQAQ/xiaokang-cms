@@ -86,6 +86,13 @@ li {
   cursor: text;
 }
 
+.ant-form-explain {
+  font-size: 12px;
+}
+
+.ant-form-explain,
+.ant-form-item-children,
+.ant-form-item-label,
 .el-select-dropdown__item,
 .ant-alert-message,
 .ant-alert-description,

@@ -25,8 +25,9 @@ Vue.prototype._ = _
 // 时间总线
 Vue.prototype.$bus = new Vue()
 
+
 // 将cancel,挂载到vue原型上
-Vue.prototype.cancel = function () {  
+Vue.prototype.cancel = function () {
   // 获取缓存的 请求取消标识 数组，取消所有关联的请求
   let cancelArr = window.axiosCancel;
   cancelArr = cancelArr || [];

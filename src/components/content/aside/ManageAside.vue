@@ -22,7 +22,6 @@ export default {
       activeIndex: '0',
       menuList: [ // 侧边栏数据
         { id: 0, title: '客服信息', icon: 'icon-kefu' },
-        { id: 1, title: '通话配置', icon: 'icon-tonghuazhong' },
         { id: 2, title: '其他配置', icon: 'icon-caidan' },
       ],
     }
@@ -51,29 +50,19 @@ export default {
           break;
         case '1':
           this.activeIndex = indey
-          if (this.$route.path == '/callSettings') return
-          this.$router.replace('/callSettings')
-          break;
-        case '2':
-          this.activeIndex = indey
           if (this.$route.path == '/restSettings') return
           this.$router.replace('/restSettings')
           break;
-        case '3':
       }
     },
     selected() {
       let path = this.$route.path;
       let manage = '/manage';
-      let manageC = '/callSettings';
       let manageR = '/restSettings'
 
       switch (path) {
         case manage:
           this.activeIndex = '0'
-          break;
-        case manageC:
-          this.activeIndex = '1'
           break;
         case manageR:
           this.activeIndex = '2'

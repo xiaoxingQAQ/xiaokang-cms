@@ -529,3 +529,15 @@ export function getServiceInfo(data) {
     data
   })
 }
+
+// 客服信息保存
+export function saveServiceInfo(data) {
+  return request({
+    method: 'post',
+    url: '/service/supportStaff/save',
+    headers: { //请求头
+      token: JSON.parse(sessionStorage.getItem('token'))
+    },
+    data
+  })
+}

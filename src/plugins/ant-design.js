@@ -14,6 +14,7 @@ import {
   Spin, 
   Upload,
   Alert,
+
 } from 'ant-design-vue';
 
 Vue.use(Alert)

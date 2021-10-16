@@ -164,9 +164,9 @@ export default {
   }
 
   .active {
-    color: #fff;
-    background-color: @color1;
-    border: transparent;
+    color: #fff !important;
+    background-color: @color1 !important;
+    border: transparent !important;
   }
 }
 </style>

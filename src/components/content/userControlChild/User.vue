@@ -183,6 +183,7 @@ export default {
     },
     // 查找用户
     searchUser(indey, typx, day, start_date, end_date) {
+      this.tabData = []
       if (this.tabData.length == 0) this.loading = true
 
       let memberID = this.SearchForm.memberID_user;
@@ -229,8 +230,8 @@ export default {
           this.loading = false
           return this.$message.error('获取数据失败')
         }
-        data.records.forEach((item, index) => {
-          const key = index;
+        data.records.forEach((item) => {
+          const key = item.memberID;
           const memberID = item.memberID;
           const equipmentID = item.equipmentID;
           const counts = item.counts;
@@ -257,8 +258,8 @@ export default {
     },
     // 点击查询
     onSearch() {
-      // if (this.SearchForm.memberID_user == '') return this.$message.warning('请完善表单')
-      // if (this.SearchForm.equipmentID_user == '') return this.$message.warning('请完善表单')
+      if (this.SearchForm.memberID_user == '') return this.$message.warning('请完善表单')
+      if (this.SearchForm.equipmentID_user == '') return this.$message.warning('请完善表单')
       this.searchUser('0', 1)
     },
   },

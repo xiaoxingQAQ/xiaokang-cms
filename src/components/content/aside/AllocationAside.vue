@@ -5,7 +5,7 @@
         v-for="(item, index) in menuList"
         :key="item.id"
         :index="item.id + ''"
-        @click="goNext(item.id)"
+        @click="goNext(index)"
       >
         <i :class="['iconfont', item.icon]">
           <span>{{ item.title }}</span>
@@ -24,8 +24,8 @@ export default {
         { id: 0, title: '人设管理', icon: 'icon-jiaose' },
         { id: 1, title: '技能管理', icon: 'icon-jineng' },
         { id: 2, title: '知识库', icon: 'icon-ziyuan' },
-        // { id: 3, title: '收音机', icon: 'icon-shebei1' },
-        // { id: 4, title: '养生知识', icon: 'icon-yangsheng' },
+        { id: 3, title: '收音机', icon: 'icon-shebei1' },
+        { id: 4, title: '养生知识', icon: 'icon-yangsheng' },
         { id: 5, title: '系统版本', icon: 'icon-details' },
       ],
     }
