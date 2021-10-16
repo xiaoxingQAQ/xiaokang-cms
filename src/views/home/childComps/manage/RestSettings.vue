@@ -258,7 +258,6 @@ export default {
   margin-right: 10px !important;
   width: 100px;
   font-weight: 500;
-  color: #52c41a;
 }
 
 .card_1 {
@@ -288,8 +287,5 @@ export default {
   color: #fff !important;
   background-color: @color1 !important;
   border: transparent !important;
-}
-.red {
-  color: #52c41a;
 }
 </style>
