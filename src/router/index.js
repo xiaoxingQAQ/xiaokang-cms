@@ -11,9 +11,9 @@ const HomeMain = () => import('@/views/home/childComps/HomeMain')
 const Allocation = () => import('@/views/home/childComps/allocation/Allocation')
 const Skill = () => import('@/views/home/childComps/allocation/Skill')
 const Repository = () => import('@/views/home/childComps/allocation/Repository')
-const Edition = () => import('@/views/home/childComps/allocation/Edition')
 const Radio = () => import('@/views/home/childComps/allocation/Radio')
 const GoodHealth = () => import('@/views/home/childComps/allocation/GoodHealth')
+const Counselor = () => import('@/views/home/childComps/allocation/Counselor')
 
 const DataCenter = () => import('@/views/home/childComps/dataCenter/DataCenter')
 const SkillCenter = () => import('@/views/home/childComps/dataCenter/SkillCenter')
@@ -23,8 +23,7 @@ const UserControl = () => import('@/views/home/childComps/operation/UserControl'
 const OperationControl = () => import('@/views/home/childComps/operation/OperationControl')
 
 const Service = () => import('@/views/home/childComps/manage/Service')
-const CallSettings = () => import('@/views/home/childComps/manage/CallSettings')
-const RestSettings = () => import('@/views/home/childComps/manage/RestSettings')
+const Edition = () => import('@/views/home/childComps/manage/Edition')
 
 const routes = [
   { path: '', redirect: '/login', },
@@ -42,7 +41,7 @@ const routes = [
       { path: '/repository', name: Repository, component: Repository },
       { path: '/radio', name: Radio, component: Radio },
       { path: '/goodHealth', name: GoodHealth, component: GoodHealth },
-      { path: '/edition', name: Edition, component: Edition },
+      { path: '/counselor', name: Counselor, component: Counselor },
 
       { path: '/dataCenter', name: DataCenter, component: DataCenter },
       { path: '/skillCenter', name: SkillCenter, component: SkillCenter },
@@ -52,8 +51,7 @@ const routes = [
       { path: '/operationControl', name: OperationControl, component: OperationControl },
 
       { path: '/service', name: Service, component: Service },
-      { path: '/callSettings', name: CallSettings, component: CallSettings },
-      { path: '/restSettings', name: RestSettings, component: RestSettings },
+      { path: '/edition', name: Edition, component: Edition },
     ]
   },
 

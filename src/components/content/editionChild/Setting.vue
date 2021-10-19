@@ -1,22 +1,28 @@
-/* 菜单管理 */
 <template>
   <div>
+    <!-- 返回 -->
+    <el-row class="back" :gutter="10">
+      <el-col :span="6">
+        <i class="el-icon-back" @click="goBack">&nbsp返回</i>
+      </el-col>
+    </el-row>
     <!-- card 1 -->
     <Card class="card_1">
       <span slot="leftTitle">通话设置</span>
       <div class="main" slot="main">
         <el-row>
           <div class="left">
-            <span>使用4G流量</span>
+            <span>可添加联系人的数量</span>
           </div>
           <div class="right">
             <a-button
-              v-for="(item, index) in arr_1"
+              v-for="(item, index) in arr_1_a"
               :key="index"
               class="switch"
-              @click="change_1(index)"
+              type="primary"
+              @click="change_1()"
               :class="{ active: currentIndex_1 == index }"
-              :disabled="currentIndex_1 == index"
+              :disabled="index == 0"
               :loading="loading_1"
             >
               {{ item.title }}
@@ -25,12 +31,13 @@
         </el-row>
         <el-row>
           <div class="left">
-            <span>屏蔽陌生来电</span>
+            <span>通话时长</span>
           </div>
           <div class="right">
             <a-button
-              v-for="(item, index) in arr_1"
+              v-for="(item, index) in arr_1_b"
               :key="index"
+              type="primary"
               class="switch"
               @click="change_2(index)"
               :class="{ active: currentIndex_2 == index }"
@@ -43,12 +50,13 @@
         </el-row>
         <el-row>
           <div class="left">
-            <span>自动接听来电</span>
+            <span>留言数量</span></span>
           </div>
           <div class="right">
             <a-button
-              v-for="(item, index) in arr_1"
+              v-for="(item, index) in arr_1_c"
               :key="index"
+               type="primary"
               class="switch"
               @click="change_3(index)"
               :class="{ active: currentIndex_3 == index }"
@@ -149,6 +157,42 @@
         </el-row>
       </div>
     </Card>
+
+  <!-- 修改可添加联系人的数量 -->
+  <el-dialog
+    title="提示"
+    :visible.sync="visible_1"
+    width="30%"
+    :before-close="handleClose_1">
+    <span slot="footer" class="dialog-footer">
+      <el-button @click="visible_1 = false">取 消</el-button>
+      <el-button type="primary" @click="visible_1 = false">确 定</el-button>
+    </span>
+  </el-dialog>
+
+  <!-- 修改通话时长 -->
+   <el-dialog
+    title="提示"
+    :visible.sync="visible_2"
+    width="30%"
+    :before-close="handleClose_2">
+    <span slot="footer" class="dialog-footer">
+      <el-button @click="visible_2 = false">取 消</el-button>
+      <el-button type="primary" @click="visible_2 = false">确 定</el-button>
+    </span>
+  </el-dialog>
+
+  <!-- 修改留言数量 -->
+   <el-dialog
+    title="提示"
+    :visible.sync="visible_3"
+    width="30%"
+    :before-close="handleClose_3">
+    <span slot="footer" class="dialog-footer">
+      <el-button @click="visible_3 = false">取 消</el-button>
+      <el-button type="primary" @click="visible_3 = false">确 定</el-button>
+    </span>
+  </el-dialog>
   </div>
 </template>
 
@@ -161,6 +205,9 @@ export default {
   },
   data() {
     return {
+      visible_1: false,
+      visible_2: false,
+      visible_3: false,
       loading_1: false,
       loading_2: false,
       loading_3: false,
@@ -175,9 +222,17 @@ export default {
       currentIndex_5: 0,
       currentIndex_6: 0,
       currentIndex_7: 0,
-      arr_1: [
-        { id: 1, title: '是' },
-        { id: 2, title: '否' },
+      arr_1_a: [
+        { id: 1, title: '100' },
+        { id: 2, title: '修改', },
+      ],
+      arr_1_b: [
+        { id: 1, title: '200' },
+        { id: 2, title: '修改', },
+      ],
+      arr_1_c: [
+        { id: 1, title: '100' },
+        { id: 2, title: '修改', },
       ],
       arr_2_a: [
         { id: 1, title: '20:00-06:00' },
@@ -205,18 +260,31 @@ export default {
     }
   },
   methods: {
-    change_1(index) {
-      this.currentIndex_1 = index
-      this.loading_1 = true
+    // 返回上一级
+    goBack() {
+      this.$emit('onChange')
     },
+    // 修改可添加联系人的数量
+    change_1() {
+      this.visible_1 = true
+    },
+    handleClose_1() {
+
+    },
+
+    // 修改通话时长
     change_2(index) {
-      this.currentIndex_2 = index
-      this.loading_2 = true
+      this.visible_2 = true
     },
+    handleClose_2() { },
+
+    // 修改留言数量
     change_3(index) {
-      this.currentIndex_3 = index
-      this.loading_3 = true
+      this.visible_3 = true
     },
+    handleClose_3() { },
+
+
     change_4(index) {
       this.currentIndex_4 = index
       this.loading_4 = true
@@ -241,13 +309,26 @@ export default {
 @color1: #0cc;
 @color2: #7f7f7f;
 
+.back {
+  i {
+    margin-bottom: 20px;
+    font-size: 20px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.3s;
+  }
+  i:hover {
+    color: #409eff;
+  }
+}
+// 内容区
 .el-row {
   display: flex;
   align-items: center;
 
   .left {
     font-weight: 500;
-    font-size: 20px;
+    font-size: 18px;
   }
   .right {
     margin-left: 25px;
@@ -255,6 +336,14 @@ export default {
 }
 
 .switch {
+  margin-right: 10px !important;
+  margin-bottom: 5px;
+  width: 100px;
+  font-weight: 500;
+  overflow: hidden;
+}
+
+.button {
   margin-right: 10px !important;
   margin-bottom: 5px;
   width: 100px;

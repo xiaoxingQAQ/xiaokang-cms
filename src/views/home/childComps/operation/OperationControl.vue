@@ -293,7 +293,6 @@ export default {
 
     // 点击删除 删除选中的表格内容
     clearContent() {
-      this.loading_2 = true
       if (this.selectedRows.length == 0) {
         this.loading_2 = false
         return this.$message.info('请选择您要删除的')

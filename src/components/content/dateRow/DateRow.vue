@@ -148,6 +148,7 @@ export default {
 
     .changeDateBtn {
       margin-right: 10px !important;
+      margin-bottom: 5px;
       width: 90px;
       font-weight: 500;
     }

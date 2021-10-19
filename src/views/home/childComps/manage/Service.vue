@@ -145,8 +145,9 @@ export default {
     this.getServiceInfo()
   },
   methods: {
-    // 点击 获取客服信息
+    // 获取客服信息
     getServiceInfo() {
+      this.cancel()
       this.loading = true
       const data = {};
       getServiceInfo(data).then(({ data, code }) => {
@@ -194,7 +195,7 @@ export default {
             this.confirmLoading = false
             return this.$message.error('保存失败')
           }
-          
+
           this.$message.success('保存成功')
           this.confirmLoading = false
           this.handleCancel()
@@ -212,7 +213,7 @@ export default {
 </script>
 
 <style lang="less" scoped>
- ::v-deep .ant-form-horizontal {
-  transform: translateX(35px);
+::v-deep .ant-form-horizontal {
+  transform: translateX(40px);
 }
 </style>

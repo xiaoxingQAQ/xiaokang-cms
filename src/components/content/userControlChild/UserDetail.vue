@@ -1,5 +1,5 @@
 <template>
-  <div class="wrapper" v-if="isShow">
+  <div class="wrapper">
     <!-- 返回 -->
     <el-row class="back" :gutter="10">
       <el-col :span="6">
@@ -177,9 +177,8 @@ export default {
       dataArr_2: ['血压', '血糖'],
       currentIndex_2: 0, // 血压，血糖
       currentIndex: 0,
-      dateArr: ['体征数据', '近期用药', '常用技能', '标签管理'],
+      dateArr: ['体征数据', '近期用药', '常用技能'],
       userForm: {}, // 用户表单对象
-      isShow: true,
     }
   },
   created() {
@@ -492,6 +491,7 @@ export default {
       this.cancel()
       // 发送请求 获取 用户常用技能
       getCommonSkill(data).then(({ data, code }) => {
+        console.log(data);
         if (code != 0) {
           this.$refs.Table_3.$data.loading = false
           return this.$message.warning('该用户暂无技能数据')
@@ -502,7 +502,7 @@ export default {
           const title = item.title;
           const counts = item.counts;
           const time = item.time;
-          this.Table_2.push({
+          this.Table_3.push({
             key,
             title,
             counts,
@@ -553,7 +553,6 @@ export default {
     },
     // 返回上一级
     goBack() {
-      this.isShow = false
       this.$emit('onChange')
     },
     // 点击展示不同的表格

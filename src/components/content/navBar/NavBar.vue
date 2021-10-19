@@ -68,7 +68,7 @@ export default {
       let allocation = '/allocation';
       let allocationS = '/skill';
       let allocationR = '/repository';
-      let allocationE = '/edition';
+      let allocationC = '/counselor';
 
       let dataCenter = '/dataCenter';
       let dataCenterS = '/skillCenter';
@@ -78,8 +78,7 @@ export default {
       let operationO = '/operationControl'
 
       let manage = '/service';
-      let manageC = '/callSettings';
-      let manageR = '/restSettings'
+      let manageE = '/edition'
       /* 如果当前处于 xxx 路由就进行判断 否则不判断 */
       switch (path) {
         case home:
@@ -95,7 +94,7 @@ export default {
         case allocationR:
           this.currentIndex = 1
           break;
-        case allocationE:
+        case allocationC:
           this.currentIndex = 1
           break;
 
@@ -119,10 +118,7 @@ export default {
         case manage:
           this.currentIndex = 4
           break;
-        case manageC:
-          this.currentIndex = 4
-          break;
-        case manageR:
+        case manageE:
           this.currentIndex = 4
           break;
       }

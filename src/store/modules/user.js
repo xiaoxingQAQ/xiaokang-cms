@@ -13,9 +13,7 @@ export default {
     counts_user: null,
     pubDate_user: null
   },
-  getters: {
-
-  },
+  getters: {},
   mutations: {
     // 初次登录 设置
     [User_Login](state, userInfo) {

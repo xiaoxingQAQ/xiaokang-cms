@@ -5,7 +5,7 @@
         v-for="(item, index) in menuList"
         :key="item.id"
         :index="item.id + ''"
-        @click="goNext(index)"
+        @click="goNext(item.id)"
       >
         <i :class="['iconfont', item.icon]">
           <span>{{ item.title }}</span>
@@ -26,7 +26,7 @@ export default {
         { id: 2, title: '知识库', icon: 'icon-ziyuan' },
         { id: 3, title: '收音机', icon: 'icon-shebei1' },
         { id: 4, title: '养生知识', icon: 'icon-yangsheng' },
-        { id: 5, title: '系统版本', icon: 'icon-details' },
+        { id: 5, title: '健康顾问', icon: 'icon-guwen' },
       ],
     }
   },
@@ -67,11 +67,8 @@ export default {
           break;
         case '5':
           this.activeIndex = indey
-          if (path == '/edition') return
-          this.$router.replace('/edition')
-          break;
-
-        default:
+          if (path == '/counselor') return
+          this.$router.replace('/counselor')
           break;
       }
     },
@@ -82,7 +79,7 @@ export default {
       let allocationR_1 = '/repository';
       let allocationR_2 = '/radio'
       let allocationG = '/goodHealth'
-      let allocationE = '/edition';
+      let allocationC = '/counselor'
 
       switch (path) {
         case allocation:
@@ -100,7 +97,7 @@ export default {
         case allocationG:
           this.activeIndex = '4'
           break;
-        case allocationE:
+        case allocationC:
           this.activeIndex = '5'
           break;
       }

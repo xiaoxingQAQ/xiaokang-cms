@@ -1,17 +1,14 @@
-/* 养生知识 */
 <template>
   <div class="wrapper">
     <!-- 按钮 -->
-    <!-- <el-row>
-      <el-button type="primary" @click="showAddDialog">新增分类</el-button>
-      <el-button type="danger" @click="showRemoveDialog">删除分类</el-button>
-    </el-row> -->
+    <el-row>
+      <el-button type="primary" @click="showAddDialog">新增健康顾问</el-button>
+      <el-button type="danger" @click="showRemoveDialog"
+        >删除健康顾问</el-button
+      >
+    </el-row>
 
-    <!-- <el-row>
-      <span class="category">频道分类</span>
-    </el-row> -->
-
-    <!-- <el-row class="loading" v-if="nameArr.length == 0">
+    <el-row class="loading" v-if="nameArr.length == 0">
       <a-spin tip="Loading...">
         <div class="spin-content"></div>
       </a-spin>
@@ -19,38 +16,20 @@
 
     <el-row v-else>
       <el-tag
-        v-for="(item, indey) in nameArr"
-        :key="indey"
+        v-for="(item, index) in nameArr"
+        :key="index"
         type="warning"
         effect="dark"
-        :class="{ active: currentIndex == indey }"
-        @click="toTable(item, indey)"
+        :class="{ active: currentIndex == index }"
+        @click="toTable(item, index)"
       >
         {{ item.name }}
       </el-tag>
-    </el-row> -->
+    </el-row>
     <!-- 卡片 -->
-    <Card>
-      <span slot="leftTitle" v-if="title">分类：{{ title }}</span>
-      <span slot="leftTitle" v-else>
-        点击上方标签，木有的话，先创建分类；
-      </span>
-
-      <div slot="rightTitle">
-        <el-button
-          type="primary"
-          :disabled="disabled"
-          @click="answerDialogVisible = true"
-          >新增频道</el-button
-        >
-        <el-button
-          type="danger"
-          :loading="loading_4"
-          :disabled="disabled"
-          @click="clearAnswer"
-          >删除频道</el-button
-        >
-      </div>
+    <Card v-for="(item, index) in nameArr" :key="index">
+      <span slot="leftTitle">健康顾问：{{ item.name }}</span>
+      <!-- <span slot="leftTitle" > 点击上方标签，木有的话，先创建； </span> -->
 
       <div slot="main">
         <a-table
@@ -58,15 +37,22 @@
           style="margin-top: 10px"
           :columns="columns"
           :data-source="data"
-          :row-selection="rowSelection"
-          :pagination="true"
+          :pagination="false"
           :loading="TableLoading_2"
-        />
+        >
+          <template slot="edit" slot-scope="text, record, index">
+            <el-button
+              @click="edit(record)"
+              type="primary"
+              icon="el-icon-edit"
+            ></el-button>
+          </template>
+        </a-table>
       </div>
     </Card>
-    <!-- 新增分类的 Dialog对话框 -->
+    <!-- 新健康顾问的 Dialog对话框 -->
     <el-dialog
-      title="新增分类"
+      title="新增知识库"
       :visible.sync="addDialogVisible"
       width="50%"
       center
@@ -79,12 +65,18 @@
         label-width="80px"
         :model="addForm"
       >
-        <el-form-item label="名称：">
+        <el-form-item label="姓名：">
           <el-input
             ref="input"
-            placeholder="请输入分类名称"
+            placeholder="请输入顾问姓名"
             v-model.trim="addForm.name"
-            @keyup.enter.native="saveAddForm"
+          ></el-input>
+        </el-form-item>
+        <el-form-item label="简介：">
+          <el-input
+            ref="input"
+            placeholder="请输入个人简介"
+            v-model.trim="addForm.referral"
           ></el-input>
         </el-form-item>
         <el-button type="info" @click="addDialogClosed">取消</el-button>
@@ -97,7 +89,7 @@
 
     <!-- 删除的Dialog对话框 -->
     <el-dialog
-      title="删除分类"
+      title="删除知识库"
       :visible.sync="removeDialogVisible"
       width="50%"
       center
@@ -117,42 +109,31 @@
         >删除</el-button
       >
     </el-dialog>
-
-    <!-- 新增问答的Dialog -->
-    <el-dialog
-      title="新增频道"
-      :visible.sync="answerDialogVisible"
-      width="50%"
-      center
-      @close="answerDialogClosed"
-      class="answerDialog"
+    <!-- 编辑健康顾问各人信息 -->
+    <a-modal
+      title="编辑客服信息"
+      okText="保存"
+      cancelText="取消"
+      :visible="visible"
+      :confirm-loading="confirmLoading"
+      @ok="handleOk"
+      @cancel="handleCancel"
     >
-      <el-form
-        ref="addFormRef"
-        label-position="right"
-        label-width="80px"
-        :model="answerForm"
+      <a-form-model
+        ref="ruleForm"
+        :model="EditForm"
+        :rules="EditFormRules"
+        :label-col="labelCol"
+        :wrapper-col="wrapperCol"
       >
-        <el-form-item label="名称：">
-          <el-input
-            placeholder="请输入频道名称"
-            v-model.trim="answerForm.questions"
-          ></el-input>
-        </el-form-item>
-        <el-form-item label="内容：">
-          <el-input
-            :autosize="{ minRows: 3, maxRows: 6 }"
-            type="textarea"
-            placeholder="请输入内容"
-            v-model.trim="answerForm.answers"
-          ></el-input>
-        </el-form-item>
-        <el-button type="info" @click="answerDialogClosed">取消</el-button>
-        <el-button type="primary" :loading="loading_3" @click="saveAnswerForm"
-          >保存</el-button
-        >
-      </el-form>
-    </el-dialog>
+        <a-form-model-item ref="name" label="顾问姓名" prop="serviceNumber">
+          <a-input v-model="EditForm.name" />
+        </a-form-model-item>
+        <a-form-model-item ref="name" label="个人简介" prop="serviceName">
+          <a-input v-model="EditForm.serviceName" />
+        </a-form-model-item>
+      </a-form-model>
+    </a-modal>
   </div>
 </template>
 
@@ -167,57 +148,73 @@ import {
   deleteAnswer
 } from '@/network/home'
 import { mapState } from 'vuex'
-const token = JSON.parse(sessionStorage.getItem('token'));
+
 export default {
   components: {
     Card,
   },
   data() {
     return {
+      wrapperCol: { span: 14 },
+      labelCol: { span: 4 },
+      visible: false, // 显示与隐藏
+      confirmLoading: false, // 点击确定按钮的回调
+      EditForm: {},
+      EditFormRules: {
+        serviceNumber: [
+          { required: true, message: '请输入顾问姓名', trigger: 'blur' },
+        ],
+        serviceName: [
+          { required: true, message: '请输入个人简介', trigger: 'blur' },
+        ],
+      },
       currentIndex: null,
       TableLoading_2: false,
       TableLoading_1: false,
-      loading_4: false, // 删除频道的loading
-      loading_3: false, // 保存频道的loading
-      loading_2: false, // 删除分类的loading
-      loading_1: false, // 保存分类的loading
+      loading_4: false,
+      loading_3: false,
+      loading_2: false,
+      loading_1: false, // 新增知识库的 按钮loading
       disabled: true,
       date: '',
-      /* 频道管理的数据 */
-      selectedRowKeys_2: [], // 选中的分类
-      selectedRows_2: [], // 选中的分类数组
-      selectedRowKeys: [], //选中的 频道名称
-      selectedRows: [], // 选中的 频道数组
+      /* 问答管理的数据 */
+      selectedRowKeys: [],
+      selectedRows: [],
       title: '',
       answerForm: {
         questions: '',
         answers: ''
       },
       repository: '',
-      answerDialogVisible: false,
       addDialogVisible: false, // 对话框 显示 / 隐藏
       removeDialogVisible: false,
-      nameArr: [], // 分类名称 数组
+      nameArr: [], // 知识库名称 数组
       addForm: { // 添加表单对象
         name: '',
+        referral: ''
       },
-      columns: [ // 对应分类的表格
+      columns: [ // 对应知识库的表格
         {
-          title: '频道',
+          title: '姓名',
           dataIndex: 'questions',
           key: 'questions',
         },
         {
-          title: '内容',
+          title: '个人简介',
           dataIndex: 'answers',
           key: 'answers',
           width: '60%',
         },
+        {
+          title: '编辑',
+          key: 'edit',
+          scopedSlots: { customRender: 'edit' },
+        },
       ],
-      data: [ // 对应分类的数据
+      data: [ // 对应知识库的数据
 
       ],
-      removeColumns: [ // 删除 分类 对话框的表格
+      removeColumns: [ // 删除 知识库 对话框 表格title
         {
           title: '序号',
           dataIndex: 'key',
@@ -242,19 +239,6 @@ export default {
   },
   computed: {
     ...mapState('user', ['memberID']),
-    // 分类的table
-    rowSelection() {
-      const { selectedRowKeys_2 } = this;
-      return {
-        selectedRowKeys: selectedRowKeys_2,
-        onChange: (selectedRowKeys, selectedRows) => {
-          console.log(`selectedRowKeys: ${selectedRowKeys}`, 'selectedRows: ', selectedRows);
-          this.selectedRowKeys_2 = selectedRowKeys
-          this.selectedRows_2 = selectedRows
-        },
-      };
-    },
-    // 问答 table
     removeRowSelection() {
       const { selectedRowKeys } = this;
       return {
@@ -268,6 +252,40 @@ export default {
     },
   },
   methods: {
+    // 点击打开 修改客服信息的dialog
+    edit(record) {
+      console.log(this.tabData);
+      this.visible = true
+    },
+    // 点击确定回调
+    handleOk() {
+      this.$refs.ruleForm.validate((valid) => {
+        if (!valid) return this.$message.info('请完善表单')
+
+        this.confirmLoading = true
+        const data = this.EditForm;
+        data.id = this.tabData[0].id
+        console.log(data);
+
+        // 发送请求 保存客服信息
+        saveServiceInfo(data).then(({ data, code }) => {
+          if (code != 0) {
+            this.confirmLoading = false
+            return this.$message.error('保存失败')
+          }
+
+          this.$message.success('保存成功')
+          this.confirmLoading = false
+          this.handleCancel()
+          this.getServiceInfo()
+        })
+      })
+    },
+    // 点击遮罩层或右上角叉或取消按钮的回调
+    handleCancel() {
+      this.visible = false
+      this.$refs.ruleForm.resetFields()
+    },
     /* 点击tag标签 跳转 */
     toTable(item, index) {
       this.currentIndex = index
@@ -278,12 +296,13 @@ export default {
       this.repository = item.id
       this.getAnswer()
     },
-    // 获取 分类数据 列表
+    // 获取 知识库的数据 列表
     getRepositorys() {
       const memberID = this.memberID
       const data = {
         memberID
       }
+      this.TableLoading_1 = true
       this.TableLoading_2 = true
       this.cancel()
       // 发送请求
@@ -295,6 +314,11 @@ export default {
           let key = index + 1;
           let id = item.id
           let name = item.name;
+          this.removeData.push({
+            key,
+            id,
+            name
+          })
           this.nameArr.push({
             key,
             id,
@@ -302,11 +326,14 @@ export default {
           })
         });
         this.nameArr = _.uniqBy(this.nameArr, 'id')
+        this.removeData = _.uniqBy(this.removeData, 'id')
+        this.TableLoading_1 = false
         this.TableLoading_2 = false
       })
     },
-    // 获取的频道数据列表
+    // 获取问答的数据列表
     getAnswer() {
+      this.selectedRowKeys_2 = []
       this.data = []
       const memberID = this.memberID
       const repository = this.repository
@@ -314,10 +341,12 @@ export default {
         memberID,
         repository
       }
+      console.log('dai', data);
       this.TableLoading_2 = true
       this.cancel()
       // 发送请求
       getAnswer(data).then(res => {
+        console.log('问答', res);
         if (!res) return
         if (res.code != 0) return this.$message.error('获取数据失败')
 
@@ -338,21 +367,6 @@ export default {
         this.TableLoading_2 = false
       })
     },
-    // 展示添加分类的框框
-    showAddDialog() {
-      this.addDialogVisible = true
-
-      this.$nextTick(() => {
-        this.$refs.input.focus()
-      })
-    },
-    // 展示删除分类的框框
-    showRemoveDialog() {
-      this.removeData = []
-      this.removeDialogVisible = true
-      // 发送请求
-      this.getRepositorys()
-    },
     /* 展示添加知识库的dialog */
     showAddDialog() {
       this.addDialogVisible = true
@@ -370,11 +384,13 @@ export default {
     },
     /* 知识库 点击 保存 */
     saveAddForm() {
-      let val = this.addForm.name;
-      if (!val) return this.$message.info('您输入的内容为空')
+      let nameVal = this.addForm.name;
+      let referralVal = this.addForm.referral;
+      if (!nameVal) return this.$message.info('请完善表单')
+      if (!referralVal) return this.$message.info('请完善表单')
 
       const memberID = this.memberID
-      const name = val;
+      const name = nameVal;
       const data = {
         name,
         memberID
@@ -443,115 +459,7 @@ export default {
       this.removeDialogVisible = false
 
     },
-    /* 新增问答区域 */
-    // #region
-    /* 关闭 新增问答的Dialog */
-    answerDialogClosed() {
-      this.answerForm = {}
-      this.answerDialogVisible = false
-    },
-    /* 保存 新增问答的Dialog */
-    saveAnswerForm() {
-      const questions = this.answerForm.questions;
-      const answers = this.answerForm.answers;
-
-      if (!questions) return this.$message.info('请完善表单')
-      if (!answers) return this.$message.info('请完善表单')
-
-      // 深拷贝
-      const arr = _.cloneDeep(this.data)
-      // 有从重复的 过滤到新数组中
-      const newArr = arr.filter(item => {
-        return item.questions == questions
-      })
-      // 如果有值 判断
-      if (newArr.length != 0) {
-        const obj = newArr[0]
-        if (obj.questions == questions) return this.$message.info('问题重复')
-      }
-
-
-      const memberID = this.memberID
-      const Form = _.cloneDeep(this.answerForm)
-      Form.memberID = memberID
-      Form.repository = this.repository
-
-      this.loading_3 = true;
-      this.cancel()
-      // 发送请求
-      addAnswer(Form).then(res => {
-        if (!res) return
-        if (res.code != 0) return this.$message.error('添加失败')
-        console.log('res: ', res);
-
-        this.$message.success('添加成功')
-        // 获取问答的数据列表
-        this.getAnswer()
-      })
-
-      setTimeout(() => {
-        this.loading_3 = false;
-        this.answerDialogClosed()
-      }, 300);
-    },
-    /* 点击删除问答 */
-    clearAnswer() {
-      this.loading_4 = true
-      setTimeout(() => {
-        if (this.selectedRows_2.length == 0) {
-          this.loading_4 = false
-          return this.$message.info('请选择您要删除的问答')
-        }
-
-        const arr = [];
-        this.selectedRows_2.forEach(item => {
-          arr.push(item.id)
-        })
-        const id = arr.join(',')
-        const data = {
-          id
-        }
-
-        console.log(data);
-        this.cancel()
-        // 发送请求 删除对应的 知识库
-        deleteAnswer(data).then(res => {
-          console.log('res: ', res);
-          if (!res) return
-          if (res.code != 0) return this.$message.error('删除失败')
-
-
-          // 提示
-          this.$message.success('删除成功')
-          // this.selectedRows_2.forEach(item => {
-          //   this.data.forEach((ele, index) => {
-          //     if (item.id == ele.id) {
-          //       this.data.splice(index, 1)
-          //     }
-          //   })
-          // })
-          console.log(this.repository);
-          this.getAnswer()
-
-          this.loading_4 = false
-        })
-      }, 500);
-    },
-    // #endregion
-    // 获取时间
-    getDate() {
-      let date = new Date()
-      let year = date.getFullYear();
-
-      let month = date.getMonth() + 1;
-      month <= 9 ? "0" + month : month;
-
-      let dates = date.getDate();
-      dates <= 9 ? "0" + dates : dates;
-
-      this.date = year + "-" + month + "-" + dates;
-    },
-  }
+  },
 }
 </script>
 
@@ -561,8 +469,9 @@ export default {
     font-size: 25px;
     font-weight: 500;
   }
-  ::v-deep .el-row {
-    margin-bottom: 10px !important;
+
+  .el-row {
+    margin-bottom: 10px;
   }
 
   .loading {
@@ -615,10 +524,6 @@ export default {
       margin-left: 10px;
     }
   }
-  // 新增知识库的Dialog
-  ::v-deep .el-form-item__label {
-    width: auto !important;
-  }
 
   ::v-deep .ant-table-thead > tr > th {
     text-align: center;
@@ -655,5 +560,9 @@ export default {
     border: 1px solid transparent;
     box-shadow: -2px -0px 10px #f56c6c !important;
   }
+}
+
+::v-deep .ant-form-horizontal {
+  transform: translateX(40px) !important;
 }
 </style>

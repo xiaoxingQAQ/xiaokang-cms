@@ -27,7 +27,7 @@
       <div slot="title_1" v-else></div>
 
       <div slot="data_2">
-        <span v-if="JSON.stringify(cardData_1) != '{}'">{{cardData_1.upcount}}</span>
+        <span v-if="JSON.stringify(cardData_1) != '{}'">{{cardData_1.account}}</span>
         <div class="loading" slot="data_1" v-else>
           <a-spin tip="Loading...">
             <div class="spin-content"></div>
@@ -38,7 +38,7 @@
       <div slot="title_2" v-else></div>
 
       <div slot="data_3">
-        <span v-if="JSON.stringify(cardData_1) != '{}'">{{cardData_1.upcount}}</span>
+        <span v-if="JSON.stringify(cardData_1) != '{}'">{{cardData_1.sumcount}}</span>
         <div class="loading" slot="data_1" v-else>
           <a-spin tip="Loading...">
             <div class="spin-content"></div>
@@ -54,7 +54,7 @@
       <span slot="rightTitle" @click="goDetail">查看更多数据</span></span>
 
       <div slot="data_1">
-        <span v-if="JSON.stringify(cardData_2) != '{}'">{{cardData_1.upcount}}</span>
+        <span v-if="JSON.stringify(cardData_2) != '{}'">{{cardData_2.account}}</span>
         <div class="loading" slot="data_1" v-else>
           <a-spin tip="Loading...">
             <div class="spin-content"></div>
@@ -66,7 +66,7 @@
 
 
       <div slot="data_3">
-        <span v-if="JSON.stringify(cardData_2) != '{}'">{{cardData_1.upcount}}</span>
+        <span v-if="JSON.stringify(cardData_2) != '{}'">{{cardData_2.sumcount}}</span>
         <div class="loading" slot="data_1" v-else>
           <a-spin tip="Loading...">
             <div class="spin-content"></div>
@@ -79,7 +79,7 @@
     </Card>
     
     <Card>
-      <span slot="leftTitle">昨日活跃用户</span>
+      <span slot="leftTitle">昨日活跃用户TOP10</span>
       <div slot="main">
         <a-table :columns="columns" :data-source="TabData" :loading="loading" :pagination="false">
         </a-table>
@@ -122,7 +122,7 @@ export default {
           key: '2',
         },
         {
-          title: 'ID',
+          title: '设备ID',
           dataIndex: 'ID',
           key: '3',
         },
@@ -177,6 +177,7 @@ export default {
       })
       // 请求卡片2的数据
       card_2(data).then(res_2 => {
+        console.log('res_2: ', res_2);
         if (!res_2) return
         if (res_2.code != 0) return this.$message.error('获取数据失败')
 
@@ -196,8 +197,10 @@ export default {
           obj.indey = index + 1;
           obj.counts = item.counts
           obj.ID = item.equipmentID
-          obj.date = item.times
-          arr.push(obj)
+          obj.date = item.uptDate
+          if (arr.length < 10) {
+            arr.push(obj)
+          }
         });
         this.TabData = arr
         this.loading = false

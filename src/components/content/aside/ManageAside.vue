@@ -22,7 +22,7 @@ export default {
       activeIndex: '0',
       menuList: [ // 侧边栏数据
         { id: 0, title: '客服信息', icon: 'icon-kefu' },
-        { id: 2, title: '其他配置', icon: 'icon-caidan' },
+        { id: 1, title: '版本管理', icon: 'icon-details' },
       ],
     }
   },
@@ -41,31 +41,31 @@ export default {
     goNext(index) {
       const indey = index + '';
       switch (indey) {
+        // 点击之后 如果 当前路由 和 将要跳转的路由 相同 那么阻止跳转
+        // 否则 放行
         case '0':
           this.activeIndex = indey
-          // 点击之后 如果 当前路由 和 将要跳转的路由 相同 那么阻止跳转
-          // 否则 放行
           if (this.$route.path == '/service') return
           this.$router.replace('/service')
           break;
         case '1':
           this.activeIndex = indey
-          if (this.$route.path == '/restSettings') return
-          this.$router.replace('/restSettings')
+          if (this.$route.path == '/edition') return
+          this.$router.replace('/edition')
           break;
       }
     },
     selected() {
       let path = this.$route.path;
-      let manage = '/manage';
-      let manageR = '/restSettings'
+      let manage = '/service';
+      let manageE = '/edition'
 
       switch (path) {
         case manage:
           this.activeIndex = '0'
           break;
-        case manageR:
-          this.activeIndex = '2'
+        case manageE:
+          this.activeIndex = '1'
           break;
       }
     },

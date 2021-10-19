@@ -6,6 +6,10 @@
       <el-button type="danger" @click="showRemoveDialog">删除知识库</el-button>
     </el-row>
 
+    <el-row>
+      <span class="category">知识库</span>
+    </el-row>
+
     <el-row class="loading" v-if="nameArr.length == 0">
       <a-spin tip="Loading...">
         <div class="spin-content"></div>
@@ -14,11 +18,12 @@
 
     <el-row v-else>
       <el-tag
-        v-for="(item, indey) in nameArr"
-        :key="indey"
+        v-for="(item, index) in nameArr"
+        :key="index"
         type="warning"
         effect="dark"
-        @click="toTable(item)"
+        :class="{ active: currentIndex == index }"
+        @click="toTable(item, index)"
       >
         {{ item.name }}
       </el-tag>
@@ -99,7 +104,7 @@
       class="removeDialog"
     >
       <a-table
-        :rowKey="(record) => record.id"
+        :rowKey="(record) => record.key"
         :columns="removeColumns"
         :data-source="removeData"
         :row-selection="removeRowSelection"
@@ -179,7 +184,7 @@ export default {
       date: '',
       /* 问答管理的数据 */
       selectedRowKeys: [], //选中的 问题名称
-      selectedRows: [], // /选中的 问题数据
+      selectedRows: [], // 选中的 问题数据
       selectedRowKeys_2: [],
       selectedRows_2: [],
       title: '',
@@ -230,14 +235,13 @@ export default {
   },
   created() {
     this.getRepositorys()
-    this.getDate()
   },
   mounted() {
 
   },
   computed: {
     ...mapState('user', ['memberID']),
-    // 删除知识库的table
+    // 问答的table
     rowSelection() {
       const { selectedRowKeys_2 } = this;
       return {
@@ -249,7 +253,7 @@ export default {
         },
       };
     },
-    // 删除问答 table
+    // 知识库 table
     removeRowSelection() {
       const { selectedRowKeys } = this;
       return {
@@ -264,7 +268,8 @@ export default {
   },
   methods: {
     /* 点击tag标签 跳转 */
-    toTable(item) {
+    toTable(item, index) {
+      this.currentIndex = index
       this.data = []
       this.selectedRowKeys_2 = []
       this.title = item.name
@@ -322,7 +327,7 @@ export default {
       this.cancel()
       // 发送请求
       getAnswer(data).then(res => {
-        console.log('问答',res);
+        console.log('问答', res);
         if (!res) return
         if (res.code != 0) return this.$message.error('获取数据失败')
 
@@ -528,25 +533,18 @@ export default {
       }, 500);
     },
     // #endregion
-    // 获取时间
-    getDate() {
-      let date = new Date()
-      let year = date.getFullYear();
-
-      let month = date.getMonth() + 1;
-      month <= 9 ? "0" + month : month;
-
-      let dates = date.getDate();
-      dates <= 9 ? "0" + dates : dates;
-
-      this.date = year + "-" + month + "-" + dates;
-    },
   },
 }
 </script>
 
 <style lang="less" scoped>
 .wrapper {
+
+  .category {
+    font-size: 25px;
+    font-weight: 500;
+  }
+
   .tabs_1 {
     .el-row {
       margin-bottom: 10px;
@@ -632,6 +630,12 @@ export default {
   b {
     font-weight: bold;
     font-size: 20px;
+  }
+
+  .active {
+    background-color: #f56c6c;
+    border: 1px solid transparent;
+    box-shadow: -2px -0px 10px #f56c6c !important;
   }
 }
 </style>

@@ -26,7 +26,8 @@
         :key="indey"
         type="warning"
         effect="dark"
-        @click="toTable(item)"
+        :class="{ active: currentIndex == indey }"
+        @click="toTable(item, indey)"
       >
         {{ item.name }}
       </el-tag>
@@ -187,6 +188,7 @@ export default {
   },
   data() {
     return {
+      currentIndex: null,
       status: 0, // 0 pause, 1 play
       fileList: [],
       uploadUrl: 'http://114.116.253.112:9600/service/attachment/upload',
@@ -289,7 +291,8 @@ export default {
       this.status = 0
     },
     /* 点击tag标签 跳转 */
-    toTable(item) {
+    toTable(item, indey) {
+      this.currentIndex = indey
       this.data = []
       this.selectedRowKeys_2 = []
       this.title = item.name
@@ -677,6 +680,12 @@ export default {
   b {
     font-weight: bold;
     font-size: 20px;
+  }
+
+  .active {
+    background-color: #f56c6c;
+    border: 1px solid transparent;
+    box-shadow: -2px -0px 10px #f56c6c !important;
   }
 }
 </style>

@@ -58,9 +58,9 @@
           :data-source="tabData"
           :pagination="true"
         >
-          <div slot="operate" slot-scope="text, record">
+          <template slot="operate" slot-scope="text, record">
             <a-button @click="goDetail(record)" class="btn">查看</a-button>
-          </div>
+          </template>
         </a-table>
       </div>
     </Card>

@@ -1,6 +1,40 @@
 <template>
   <div class="wrapper">
-    <Card>
+    <el-form
+      :model="updateForm"
+      :rules="updateFormRules"
+      ref="ruleForm"
+      label-width="100px"
+    >
+      <el-form-item label="版本编号：" prop="number">
+        <el-input v-model="updateForm.number"></el-input>
+      </el-form-item>
+
+      <el-form-item label="更新日志：" prop="updateLog">
+        <el-input
+          type="textarea"
+          :autosize="{ minRows: 3, maxRows: 6 }"
+          v-model="updateForm.updateLog"
+        ></el-input>
+      </el-form-item>
+
+      <el-form-item label="版本文件：">
+        <a-upload
+          method="post"
+          :action="uploadUrl"
+          :headers="headers"
+          :remove="onRemove"
+          :multiple="false"
+          :file-list="fileList"
+          @change="handleChange"
+        >
+          <a-button v-if="fileList.length == 0">
+            <a-icon type="upload" /> Upload
+          </a-button>
+        </a-upload>
+      </el-form-item>
+    </el-form>
+    <!-- <Card>
       <span slot="leftTitle">版本推送</span>
       <div slot="main">
         <el-form
@@ -41,7 +75,7 @@
           </el-form-item>
         </el-form>
       </div>
-    </Card>
+    </Card> -->
   </div>
 </template>
 
@@ -88,7 +122,7 @@ export default {
     ...mapState('user', ['memberID'])
   },
   methods: {
-    editionPush() {
+    push() {
       this.$refs.ruleForm.validate(valid => {
         if (!valid) return
         // 先清除 上一个定时器
@@ -169,10 +203,9 @@ export default {
 <style lang="less" scoped>
 .wrapper {
   .el-form {
-    padding: 0 0 30px 100px;
     ::v-deep .el-input__inner,
     ::v-deep .el-textarea__inner {
-      width: 41% !important;
+      width: 80% !important;
     }
     .el-form-item {
       font-weight: 600;
@@ -181,11 +214,6 @@ export default {
         font-weight: 500;
         color: #777;
       }
-    }
-
-    .el-button {
-      float: left;
-      margin-top: 10px;
     }
   }
 

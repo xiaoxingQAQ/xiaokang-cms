@@ -12,9 +12,11 @@ import { mapMutations } from 'vuex'
 export default {
   created() {
     this.Init_User()
+    this.Init_Edition_Info()
   },
   methods: {
     ...mapMutations('user', ['Init_User']),
+    ...mapMutations('edition', ['Init_Edition_Info'])
   },
 }
 </script>
@@ -23,15 +25,15 @@ export default {
 // 动画
 .slide-fade-enter-active {
   transition: all 0.6s ease-in;
-  opacity: 0.6;
+  opacity: 0.1;
 }
 .slide-fade-leave-active {
   transition: all 0.6s ease-in-out;
-  opacity: 0.6;
+  opacity: 0.1;
 }
 .slide-fade-enter,
 .slide-fade-leave-to {
   transform: translate(-50px);
-  opacity: 0.6;
+  opacity: 0.1;
 }
 </style>

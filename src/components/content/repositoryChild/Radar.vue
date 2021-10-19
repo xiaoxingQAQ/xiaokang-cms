@@ -18,7 +18,8 @@
         :key="index"
         type="warning"
         effect="dark"
-        @click="toTable(item)"
+        :class="{ active: currentIndex == index }"
+        @click="toTable(item, index)"
       >
         {{ item.name }}
       </el-tag>
@@ -225,6 +226,7 @@ export default {
   },
   data() {
     return {
+      currentIndex: null,
       repositoryArr: [],
       selectedRowKeys: [],
       selectedRows: [],
@@ -321,7 +323,8 @@ export default {
   },
   methods: {
     // 点击 tag标签 触发
-    toTable(item) {
+    toTable(item, index) {
+      this.currentIndex = index;
       this.title = item.name
       this.getProblem(item)
     },
@@ -733,5 +736,12 @@ export default {
   ::v-deep .el-form-item__label {
     font-weight: 500;
   }
+
+  .active {
+    background-color: #f56c6c;
+    border: 1px solid transparent;
+    box-shadow: -2px -0px 10px #f56c6c !important;
+  }
+  
 }
 </style>

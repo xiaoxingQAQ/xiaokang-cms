@@ -43,17 +43,21 @@
             </el-form-item>
             <!-- 按钮区域 -->
             <el-form-item class="btns">
-              <el-button :loading="loading" type="primary" @click="login"
-                >登录</el-button
+              <a-button
+                :loading="loading"
+                class="btn"
+                type="primary"
+                @click="login"
+                >登录</a-button
               >
             </el-form-item>
           </el-form>
         </div>
       </div>
     </main>
-    
+
     <div class="footer">
-      <div> Copyright 2021 </div>
+      <div>Copyright 2021</div>
     </div>
   </div>
 </template>
@@ -127,12 +131,21 @@ export default {
 </script>
 
 <style lang="less" scoped>
+@color1: #0cc;
+@color2: #7f7f7f;
 .wrapper {
   position: relative;
   width: 100%;
   height: 100%;
   background: url('../../assets/images/background.png');
   background-size: 100%;
+
+  .btn {
+    width: 90px;
+    font-weight: 500;
+    color: #fff;
+    border: transparent;
+  }
 
   header {
     box-sizing: border-box;

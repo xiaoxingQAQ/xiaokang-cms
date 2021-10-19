@@ -222,6 +222,43 @@ export function getKnowledge(data) {
   })
 }
 
+
+// 收音机列表
+export function getRadioList(data) {
+  return request({
+    method: 'post',
+    url: '/service/backequipment/broadcastlist',
+    headers: { //请求头
+      token: JSON.parse(sessionStorage.getItem('token'))
+    },
+    data
+  })
+}
+
+// 新增收音机
+export function addRadio(data) {
+  return request({
+    method: 'post',
+    url: '/service/backequipment/savebroadcast',
+    headers: { //请求头
+      token: JSON.parse(sessionStorage.getItem('token'))
+    },
+    data
+  })
+}
+
+// 收音机删除接口，传id字符串用逗号分隔
+export function deleteRadio(data) {
+  return request({
+    method: 'post',
+    url: '/service/backequipment/deletebroadcast',
+    headers: { //请求头
+      token: JSON.parse(sessionStorage.getItem('token'))
+    },
+    data
+  })
+}
+
 // 版本推送
 export function editionPush(data) {
   return request({

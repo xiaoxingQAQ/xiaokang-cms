@@ -107,7 +107,7 @@ export default {
       const R_1Path = '/repository';
       const R_2Path = '/radio';
       const GPath = '/goodHealth';
-      const EPath = '/edition';
+      const CPath = '/counselor';
 
       switch (path) {
         case APath:
@@ -120,7 +120,7 @@ export default {
           return true
         case GPath:
           return true
-        case EPath:
+        case CPath:
           return true
       }
     },
@@ -149,12 +149,11 @@ export default {
     showAsideM() {
       const path = this.$route.path;
       const MPath = '/service';
-      const RPath = '/restSettings';
-
+      const EPath = '/edition';
       switch (path) {
         case MPath:
           return true
-        case RPath:
+        case EPath:
           return true
       }
     },
