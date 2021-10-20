@@ -2,16 +2,16 @@
 <template>
   <div class="wrapper">
     <!-- 按钮 -->
-    <!-- <el-row>
+    <el-row>
       <el-button type="primary" @click="showAddDialog">新增分类</el-button>
       <el-button type="danger" @click="showRemoveDialog">删除分类</el-button>
-    </el-row> -->
+    </el-row>
 
-    <!-- <el-row>
+    <el-row>
       <span class="category">频道分类</span>
-    </el-row> -->
+    </el-row>
 
-    <!-- <el-row class="loading" v-if="nameArr.length == 0">
+    <el-row class="loading" v-if="nameArr.length == 0">
       <a-spin tip="Loading...">
         <div class="spin-content"></div>
       </a-spin>
@@ -28,7 +28,7 @@
       >
         {{ item.name }}
       </el-tag>
-    </el-row> -->
+    </el-row>
     <!-- 卡片 -->
     <Card>
       <span slot="leftTitle" v-if="title">分类：{{ title }}</span>

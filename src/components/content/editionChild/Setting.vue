@@ -1,15 +1,24 @@
 <template>
   <div>
     <!-- 返回 -->
-    <el-row class="back" :gutter="10">
+    <el-row
+      class="back"
+      :gutter="10"
+    >
       <el-col :span="6">
-        <i class="el-icon-back" @click="goBack">&nbsp返回</i>
+        <i
+          class="el-icon-back"
+          @click="goBack"
+        >&nbsp返回</i>
       </el-col>
     </el-row>
     <!-- card 1 -->
     <Card class="card_1">
       <span slot="leftTitle">通话设置</span>
-      <div class="main" slot="main">
+      <div
+        class="main"
+        slot="main"
+      >
         <el-row>
           <div class="left">
             <span>可添加联系人的数量</span>
@@ -56,7 +65,7 @@
             <a-button
               v-for="(item, index) in arr_1_c"
               :key="index"
-               type="primary"
+              type="primary"
               class="switch"
               @click="change_3(index)"
               :class="{ active: currentIndex_3 == index }"
@@ -72,71 +81,81 @@
 
     <!-- card 2 -->
     <Card class="card_2">
-      <span slot="leftTitle">屏幕设置</span>
-      <div class="main" slot="main">
-        <el-row :gutter="50">
-          <el-col :span="25">
-          <div class="left">
-            <span>屏幕亮度</span>
-          </div>
-          <div class="right">
-            <a-button
-              v-for="(item, index) in arr_2_b"
-              :key="index"
-              class="switch"
-              @click="change_5(index)"
-              :class="{ active: currentIndex_5 == index }"
-              :disabled="currentIndex_5 == index"
-              :loading="loading_5"
-            >
-              {{ item.title }}
-            </a-button>
-          </div>
-          </el-col>
-          <el-col :span="25">
-          <div class="left">
-            <span>屏保模式</span>
-          </div>
-          <div class="right">
-            <a-button
-              v-for="(item, index) in arr_2_c"
-              :key="index"
-              class="switch"
-              @click="change_6(index)"
-              :class="{ active: currentIndex_6 == index }"
-              :disabled="currentIndex_6 == index"
-              :loading="loading_6"
-            >
-              {{ item.title }}
-            </a-button>
-          </div>
-        </el-col>
-        </el-row>
-         <el-row>
-          <div class="left">
-            <span>免打扰时段</span>
-          </div>
-          <div class="right">
-            <a-button
-              v-for="(item, index) in arr_2_a"
-              :key="index"
-              class="switch"
-              @click="change_4(index)"
-              :class="{ active: currentIndex_4 == index }"
-              :disabled="currentIndex_4 == index"
-              :loading="loading_4"
-            >
-              {{ item.title }}
-            </a-button>
-          </div>
-        </el-row>
-      </div>
+      <template #leftTitle>
+        <span>屏幕设置</span>
+      </template>
+
+      <template #main>
+        <div>
+          <el-row>
+            <el-col>
+              <div class="left">
+                <span>屏幕亮度</span>
+              </div>
+              <div class="right">
+                <a-button
+                  v-for="(item, index) in arr_2_a"
+                  :key="index"
+                  :type="item.type"
+                  class="switch"
+                  @click="change_4(index)"
+                  :class="[{ active: currentIndex_4 == index }, { unique: index == 3 }]"
+                  :loading="loading_4"
+                >
+                  {{ item.title }}
+                </a-button>
+              </div>
+            </el-col>
+          </el-row>
+
+          <el-row>
+            <div class="left">
+              <span>屏保模式</span>
+            </div>
+            <div class="right">
+              <a-button
+                v-for="(item, index) in arr_2_b"
+                :key="index"
+                :type="item.type"
+                class="switch"
+                @click="change_5(index)"
+                :class="{ active: currentIndex_5 == index }"
+                :loading="loading_5"
+              >
+                {{ item.title }}
+              </a-button>
+            </div>
+          </el-row>
+
+          <el-row>
+            <div class="left">
+              <span>免打扰时段</span>
+            </div>
+            <div class="right">
+              <a-button
+                v-for="(item, index) in arr_2_c"
+                :key="index"
+                :type="item.type"
+                class="switch"
+                @click="change_6(index)"
+                :class="[{ active: currentIndex_6 == index }, { unique: index == 2 }]"
+                :loading="loading_6"
+              >
+                {{ item.title }}
+              </a-button>
+            </div>
+          </el-row>
+        </div>
+      </template>
     </Card>
 
     <!-- card 3-->
     <Card class="card_2">
       <span slot="leftTitle">“稍后提醒”再响间隔（分钟）</span>
-      <div class="main" slot="main">
+      <div
+        class="main"
+        slot="main"
+      >
         <el-row>
           <div class="left">
             <span>稍后再响间隔</span></span>
@@ -158,41 +177,223 @@
       </div>
     </Card>
 
-  <!-- 修改可添加联系人的数量 -->
-  <el-dialog
-    title="提示"
-    :visible.sync="visible_1"
-    width="30%"
-    :before-close="handleClose_1">
-    <span slot="footer" class="dialog-footer">
-      <el-button @click="visible_1 = false">取 消</el-button>
-      <el-button type="primary" @click="visible_1 = false">确 定</el-button>
-    </span>
-  </el-dialog>
+    <!-- 修改可添加联系人的数量 -->
+    <el-dialog
+      title="可添加联系人的数量"
+      :visible.sync="visible_1"
+      width="30%"
+      :before-close="handleClose_1"
+    >
+      <el-input
+        v-model.trim="input_1"
+        placeholder="请输入需要设置的数量"
+      ></el-input>
+      <span
+        slot="footer"
+        class="dialog-footer"
+      >
+        <el-button @click="visible_1 = false">取 消</el-button>
+        <el-button
+          type="primary"
+          @click="visible_1 = false"
+        >确 定</el-button>
+      </span>
+    </el-dialog>
 
-  <!-- 修改通话时长 -->
-   <el-dialog
-    title="提示"
-    :visible.sync="visible_2"
-    width="30%"
-    :before-close="handleClose_2">
-    <span slot="footer" class="dialog-footer">
-      <el-button @click="visible_2 = false">取 消</el-button>
-      <el-button type="primary" @click="visible_2 = false">确 定</el-button>
-    </span>
-  </el-dialog>
+    <!-- 修改通话时长 -->
+    <el-dialog
+      title="提示"
+      :visible.sync="visible_2"
+      width="30%"
+      :before-close="handleClose_2"
+    >
+      <el-input
+        v-model.trim="input_1"
+        placeholder="请输入需要设置的时长"
+      ></el-input>
+      <span
+        slot="footer"
+        class="dialog-footer"
+      >
+        <el-button @click="visible_2 = false">取 消</el-button>
+        <el-button
+          type="primary"
+          @click="visible_2 = false"
+        >确 定</el-button>
+      </span>
+    </el-dialog>
 
-  <!-- 修改留言数量 -->
-   <el-dialog
-    title="提示"
-    :visible.sync="visible_3"
-    width="30%"
-    :before-close="handleClose_3">
-    <span slot="footer" class="dialog-footer">
-      <el-button @click="visible_3 = false">取 消</el-button>
-      <el-button type="primary" @click="visible_3 = false">确 定</el-button>
-    </span>
-  </el-dialog>
+    <!-- 修改留言数量 -->
+    <el-dialog
+      title="提示"
+      :visible.sync="visible_3"
+      width="30%"
+      :before-close="handleClose_3"
+    >
+      <el-input
+        v-model.trim="input_1"
+        placeholder="请输入需要设置的数量"
+      ></el-input>
+      <span
+        slot="footer"
+        class="dialog-footer"
+      >
+        <el-button @click="visible_3 = false">取 消</el-button>
+        <el-button
+          type="primary"
+          @click="visible_3 = false"
+        >确 定</el-button>
+      </span>
+    </el-dialog>
+
+    <!-- 修改屏幕亮度 -->
+    <el-dialog
+      title="提示"
+      :visible.sync="visible_4"
+      width="30%"
+      :before-close="handleClose_4"
+    >
+      
+      <span
+        slot="footer"
+        class="dialog-footer"
+      >
+        <el-button @click="visible_4 = false">取 消</el-button>
+        <el-button
+          type="primary"
+          @click="visible_4 = false"
+        >确 定</el-button>
+      </span>
+    </el-dialog>
+    <!-- 新增 -->
+    <el-dialog
+      title="提示"
+      :visible.sync="visible_4_a"
+      width="30%"
+      :before-close="handleClose_4_a"
+    >
+      <span
+        slot="footer"
+        class="dialog-footer"
+      >
+        <el-button @click="visible_4_a = false">取 消</el-button>
+        <el-button
+          type="primary"
+          @click="visible_4_a = false"
+        >确 定</el-button>
+      </span>
+    </el-dialog>
+    <!-- 删除 -->
+    <el-dialog
+      title="提示"
+      :visible.sync="visible_4_b"
+      width="30%"
+      :before-close="handleClose_4_b"
+    >
+      <span
+        slot="footer"
+        class="dialog-footer"
+      >
+        <el-button @click="visible_4_b = false">取 消</el-button>
+        <el-button
+          type="primary"
+          @click="visible_4_b = false"
+        >确 定</el-button>
+      </span>
+    </el-dialog>
+
+    <!-- 修改屏保模式 -->
+    <!-- 新增 -->
+    <el-dialog
+      title="提示"
+      :visible.sync="visible_5_a"
+      width="30%"
+      :before-close="handleClose_5_a"
+    >
+      <span
+        slot="footer"
+        class="dialog-footer"
+      >
+        <el-button @click="visible_5_a = false">取 消</el-button>
+        <el-button
+          type="primary"
+          @click="visible_5_a = false"
+        >确 定</el-button>
+      </span>
+    </el-dialog>
+    <!-- 删除 -->
+    <el-dialog
+      title="提示"
+      :visible.sync="visible_5_b"
+      width="30%"
+      :before-close="handleClose_5_b"
+    >
+      <span
+        slot="footer"
+        class="dialog-footer"
+      >
+        <el-button @click="visible_5_b = false">取 消</el-button>
+        <el-button
+          type="primary"
+          @click="visible_5_b = false"
+        >确 定</el-button>
+      </span>
+    </el-dialog>
+
+    <!-- 修改免打扰时段 -->
+    <el-dialog
+      title="提示"
+      :visible.sync="visible_6"
+      width="30%"
+      :before-close="handleClose_6"
+    >
+      <span
+        slot="footer"
+        class="dialog-footer"
+      >
+        <el-button @click="visible_6 = false">取 消</el-button>
+        <el-button
+          type="primary"
+          @click="visible_6 = false"
+        >确 定</el-button>
+      </span>
+    </el-dialog>
+    <!-- 新增 -->
+    <el-dialog
+      title="提示"
+      :visible.sync="visible_6_a"
+      width="30%"
+      :before-close="handleClose_6_a"
+    >
+      <span
+        slot="footer"
+        class="dialog-footer"
+      >
+        <el-button @click="visible_6_a = false">取 消</el-button>
+        <el-button
+          type="primary"
+          @click="visible_6_a = false"
+        >确 定</el-button>
+      </span>
+    </el-dialog>
+    <!-- 删除 -->
+    <el-dialog
+      title="提示"
+      :visible.sync="visible_6_b"
+      width="30%"
+      :before-close="handleClose_6_b"
+    >
+      <span
+        slot="footer"
+        class="dialog-footer"
+      >
+        <el-button @click="visible_6_b = false">取 消</el-button>
+        <el-button
+          type="primary"
+          @click="visible_6_b = false"
+        >确 定</el-button>
+      </span>
+    </el-dialog>
   </div>
 </template>
 
@@ -205,9 +406,24 @@ export default {
   },
   data() {
     return {
+      input_1: '',
+      input_2: '',
+      input_3: '',
+      input_4: '',
+      input_6: '',
+
       visible_1: false,
       visible_2: false,
       visible_3: false,
+      visible_4: false,
+      visible_4_a: false,
+      visible_4_b: false,
+      visible_5_a: false,
+      visible_5_b: false,
+      visible_6: false,
+      visible_6_a: false,
+      visible_6_b: false,
+
       loading_1: false,
       loading_2: false,
       loading_3: false,
@@ -215,6 +431,7 @@ export default {
       loading_5: false,
       loading_6: false,
       loading_7: false,
+
       currentIndex_1: 0,
       currentIndex_2: 0,
       currentIndex_3: 0,
@@ -222,6 +439,7 @@ export default {
       currentIndex_5: 0,
       currentIndex_6: 0,
       currentIndex_7: 0,
+
       arr_1_a: [
         { id: 1, title: '100' },
         { id: 2, title: '修改', },
@@ -235,18 +453,26 @@ export default {
         { id: 2, title: '修改', },
       ],
       arr_2_a: [
-        { id: 1, title: '20:00-06:00' },
-        { id: 2, title: '关闭' },
-      ],
-      arr_2_b: [
         { id: 1, title: '正常' },
         { id: 2, title: '高亮' },
         { id: 3, title: '护眼' },
+        { id: 4, title: '自定义' },
+        { id: 6, title: '新增', type: 'primary' },
+        { id: 7, title: '删除', type: 'danger' },
       ],
-      arr_2_c: [
+      arr_2_b: [
         { id: 1, title: '日历' },
         { id: 2, title: '相册' },
         { id: 3, title: '随机' },
+        { id: 4, title: '新增', type: 'primary' },
+        { id: 5, title: '删除', type: 'danger' },
+      ],
+      arr_2_c: [
+        { id: 1, title: '20:00-06:00' },
+        { id: 2, title: '关闭' },
+        { id: 3, title: '自定义' },
+        { id: 4, title: '新增', type: 'primary' },
+        { id: 5, title: '删除', type: 'danger' },
       ],
       arr_3: [
         { id: 1, title: '1分钟' },
@@ -258,6 +484,8 @@ export default {
         { id: 7, title: '30分钟' },
       ]
     }
+  },
+  computed: {
   },
   methods: {
     // 返回上一级
@@ -284,19 +512,83 @@ export default {
     },
     handleClose_3() { },
 
-
+    // 修改屏幕亮度
     change_4(index) {
-      this.currentIndex_4 = index
-      this.loading_4 = true
+      if (index != 4 && index != 5) {
+        this.currentIndex_4 = index
+      }
+
+      switch (index) {
+        case 3:
+          this.visible_4 = true
+          break;
+        case 4:
+          this.visible_4_a = true
+          break;
+        case 5:
+          this.visible_4_b = true
+          break;
+      }
+
     },
+    handleClose_4() {
+
+    },
+    handleClose_4_a() {
+
+    },
+    handleClose_4_b() {
+
+    },
+
     change_5(index) {
-      this.currentIndex_5 = index
-      this.loading_5 = true
+      if (index != 3 && index != 4) {
+        this.currentIndex_5 = index
+      }
+      switch (index) {
+        case 3:
+          this.visible_5_a = true
+          break;
+        case 4:
+          this.visible_5_b = true
+          break;
+      }
     },
+    handleClose_5_a() {
+
+    },
+    handleClose_5_b() {
+
+    },
+
+
     change_6(index) {
-      this.currentIndex_6 = index
-      this.loading_6 = true
+      if (index != 3 && index != 4) {
+        this.currentIndex_6 = index
+      }
+      switch (index) {
+        case 2:
+          this.visible_6 = true
+          break;
+        case 3:
+          this.visible_6_a = true
+          break;
+        case 4:
+          this.visible_6_b = true
+          break;
+      }
     },
+    handleClose_6() {
+
+    },
+    handleClose_6_a() {
+
+    },
+    handleClose_6_b() {
+
+    },
+
+
     change_7(index) {
       this.currentIndex_7 = index
       this.loading_7 = true
@@ -343,14 +635,6 @@ export default {
   overflow: hidden;
 }
 
-.button {
-  margin-right: 10px !important;
-  margin-bottom: 5px;
-  width: 100px;
-  font-weight: 500;
-  overflow: hidden;
-}
-
 .card_1 {
   .main {
     display: flex;
@@ -361,11 +645,20 @@ export default {
 
 .card_2 {
   .el-row:first-child {
-    margin-bottom: 20px;
+    transform: translateX(18px);
+    // margin-bottom: 20px;
   }
+
+  .el-row:nth-child(2) {
+    transform: translateX(18px);
+
+    // margin-bottom: 20px;
+  }
+
   .el-col {
     display: flex;
   }
+
   .main {
     display: flex;
     flex-direction: column;
@@ -377,6 +670,10 @@ export default {
 .active {
   color: #fff !important;
   background-color: @color1 !important;
-  border: transparent !important;
+  border: 1px solid transparent !important;
+}
+
+.unique {
+  color: #67c23a;
 }
 </style>

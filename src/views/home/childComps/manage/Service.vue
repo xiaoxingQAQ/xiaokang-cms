@@ -147,23 +147,27 @@ export default {
   methods: {
     // 获取客服信息
     getServiceInfo() {
+      this.tabData = []
       this.cancel()
       this.loading = true
       const data = {};
       getServiceInfo(data).then(({ data, code }) => {
+        console.log('data: ', data);
         if (code != 0) return this.$message.error('获取数据失败')
 
         data.forEach((item, index) => {
           const key = index;
           const id = item.id;
           const imageUrl = item.imageUrl;
-          const serviceName = item.serviceName
+          const serviceNumber = item.serviceNumber;
+          const serviceName = item.serviceName;
           const serviceMail = item.serviceMail; // 客服电子邮件
           const servicePhone = item.servicePhone; // 客服手机号
           const serviceTime = item.serviceTime; // 工作时间
           this.tabData.push({
             key,
             id,
+            serviceNumber,
             imageUrl,
             serviceName,
             serviceMail,
@@ -176,7 +180,14 @@ export default {
     },
     // 点击打开 修改客服信息的dialog
     edit(record) {
-      console.log(this.tabData);
+      console.log('record: ', record);
+      this.EditForm = {
+        serviceNumber: record.serviceNumber,
+        serviceName: record.serviceName,
+        serviceMail: record.serviceMail,
+        servicePhone: record.servicePhone,
+        remark: record.remark
+      }
       this.visible = true
     },
     // 点击确定回调
