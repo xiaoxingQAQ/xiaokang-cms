@@ -248,12 +248,17 @@
 
     <!-- 修改屏幕亮度 -->
     <el-dialog
-      title="提示"
+      title="设置亮度值"
       :visible.sync="visible_4"
       width="30%"
       :before-close="handleClose_4"
     >
-      
+      <el-slider
+        v-model="value_4"
+        @change="handleChange_4"
+        show-input
+      >
+      </el-slider>
       <span
         slot="footer"
         class="dialog-footer"
@@ -272,6 +277,19 @@
       width="30%"
       :before-close="handleClose_4_a"
     >
+      <el-select
+        v-model="value_4_a"
+        placeholder="请选择"
+      >
+        <el-option
+          v-for="item in options_4_a"
+          :key="item.value"
+          :label="item.label"
+          :value="item.value"
+          :disabled="item.disabled"
+        >
+        </el-option>
+      </el-select>
       <span
         slot="footer"
         class="dialog-footer"
@@ -290,6 +308,19 @@
       width="30%"
       :before-close="handleClose_4_b"
     >
+      <el-select
+        v-model="value_4_b"
+        placeholder="请选择"
+      >
+        <el-option
+          v-for="item in options_4_b"
+          :key="item.value"
+          :label="item.label"
+          :value="item.value"
+          :disabled="item.disabled"
+        >
+        </el-option>
+      </el-select>
       <span
         slot="footer"
         class="dialog-footer"
@@ -310,6 +341,19 @@
       width="30%"
       :before-close="handleClose_5_a"
     >
+      <el-select
+        v-model="value_5_a"
+        placeholder="请选择"
+      >
+        <el-option
+          v-for="item in options_5_a"
+          :key="item.value"
+          :label="item.label"
+          :value="item.value"
+          :disabled="item.disabled"
+        >
+        </el-option>
+      </el-select>
       <span
         slot="footer"
         class="dialog-footer"
@@ -328,6 +372,19 @@
       width="30%"
       :before-close="handleClose_5_b"
     >
+      <el-select
+        v-model="value_5_b"
+        placeholder="请选择"
+      >
+        <el-option
+          v-for="item in options_5_b"
+          :key="item.value"
+          :label="item.label"
+          :value="item.value"
+          :disabled="item.disabled"
+        >
+        </el-option>
+      </el-select>
       <span
         slot="footer"
         class="dialog-footer"
@@ -347,6 +404,7 @@
       width="30%"
       :before-close="handleClose_6"
     >
+
       <span
         slot="footer"
         class="dialog-footer"
@@ -365,6 +423,19 @@
       width="30%"
       :before-close="handleClose_6_a"
     >
+      <el-select
+        v-model="value_6_a"
+        placeholder="请选择"
+      >
+        <el-option
+          v-for="item in options_6_a"
+          :key="item.value"
+          :label="item.label"
+          :value="item.value"
+          :disabled="item.disabled"
+        >
+        </el-option>
+      </el-select>
       <span
         slot="footer"
         class="dialog-footer"
@@ -383,6 +454,19 @@
       width="30%"
       :before-close="handleClose_6_b"
     >
+      <el-select
+        v-model="value_6_b"
+        placeholder="请选择"
+      >
+        <el-option
+          v-for="item in options_6_b"
+          :key="item.value"
+          :label="item.label"
+          :value="item.value"
+          :disabled="item.disabled"
+        >
+        </el-option>
+      </el-select>
       <span
         slot="footer"
         class="dialog-footer"
@@ -406,6 +490,129 @@ export default {
   },
   data() {
     return {
+      options_4_a: [
+        {
+          value: '选项1',
+          label: '黄金糕'
+        }, {
+          value: '选项2',
+          label: '双皮奶',
+          disabled: true
+        }, {
+          value: '选项3',
+          label: '蚵仔煎'
+        }, {
+          value: '选项4',
+          label: '龙须面'
+        }, {
+          value: '选项5',
+          label: '北京烤鸭'
+        }
+      ],
+      options_4_b: [
+        {
+          value: '选项1',
+          label: '黄金糕'
+        }, {
+          value: '选项2',
+          label: '双皮奶',
+          disabled: true
+        }, {
+          value: '选项3',
+          label: '蚵仔煎'
+        }, {
+          value: '选项4',
+          label: '龙须面'
+        }, {
+          value: '选项5',
+          label: '北京烤鸭'
+        }
+      ],
+      options_5_a: [
+        {
+          value: '选项1',
+          label: '黄金糕'
+        }, {
+          value: '选项2',
+          label: '双皮奶',
+          disabled: true
+        }, {
+          value: '选项3',
+          label: '蚵仔煎'
+        }, {
+          value: '选项4',
+          label: '龙须面'
+        }, {
+          value: '选项5',
+          label: '北京烤鸭'
+        }
+      ],
+      options_5_b: [
+        {
+          value: '选项1',
+          label: '黄金糕'
+        }, {
+          value: '选项2',
+          label: '双皮奶',
+          disabled: true
+        }, {
+          value: '选项3',
+          label: '蚵仔煎'
+        }, {
+          value: '选项4',
+          label: '龙须面'
+        }, {
+          value: '选项5',
+          label: '北京烤鸭'
+        }
+      ],
+      options_6_a: [
+        {
+          value: '选项1',
+          label: '黄金糕'
+        }, {
+          value: '选项2',
+          label: '双皮奶',
+          disabled: true
+        }, {
+          value: '选项3',
+          label: '蚵仔煎'
+        }, {
+          value: '选项4',
+          label: '龙须面'
+        }, {
+          value: '选项5',
+          label: '北京烤鸭'
+        }
+      ],
+      options_6_b: [
+        {
+          value: '选项1',
+          label: '黄金糕'
+        }, {
+          value: '选项2',
+          label: '双皮奶',
+          disabled: true
+        }, {
+          value: '选项3',
+          label: '蚵仔煎'
+        }, {
+          value: '选项4',
+          label: '龙须面'
+        }, {
+          value: '选项5',
+          label: '北京烤鸭'
+        }
+      ],
+
+      value_4: 0,
+      value_4_a: '',
+      value_4_b: '',
+      value_5_a: '',
+      value_5_b: '',
+      value_6_a: '',
+      value_6_b: '',
+
       input_1: '',
       input_2: '',
       input_3: '',
@@ -529,6 +736,9 @@ export default {
           this.visible_4_b = true
           break;
       }
+
+    },
+    handleChange_4() {
 
     },
     handleClose_4() {

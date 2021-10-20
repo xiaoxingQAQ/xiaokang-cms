@@ -8,13 +8,13 @@
       >
     </el-row>
 
-    <el-row class="loading" v-if="nameArr.length == 0">
+    <!-- <el-row class="loading" v-if="nameArr.length == 0">
       <a-spin tip="Loading...">
         <div class="spin-content"></div>
       </a-spin>
-    </el-row>
+    </el-row> -->
 
-    <el-row v-else>
+    <!-- <el-row v-else>
       <el-tag
         v-for="(item, index) in nameArr"
         :key="index"
@@ -25,7 +25,7 @@
       >
         {{ item.name }}
       </el-tag>
-    </el-row>
+    </el-row> -->
     <!-- 卡片 -->
     <Card v-for="(item, index) in nameArr" :key="index">
       <span slot="leftTitle">健康顾问：{{ item.name }}</span>

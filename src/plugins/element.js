@@ -31,8 +31,10 @@ import {
   MessageBox,
   Breadcrumb,
   BreadcrumbItem,
+  Slider,
 } from 'element-ui'
 
+Vue.use(Slider)
 Vue.use(BreadcrumbItem)
 Vue.use(Breadcrumb)
 Vue.use(DatePicker)

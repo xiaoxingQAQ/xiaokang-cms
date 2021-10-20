@@ -10,11 +10,24 @@
     </el-row>
     <!-- 按钮 -->
     <el-row>
-      <el-button type="primary" @click="showAddDialog">新增分类</el-button>
-      <el-button type="danger" @click="showRemoveDialog">删除分类</el-button>
+      <el-button
+        type="primary"
+        @click="showAddDialog"
+      >新增分类</el-button>
+      <el-button
+        type="danger"
+        @click="showRemoveDialog"
+      >删除分类</el-button>
+    </el-row>
+
+    <el-row>
+      <span class="category">养生知识</span>
     </el-row>
     <!-- loading -->
-    <el-row class="loading" v-if="nameArr.length == 0">
+    <el-row
+      class="loading"
+      v-if="nameArr.length == 0"
+    >
       <a-spin tip="Loading...">
         <div class="spin-content"></div>
       </a-spin>
@@ -34,8 +47,14 @@
     </el-row>
     <!-- 卡片 -->
     <Card>
-      <span slot="leftTitle" v-if="title">分类：{{ title }}</span>
-      <span slot="leftTitle" v-else>
+      <span
+        slot="leftTitle"
+        v-if="title"
+      >分类：{{ title }}</span>
+      <span
+        slot="leftTitle"
+        v-else
+      >
         点击上方标签，木有的话，先创建分类；
       </span>
 
@@ -44,15 +63,13 @@
           type="primary"
           :disabled="disabled"
           @click="answerDialogVisible = true"
-          >新增养生知识</el-button
-        >
+        >新增养生知识</el-button>
         <el-button
           type="danger"
           :loading="loading_4"
           :disabled="disabled"
           @click="clearAnswer"
-          >删除养生知识</el-button
-        >
+        >删除养生知识</el-button>
       </div>
 
       <div slot="main">
@@ -65,7 +82,10 @@
           :pagination="true"
           :loading="TableLoading_2"
         >
-          <template slot="audio" slot-scope="text, record, index">
+          <template
+            slot="audio"
+            slot-scope="text, record, index"
+          >
             <audio
               class="tsp-audio"
               @play="play"
@@ -102,11 +122,16 @@
             @keyup.enter.native="saveAddForm"
           ></el-input>
         </el-form-item>
-        <el-button type="info" @click="addDialogClosed">取消</el-button>
+        <el-button
+          type="info"
+          @click="addDialogClosed"
+        >取消</el-button>
 
-        <el-button type="primary" :loading="loading_1" @click="saveAddForm"
-          >保存</el-button
-        >
+        <el-button
+          type="primary"
+          :loading="loading_1"
+          @click="saveAddForm"
+        >保存</el-button>
       </el-form>
     </el-dialog>
 
@@ -127,10 +152,15 @@
         :pagination="true"
         :loading="TableLoading_1"
       />
-      <el-button type="info" @click="removeDialogClosed">取消</el-button>
-      <el-button type="danger" @click="clearRepository" :loading="loading_2"
-        >删除</el-button
-      >
+      <el-button
+        type="info"
+        @click="removeDialogClosed"
+      >取消</el-button>
+      <el-button
+        type="danger"
+        @click="clearRepository"
+        :loading="loading_2"
+      >删除</el-button>
     </el-dialog>
 
     <!-- 新增养生知识的Dialog -->
@@ -142,9 +172,16 @@
       @close="answerDialogClosed"
       class="answerDialog"
     >
-      <el-form ref="addFormRef" label-position="right" label-width="80px">
+      <el-form
+        ref="addFormRef"
+        label-position="right"
+        label-width="80px"
+      >
         <el-form-item label="名称：">
-          <el-input placeholder="请输入名称" v-model.trim="name"></el-input>
+          <el-input
+            placeholder="请输入名称"
+            v-model.trim="name"
+          ></el-input>
         </el-form-item>
         <el-form-item label="音频文件：">
           <a-upload
@@ -161,10 +198,15 @@
             </a-button>
           </a-upload>
         </el-form-item>
-        <el-button type="info" @click="answerDialogClosed">取消</el-button>
-        <el-button type="primary" :loading="loading_3" @click="saveAnswerForm"
-          >保存</el-button
-        >
+        <el-button
+          type="info"
+          @click="answerDialogClosed"
+        >取消</el-button>
+        <el-button
+          type="primary"
+          :loading="loading_3"
+          @click="saveAnswerForm"
+        >保存</el-button>
       </el-form>
     </el-dialog>
   </div>
@@ -593,6 +635,10 @@ export default {
 
 <style lang="less" scoped>
 .wrapper {
+  .category {
+    font-size: 25px;
+    font-weight: 500;
+  }
   ::v-deep .el-row {
     margin-bottom: 10px !important;
   }
