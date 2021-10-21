@@ -80,6 +80,13 @@
               loop
             ></audio>
           </template>
+          <template slot="editHealth" slot-scope="text, record, index">
+            <el-button
+                    @click="editHealth(record)"
+                    type="primary"
+                    icon="el-icon-edit"
+            ></el-button>
+          </template>
         </a-table>
       </div>
     </Card>
@@ -209,6 +216,40 @@
         >
       </el-form>
     </el-dialog>
+    <!-- 编辑养生知识的Dialog -->
+    <el-dialog
+            title="编辑养生知识"
+            :visible.sync="editHealthVisible"
+            width="50%"
+            center
+            @close="answerDialogClosed"
+            class="answerDialog"
+    >
+      <el-form ref="editFormRef" label-position="right" label-width="80px" v-model="editForm">
+        <el-form-item label="名称：">
+          <el-input placeholder="请输入名称" v-model.trim="editForm.title"></el-input>
+        </el-form-item>
+        <el-form-item label="音频文件：">
+          <a-upload
+                  method="post"
+                  :action="uploadUrl"
+                  :headers="headers"
+                  :remove="onRemove"
+                  :multiple="false"
+                  :file-list="editFileList"
+                  @change="handleEditChange"
+          >
+            <a-button v-if="editFileList.length == 0">
+              <a-icon type="upload" /> Upload
+            </a-button>
+          </a-upload>
+        </el-form-item>
+        <el-button type="info" @click="editDialogClosed">取消</el-button>
+        <el-button type="primary" :loading="loading_3" @click="saveEditForm"
+        >保存</el-button
+        >
+      </el-form>
+    </el-dialog>
   </div>
 </template>
 
@@ -223,6 +264,7 @@ import {
   deleByHealthy,
 } from '@/network/home'
 import { mapState } from 'vuex'
+import _ from 'lodash'
 const token = JSON.parse(sessionStorage.getItem('token'))
 export default {
   components: {
@@ -233,6 +275,7 @@ export default {
       currentIndex: null,
       status: 0, // 0 pause, 1 play
       fileList: [],
+      editFileList: [],
       uploadUrl: 'http://114.116.253.112:9600/service/attachment/upload',
       headers: {
         token,
@@ -262,6 +305,7 @@ export default {
       addDialogVisible: false, // 对话框 显示 / 隐藏
       updataDialogVisible: false, // 修改分类
       removeDialogVisible: false,
+      editHealthVisible: false, // 编辑养生知识内容  对话框 显示 / 隐藏
       addForm: {
         // 添加分类
         directoryName: '',
@@ -278,6 +322,11 @@ export default {
           scopedSlots: { customRender: 'audio' },
           key: 'audio',
           width: '60%',
+        },
+        {
+          title: '编辑',
+          key: 'editHealth',
+          scopedSlots: { customRender: 'editHealth' },
         },
       ],
       data: [],
@@ -301,6 +350,9 @@ export default {
         },
       ],
       removeData: [],
+      editHealthData: {}, // 储存编辑养生知识，回显
+      editForm: {}, // 保存编辑的内容
+      editStatus: false, // 编辑状态
     }
   },
   created() {
@@ -400,11 +452,13 @@ export default {
     getByHealthyList() {
       this.selectedRowKeys_2 = []
       this.data = []
+      const categoryID = '3'
       const memberID = this.memberID
       const healthyID = this.healthyID
       const data = {
         memberID,
         healthyID,
+        categoryID
       }
       console.log('dai', data)
       console.log(data)
@@ -609,6 +663,7 @@ export default {
         })
       }, 500)
     },
+
     // 处理上传文件状态改变
     handleChange(info) {
       console.log(info)
@@ -621,7 +676,7 @@ export default {
         return file
       })
 
-      this.fileList = fileList
+        this.fileList = fileList
     },
     // 处理删除文件
     onRemove() {
@@ -637,6 +692,7 @@ export default {
             message: '删除成功!',
           })
           this.fileList = []
+          this.editFileList = []
           this.attachmentID = ''
           flag = true
         })
@@ -649,6 +705,74 @@ export default {
         })
       return flag
     },
+    // 编辑养生知识内容
+    editHealth (record) {
+      console.log(record)
+      this.editHealthVisible = true
+      this.editHealthData = _.cloneDeep(record)
+      this.editForm = this.editHealthData
+      this.editStatus = true
+    },
+    // 编辑养生知识内容 确定按钮
+    saveEditForm() {
+      const title = this.editForm.title
+      this.editForm.status = 1
+      const attachmentID = this.editForm.attachmentID
+      if (!title) return this.$message.warning('请输入名称')
+      if (!attachmentID) {
+        return this.$message.warning('请上传音频')
+      }
+      // 深拷贝
+      const arr = _.cloneDeep(this.data)
+      // 有从重复的 过滤到新数组中
+      const newArr = arr.filter((item) => {
+        return item.title == title
+      })
+      // 如果有值 判断
+      if (newArr.length != 0) {
+        const obj = newArr[0]
+        if (obj.title == title) return this.$message.info('名称重复')
+      }
+      const data = this.editForm
+
+      this.loading_3 = true
+      this.cancel()
+      // 发送请求
+      addByHealthy(data).then((res) => {
+        if (!res) return
+        if (res.code != 0) return this.$message.error('修改失败')
+        console.log('res: ', res)
+
+        this.editStatus = false
+        this.editHealthVisible = false
+        this.$message.success('修改成功')
+        // 获取养生知识内容数据列表
+        this.getByHealthyList()
+      })
+
+      setTimeout(() => {
+        this.loading_3 = false
+        this.answerDialogClosed()
+      }, 300)
+    },
+    // 编辑养生知识内容 对话框关闭
+    editDialogClosed() {
+      this.editHealthVisible = false
+      this.editStatus = false
+    },
+    handleEditChange (info) {
+      console.log(info)
+      let fileList = [...info.fileList]
+      fileList = fileList.map((file) => {
+        if (file.response) {
+          file.url = file.response.url
+          this.editForm.attachmentID = file.response.data.id
+        }
+        return file
+      })
+
+      this.editFileList = fileList
+    }
   },
 }
 </script>
