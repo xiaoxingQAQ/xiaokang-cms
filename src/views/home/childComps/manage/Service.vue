@@ -5,14 +5,14 @@
       <span slot="leftTitle">客服信息</span>
       <template #rightTitle>
         <a-button
-          style="margin-right: 10px"
-          type="primary"
-          @click="AddServicer"
-        >新增客服</a-button>
-        <a-button
-          type="danger"
-          @click="deleteServicer"
-        >删除客服</a-button>
+                style="margin-right: 10px"
+                type="primary"
+                @click="AddServicer"
+        >新增客服</a-button
+        >
+        <a-button type="danger" @click="deleteServicer"
+        >删除客服</a-button
+        >
       </template>
       <div slot="main">
         <a-table
@@ -23,22 +23,12 @@
           :pagination="false"
           :row-selection="rowSelection"
         >
-          <template
-            slot="image"
-            slot-scope="text, record, index"
-          >
+          <template slot="image" slot-scope="text, record, index">
             <div>
-              <img
-                style="width: 70%"
-                :src="text.imageUrl"
-                alt=""
-              />
+              <img style="width: 70%" :src="text.photoUrl" alt="" />
             </div>
           </template>
-          <template
-            slot="edit"
-            slot-scope="text, record, index"
-          >
+          <template slot="edit" slot-scope="text, record, index">
             <el-button
               @click="edit(record)"
               type="primary"
@@ -64,47 +54,28 @@
         :label-col="labelCol"
         :wrapper-col="wrapperCol"
       >
-        <a-form-model-item
-          ref="num"
-          label="客服工号"
-          prop="num"
-        >
+        <a-form-model-item ref="num" label="客服工号" prop="num">
           <a-input v-model="EditForm.num" />
         </a-form-model-item>
-        <a-form-model-item
-          ref="name"
-          label="客服名称"
-          prop="name"
-        >
+        <a-form-model-item ref="name" label="客服名称" prop="name">
           <a-input v-model="EditForm.name" />
         </a-form-model-item>
-        <a-form-model-item
-          ref="email"
-          label="客服邮箱"
-          prop="email"
-        >
+        <a-form-model-item ref="email" label="客服邮箱" prop="email">
           <a-input v-model="EditForm.email" />
         </a-form-model-item>
-        <a-form-model-item
-          ref="phone"
-          label="客服电话"
-          prop="phone"
-        >
+        <a-form-model-item ref="phone" label="客服电话" prop="phone">
           <a-input v-model="EditForm.phone" />
         </a-form-model-item>
-        <a-form-model-item
-          ref="image"
-          label="图片"
-        >
+        <a-form-model-item ref="image" label="图片">
           <a-upload
-            class="uploader"
-            :action="uploadUrl"
-            :headers="headers"
-            :remove="onImgRemove"
-            list-type="picture-card"
-            :file-list="fileList"
-            @preview="handleImgPreview"
-            @change="handleImgChange"
+                  class="uploader"
+                  :action="uploadUrl"
+                  :headers="headers"
+                  :remove="onImgRemove"
+                  list-type="picture-card"
+                  :file-list="fileList"
+                  @preview="handleImgPreview"
+                  @change="handleImgChange"
           >
             <div v-if="fileList.length < 1">
               <a-icon type="plus" />
@@ -112,30 +83,19 @@
             </div>
           </a-upload>
         </a-form-model-item>
-        <a-form-model-item
-          ref="name"
-          label="备注信息"
-          prop="message"
-        >
-          <a-input
-            type="textarea"
-            v-model="EditForm.message"
-          />
+        <a-form-model-item ref="name" label="备注信息" prop="message">
+          <a-input type="textarea" v-model="EditForm.message" />
         </a-form-model-item>
       </a-form-model>
     </a-modal>
     <!-- 新增的预览图片 -->
     <a-modal
-      class="preview"
-      :visible="previewVisible"
-      :footer="null"
-      @cancel="handleImgCancel"
+            class="preview"
+            :visible="previewVisible"
+            :footer="null"
+            @cancel="handleImgCancel"
     >
-      <img
-        alt="example"
-        style="width: 100%"
-        :src="previewImage"
-      />
+      <img alt="example" style="width: 100%" :src="previewImage" />
     </a-modal>
   </div>
 </template>
@@ -143,7 +103,7 @@
 <script>
 import Card from '@/components/content/card/Card'
 
-import { getServiceInfo, saveServiceInfo, getServicePage, updateServiceInfo, deleteServiceInfo } from '@/network/home'
+import { getServiceInfo, saveServiceInfo,getServicePage,updateServiceInfo,deleteServiceInfo } from '@/network/home'
 
 const token = JSON.parse(sessionStorage.getItem('token'));
 function getBase64(file) {
@@ -266,9 +226,6 @@ export default {
       this.tabData = []
       this.cancel()
       this.loading = true
-
-
-
       // const data = {};
       getServicePage().then(({ data, code }) => {
         if (code != 0) return this.$message.error('获取数据失败')
@@ -303,26 +260,26 @@ export default {
       this.addStatus = true
       this.visible = true
       this.fileList = []
-      this.$nextTick(() => {
+      this.$nextTick(()=>{
         this.$refs.ruleForm.resetFields();
       })
     },
     // 删除客服信息
     deleteServicer() {
-      this.cancel()
-      if (this.selectedRows.length == 0) {
-        return this.$message.info('请选择您要删除的')
-      }
+        this.cancel()
+        if (this.selectedRows.length == 0) {
+          return this.$message.info('请选择您要删除的')
+        }
 
-      const arr = [];
-      this.selectedRows.forEach(item => {
-        arr.push(item.id)
-      })
-      const ids = arr.join(',')
+        const arr = [];
+        this.selectedRows.forEach(item => {
+          arr.push(item.id)
+        })
+        const ids = arr.join(',')
 
-      const data = { ids }
-      // return
-      // 发送请求 删除选中的
+        const data = {ids}
+        // return
+        // 发送请求 删除选中的
       deleteServiceInfo(data).then(res => {
         console.log('res: ', res);
         if (!res) return
@@ -361,13 +318,13 @@ export default {
 
         if (this.addStatus === true) {
           this.saveServiceInfo(data)
-        } else {
+        }else {
           this.updateServiceInfo(data)
         }
       })
     },
     // 保存新增客服
-    saveServiceInfo(data) {
+    saveServiceInfo (data) {
       // 发送请求 保存客服信息
       saveServiceInfo(data).then(({ data, code }) => {
         if (code != 0) {
@@ -382,7 +339,7 @@ export default {
       })
     },
     // 更新客服信息
-    updateServiceInfo(data) {
+    updateServiceInfo (data) {
       // 发送请求 保存客服信息
       updateServiceInfo(data).then(({ data, code }) => {
         if (code != 0) {
@@ -434,10 +391,10 @@ export default {
     // 处理状态 改变
     handleImgChange({ file, fileList }) {
       console.log(file);
-      this.fileList = fileList;
-      if (file.response) {
-        this.EditForm.attachmentID = file.response.data.id
-      }
+        this.fileList = fileList;
+        if (file.response) {
+          this.EditForm.attachmentID = file.response.data.id
+        }
     },
     // 处理预览
     async handleImgPreview(file) {
