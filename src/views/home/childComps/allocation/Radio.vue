@@ -6,11 +6,9 @@
       <el-button type="primary" @click="showAddDialog">新增分类</el-button>
       <el-button type="danger" @click="showRemoveDialog">分类管理</el-button>
     </el-row>
-
     <el-row>
       <span class="category">频道分类</span>
     </el-row>
-
     <el-row class="loading" v-if="nameArr.length == 0">
       <a-spin tip="Loading...">
         <div class="spin-content"></div>
