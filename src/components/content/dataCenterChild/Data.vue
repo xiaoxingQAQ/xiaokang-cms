@@ -4,12 +4,24 @@
     <Card class="card_1">
       <span slot="leftTitle">数据总览</span>
 
-      <div slot="data_1" v-if="yestuser == ''">0</div>
-      <div slot="data_1" v-else>{{ yestuser }}</div>
+      <div
+        slot="data_1"
+        v-if="yestuser == ''"
+      >0</div>
+      <div
+        slot="data_1"
+        v-else
+      >{{ yestuser }}</div>
       <div slot="title_1">昨日新增激活设备</div>
 
-      <div slot="data_3" v-if="accumuser == ''">0</div>
-      <div slot="data_3" v-else>{{ accumuser }}</div>
+      <div
+        slot="data_3"
+        v-if="accumuser == ''"
+      >0</div>
+      <div
+        slot="data_3"
+        v-else
+      >{{ accumuser }}</div>
       <div slot="title_3">累计激活设备</div>
     </Card>
     <!-- 折线统计图 -->
@@ -17,8 +29,15 @@
       <span slot="leftTitle">设备增长</span>
       <div slot="main">
         <!-- 选择时间 -->
-        <DateRow @onChange="getIncrease_1" @Change="getIncrease_2" />
-        <div class="echarts" ref="echarts_1"></div>
+        <DateRow
+          ref="DateRow_1"
+          @onChange="getIncrease_1"
+          @Change="getIncrease_2"
+        />
+        <div
+          class="echarts"
+          ref="echarts_1"
+        ></div>
       </div>
     </Card>
 
@@ -26,8 +45,14 @@
       <span slot="leftTitle">设备活跃</span>
       <div slot="main">
         <!-- 选择时间 -->
-        <DateRow  @onChange="getActive_1" @Change="getActive_2" />
-        <div class="echarts" ref="echarts_2"></div>
+        <DateRow
+          @onChange="getActive_1"
+          @Change="getActive_2"
+        />
+        <div
+          class="echarts"
+          ref="echarts_2"
+        ></div>
       </div>
     </Card>
   </div>
@@ -164,6 +189,9 @@ export default {
     },
     // 获取设备增长数据 （默认最近7天）
     getIncrease_1(day = 0) {
+      this.$nextTick(() => {
+        this.$refs.DateRow_1.$data.loading = true
+      })
       this.cancel()
       this.option_1.series[0].data = []
       this.option_1.series[1].data = []
@@ -223,10 +251,16 @@ export default {
             }
           ]
         })
+        this.$nextTick(() => {
+          this.$refs.DateRow_1.$data.loading = false
+        })
       })
 
     },
     getIncrease_2(day, start_date, end_date) {
+      this.$nextTick(() => {
+        this.$refs.DateRow_1.$data.loading = true
+      })
       this.cancel()
       this.option_1.series[0].data = []
       this.option_1.series[1].data = []
@@ -277,7 +311,9 @@ export default {
           ]
         })
       })
-
+      this.$nextTick(() => {
+        this.$refs.DateRow_1.$data.loading = false
+      })
     },
     // 获取设备活跃数据
     getActive_1(day = 0) {
