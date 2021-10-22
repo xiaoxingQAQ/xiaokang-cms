@@ -151,7 +151,7 @@
 
     <!-- 删除分类的Dialog对话框 -->
     <el-dialog
-      title="删除分类"
+      title="分类管理"
       :visible.sync="removeDialogVisible"
       width="50%"
       center

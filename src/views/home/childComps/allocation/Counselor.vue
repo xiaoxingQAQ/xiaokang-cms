@@ -30,7 +30,7 @@
     <Card v-for="(item, index) in counselorList" :key="index">
       <span slot="leftTitle">健康顾问：{{ item.nickName }}</span>
       <!-- <span slot="leftTitle" > 点击上方标签，木有的话，先创建； </span> -->
-      <div>{{counselorList}}</div>
+      <div>{{ counselorList }}</div>
       <div slot="main">
         <a-table
           :rowKey="(record) => record.id"
@@ -69,26 +69,31 @@
         label-position="right"
         label-width="100px"
         :model="addForm"
-
       >
-        <el-form-item label="姓名："  prop="nickName">
+        <el-form-item label="姓名：" prop="nickName">
           <el-input
             ref="input"
             placeholder="请输入顾问姓名"
             v-model.trim="addForm.nickName"
           ></el-input>
         </el-form-item>
-        <el-form-item label="简介："  prop="profile">
+        <el-form-item label="简介：" prop="profile">
           <el-input
             ref="input"
             placeholder="请输入个人简介"
             v-model.trim="addForm.profile"
           ></el-input>
         </el-form-item>
-        <el-form-item label="签约时间：" >
-          <el-date-picker type="date" placeholder="选择日期" v-model="addForm.signDate" value-format="yyyy-MM-dd" style="width: 100%;"></el-date-picker>
+        <el-form-item label="签约时间：">
+          <el-date-picker
+            type="date"
+            placeholder="选择日期"
+            v-model="addForm.signDate"
+            value-format="yyyy-MM-dd"
+            style="width: 100%"
+          ></el-date-picker>
         </el-form-item>
-        <el-form-item label="上传图片：" >
+        <el-form-item label="上传图片：">
           <a-upload
             class="uploader"
             :action="uploadUrl"
@@ -169,7 +174,13 @@
           <a-input v-model="EditForm.profile" />
         </a-form-model-item>
         <a-form-model-item label="签约时间" prop="signDate" required>
-          <el-date-picker type="date" placeholder="选择日期" v-model="EditForm.signDate" value-format="yyyy-MM-dd" style="width: 100%;"></el-date-picker>
+          <el-date-picker
+            type="date"
+            placeholder="选择日期"
+            v-model="EditForm.signDate"
+            value-format="yyyy-MM-dd"
+            style="width: 100%"
+          ></el-date-picker>
         </a-form-model-item>
         <a-form-item label="上传图片">
           <a-upload
@@ -190,29 +201,24 @@
         </a-form-item>
       </a-form-model>
     </a-modal>
-
   </div>
 </template>
 
 <script>
 import Card from '@/components/content/card/Card'
-import {
-  getCounselorList,
-  addCounselor,
-  deleteCounselor
-} from '@/network/home'
+import { getCounselorList, addCounselor, deleteCounselor } from '@/network/home'
 import { mapState } from 'vuex'
 import _ from 'lodash'
-import AFormItem from "ant-design-vue/es/form/FormItem";
+import AFormItem from 'ant-design-vue/es/form/FormItem'
 
-const token = JSON.parse(sessionStorage.getItem('token'));
+const token = JSON.parse(sessionStorage.getItem('token'))
 function getBase64(file) {
   return new Promise((resolve, reject) => {
-    const reader = new FileReader();
-    reader.readAsDataURL(file);
-    reader.onload = () => resolve(reader.result);
-    reader.onerror = error => reject(error);
-  });
+    const reader = new FileReader()
+    reader.readAsDataURL(file)
+    reader.onload = () => resolve(reader.result)
+    reader.onerror = (error) => reject(error)
+  })
 }
 
 export default {
@@ -236,7 +242,12 @@ export default {
           { required: true, message: '请输入个人简介', trigger: 'blur' },
         ],
         signDate: [
-          { type: 'date', required: true, message: '请选择日期', trigger: 'change' }
+          {
+            type: 'date',
+            required: true,
+            message: '请选择日期',
+            trigger: 'change',
+          },
         ],
       },
       currentIndex: null,
@@ -255,13 +266,15 @@ export default {
       addDialogVisible: false, // 对话框 显示 / 隐藏
       removeDialogVisible: false,
       nameArr: [], // 知识库名称 数组
-      addForm: { // 添加表单对象
+      addForm: {
+        // 添加表单对象
         nickName: null,
         profile: null,
         signDate: null,
-        attachmentID: null
+        attachmentID: null,
       },
-      columns: [ // 对应健康顾问的表格
+      columns: [
+        // 对应健康顾问的表格
         {
           title: '图片',
           key: 'image',
@@ -290,71 +303,77 @@ export default {
           scopedSlots: { customRender: 'edit' },
         },
       ],
-      data: [ // 对应知识库的数据
+      data: [
+        // 对应知识库的数据
       ],
-      removeColumns: [ // 删除 知识库 对话框 表格title
+      removeColumns: [
+        // 删除 知识库 对话框 表格title
         {
           title: '序号',
           dataIndex: 'key',
           key: 'key',
         },
         {
-          title: '知识库名称',
+          title: '健康顾问',
           dataIndex: 'name',
           key: 'name',
           width: '70%',
         },
       ],
-      removeData: [ // 删除 知识库 table 的数据
+      removeData: [
+        // 删除 知识库 table 的数据
       ],
       counselorList: [], // 健康顾问列表的数据
       currentDate: null, // 当前时间
       fileList: [], // 上传文件列表
-      editFileList:[], // 编辑的上传文件列表
+      editFileList: [], // 编辑的上传文件列表
       uploadUrl: 'http://114.116.253.112:9600/service/attachment/upload',
       headers: {
         token,
       },
       previewVisible: false, // 预览 打开 or 关闭
       previewImage: '', // 预览图片
-      editStatus: false // 编辑状态
+      editStatus: false, // 编辑状态
     }
   },
   created() {
     this.getCounselorList()
     this.getNowFormatDate()
   },
-  mounted() {
-
-  },
+  mounted() {},
   computed: {
     ...mapState('user', ['memberID']),
     removeRowSelection() {
-      const { selectedRowKeys } = this;
+      const { selectedRowKeys } = this
       return {
         selectedRowKeys,
         onChange: (selectedRowKeys, selectedRows) => {
-          console.log(`selectedRowKeys: ${selectedRowKeys}`, 'selectedRows: ', selectedRows);
+          console.log(
+            `selectedRowKeys: ${selectedRowKeys}`,
+            'selectedRows: ',
+            selectedRows
+          )
           this.selectedRowKeys = selectedRowKeys
           this.selectedRows = selectedRows
         },
-      };
+      }
     },
   },
   methods: {
     //获取当前时间 yyyy-MM-dd
     getNowFormatDate() {
-      let date = new Date();
-      let seperator = "-";
-      let month = date.getMonth() + 1;
-      let strDate = date.getDate();
+      let date = new Date()
+      let seperator = '-'
+      let month = date.getMonth() + 1
+      let strDate = date.getDate()
       if (month >= 1 && month <= 9) {
-        month = "0" + month;
+        month = '0' + month
       }
       if (strDate >= 0 && strDate <= 9) {
-        strDate = "0" + strDate;
+        strDate = '0' + strDate
       }
-      this.currentDate = date.getFullYear() + seperator + month + seperator + strDate;
+      this.currentDate =
+        date.getFullYear() + seperator + month + seperator + strDate
     },
     // 点击打开 修改健康顾问的dialog
     edit(record) {
@@ -371,7 +390,7 @@ export default {
         this.confirmLoading = true
         // 更新时间
         this.EditForm.uptDate = this.currentDate
-        if(this.EditForm.photoID === null) {
+        if (this.EditForm.photoID === null) {
           this.EditForm.photoID = this.changedEditForm.photoID
         }
         const data = this.EditForm
@@ -412,20 +431,20 @@ export default {
     getCounselorList() {
       const data = {}
       // 发送请求
-      getCounselorList(data).then(res => {
+      getCounselorList(data).then((res) => {
         if (!res) return
         if (res.code != 0) return this.$message.error('获取数据失败')
         this.counselorList = res.data
         res.data.forEach((item, index) => {
-          let key = index + 1;
+          let key = index + 1
           let id = item.id
-          let name = item.nickName;
+          let name = item.nickName
           this.removeData.push({
             key,
             id,
-            name
+            name,
           })
-        });
+        })
       })
     },
 
@@ -446,9 +465,9 @@ export default {
     },
     /* 健康顾问 点击 保存 */
     saveAddForm() {
-      let nickName = this.addForm.nickName;
-      let profile = this.addForm.profile;
-      let signDate = this.addForm.signDate;
+      let nickName = this.addForm.nickName
+      let profile = this.addForm.profile
+      let signDate = this.addForm.signDate
       let pubDate = this.currentDate // 创建时间
       let photoID = this.addForm.attachmentID
       if (!nickName) return this.$message.info('请完善表单')
@@ -460,12 +479,12 @@ export default {
         profile,
         signDate,
         pubDate,
-        photoID
+        photoID,
       }
       this.loading_1 = true
       this.cancel()
       // 发送请求
-      addCounselor(data).then(res => {
+      addCounselor(data).then((res) => {
         if (!res) return
         if (res.code != 0) {
           this.loading_1 = false
@@ -487,19 +506,19 @@ export default {
           return this.$message.info('请选择您要删除的知识库')
         }
 
-        const arr = [];
-        this.selectedRows.forEach(item => {
+        const arr = []
+        this.selectedRows.forEach((item) => {
           arr.push(item.id)
         })
         const id = arr.join(',')
         const data = {
-          id
+          id,
         }
-        console.log(data);
+        console.log(data)
         this.cancel()
         // 发送请求 删除对应的 知识库
-        deleteCounselor(data).then(res => {
-          console.log('res: ', res);
+        deleteCounselor(data).then((res) => {
+          console.log('res: ', res)
           if (!res) return
           if (res.code != 0) return this.$message.error('删除失败')
 
@@ -510,8 +529,7 @@ export default {
           this.getCounselorList()
           this.loading_2 = false
         })
-      }, 1000);
-
+      }, 1000)
     },
     /* 关闭新增 对话框事件 */
     addDialogClosed() {
@@ -528,57 +546,57 @@ export default {
     // 图片处理删除
     onImgRemove() {
       debugger
-      let flag = false;
+      let flag = false
       this.$confirm('此操作将永久删除该文件, 是否继续?', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
-        type: 'warning'
-      }).then(() => {
-        this.$message({
-          type: 'success',
-          message: '删除成功!'
-        });
-        this.fileList = [];
-        this.editFileList = []
-        flag = true
-        this.addForm.attachmentID = ''
-        this.EditForm.photoID = null
-      }).catch(() => {
-        this.$message({
-          type: 'info',
-          message: '已取消删除'
-        });
-        flag = false
-      });
-      console.log(this.addForm.attachmentID);
+        type: 'warning',
+      })
+        .then(() => {
+          this.$message({
+            type: 'success',
+            message: '删除成功!',
+          })
+          this.fileList = []
+          this.editFileList = []
+          flag = true
+          this.addForm.attachmentID = ''
+          this.EditForm.photoID = null
+        })
+        .catch(() => {
+          this.$message({
+            type: 'info',
+            message: '已取消删除',
+          })
+          flag = false
+        })
+      console.log(this.addForm.attachmentID)
       console.log(this.EditForm.photoID)
       return flag
     },
     // 处理状态 改变
     handleImgChange({ file, fileList }) {
-      console.log(file);
+      console.log(file)
       if (this.editStatus === false) {
-        this.fileList = fileList;
-        if (file.response)
-          this.addForm.attachmentID = file.response.data.id
-      }else {
+        this.fileList = fileList
+        if (file.response) this.addForm.attachmentID = file.response.data.id
+      } else {
         this.editFileList = fileList
-        if (file.response)
-          this.EditForm.photoID = file.response.data.id
+        if (file.response) this.EditForm.photoID = file.response.data.id
       }
     },
     // 处理预览
     async handleImgPreview(file) {
       this.AddDialogVisible = false
       if (!file.url && !file.preview) {
-        file.preview = await getBase64(file.originFileObj);
+        file.preview = await getBase64(file.originFileObj)
       }
-      this.previewImage = file.url || file.preview;
-      this.previewVisible = true;
+      this.previewImage = file.url || file.preview
+      this.previewVisible = true
     },
     // 处理关闭预览
     handleImgCancel() {
-      this.previewVisible = false;
+      this.previewVisible = false
       this.AddDialogVisible = true
     },
   },
