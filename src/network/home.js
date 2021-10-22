@@ -668,13 +668,57 @@ export function getServiceInfo(data) {
 }
 
 // 客服信息保存
+// export function saveServiceInfo(data) {
+//   return request({
+//     method: 'post',
+//     url: '/service/supportStaff/save',
+//     headers: { //请求头
+//       token: JSON.parse(sessionStorage.getItem('token'))
+//     },
+//     data
+//   })
+// }
+// 查询客服信息
+export function getServicePage(params) {
+  return request( {
+    params,
+    method: 'get',
+    url: '/admin/customer/get/page',
+    headers: { //请求头
+      token: JSON.parse(sessionStorage.getItem('token'))
+    },
+  })
+}
+// 客服信息保存
 export function saveServiceInfo(data) {
   return request({
     method: 'post',
-    url: '/service/supportStaff/save',
+    url: '/admin/customer/save',
     headers: { //请求头
       token: JSON.parse(sessionStorage.getItem('token'))
     },
     data
+  })
+}
+// 客服信息更新
+export function updateServiceInfo(data) {
+  return request({
+    method: 'post',
+    url: '/admin/customer/update',
+    headers: { //请求头
+      token: JSON.parse(sessionStorage.getItem('token'))
+    },
+    data
+  })
+}
+// 客服信息删除
+export function deleteServiceInfo(params) {
+  return request({
+    params,
+    method: 'get',
+    url: '/admin/customer/delete',
+    headers: { //请求头
+      token: JSON.parse(sessionStorage.getItem('token'))
+    },
   })
 }

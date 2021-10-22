@@ -3,12 +3,25 @@
   <div>
     <Card>
       <span slot="leftTitle">客服信息</span>
+      <template #rightTitle>
+        <a-button
+                style="margin-right: 10px"
+                type="primary"
+                @click="AddServicer"
+        >新增客服</a-button
+        >
+        <a-button type="danger" @click="deleteServicer"
+        >删除客服</a-button
+        >
+      </template>
       <div slot="main">
         <a-table
+          :rowKey="(record) => record.id"
           :columns="columns"
           :data-source="tabData"
           :loading="loading"
           :pagination="false"
+          :row-selection="rowSelection"
         >
           <template slot="image" slot-scope="text, record, index">
             <div>
@@ -26,7 +39,7 @@
       </div>
     </Card>
     <a-modal
-      title="编辑客服信息"
+      :title="addStatus=== true ? '新增客服信息': '编辑客服信息'"
       okText="保存"
       cancelText="取消"
       :visible="visible"
@@ -41,22 +54,48 @@
         :label-col="labelCol"
         :wrapper-col="wrapperCol"
       >
-        <a-form-model-item ref="name" label="客服工号" prop="serviceNumber">
-          <a-input v-model="EditForm.serviceNumber" />
+        <a-form-model-item ref="num" label="客服工号" prop="num">
+          <a-input v-model="EditForm.num" />
         </a-form-model-item>
-        <a-form-model-item ref="name" label="客服名称" prop="serviceName">
-          <a-input v-model="EditForm.serviceName" />
+        <a-form-model-item ref="name" label="客服名称" prop="name">
+          <a-input v-model="EditForm.name" />
         </a-form-model-item>
-        <a-form-model-item ref="name" label="客服邮箱" prop="serviceMail">
-          <a-input v-model="EditForm.serviceMail" />
+        <a-form-model-item ref="email" label="客服邮箱" prop="email">
+          <a-input v-model="EditForm.email" />
         </a-form-model-item>
-        <a-form-model-item ref="name" label="客服电话" prop="servicePhone">
-          <a-input v-model="EditForm.servicePhone" />
+        <a-form-model-item ref="phone" label="客服电话" prop="phone">
+          <a-input v-model="EditForm.phone" />
         </a-form-model-item>
-        <a-form-model-item ref="name" label="备注信息" prop="remark">
-          <a-input type="textarea" v-model="EditForm.remark" />
+        <a-form-model-item ref="image" label="图片">
+          <a-upload
+                  class="uploader"
+                  :action="uploadUrl"
+                  :headers="headers"
+                  :remove="onImgRemove"
+                  list-type="picture-card"
+                  :file-list="fileList"
+                  @preview="handleImgPreview"
+                  @change="handleImgChange"
+          >
+            <div v-if="fileList.length < 1">
+              <a-icon type="plus" />
+              <div class="ant-upload-text">Upload</div>
+            </div>
+          </a-upload>
+        </a-form-model-item>
+        <a-form-model-item ref="name" label="备注信息" prop="message">
+          <a-input type="textarea" v-model="EditForm.message" />
         </a-form-model-item>
       </a-form-model>
+    </a-modal>
+    <!-- 新增的预览图片 -->
+    <a-modal
+            class="preview"
+            :visible="previewVisible"
+            :footer="null"
+            @cancel="handleImgCancel"
+    >
+      <img alt="example" style="width: 100%" :src="previewImage" />
     </a-modal>
   </div>
 </template>
@@ -64,37 +103,63 @@
 <script>
 import Card from '@/components/content/card/Card'
 
-import { getServiceInfo, saveServiceInfo } from '@/network/home'
+import { getServiceInfo, saveServiceInfo,getServicePage,updateServiceInfo,deleteServiceInfo } from '@/network/home'
+
+const token = JSON.parse(sessionStorage.getItem('token'));
+function getBase64(file) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onload = () => resolve(reader.result);
+    reader.onerror = error => reject(error);
+  });
+}
 
 export default {
   components: {
     Card,
   },
+  computed: {
+    rowSelection() {
+      const { selectedRowKeys } = this;
+      return {
+        selectedRowKeys,
+        onChange: (selectedRowKeys, selectedRows) => {
+          console.log(`selectedRowKeys: ${selectedRowKeys}`, 'selectedRows: ', selectedRows);
+          this.selectedRowKeys = selectedRowKeys
+          this.selectedRows = selectedRows
+        },
+      };
+    },
+  },
   data() {
     return {
+      selectedRowKeys: [],
+      selectedRows: [],
       EditForm: {
-        serviceNumber: '',
-        serviceName: '',
-        serviceMail: '',
-        servicePhone: '',
-        remark: ''
+        num: '',
+        name: '',
+        email: '',
+        phone: '',
+        message: '',
+        attachmentID: ''
       },
       wrapperCol: { span: 14 },
       labelCol: { span: 4 },
       EditFormRules: {
-        serviceNumber: [
+        num: [
           { required: true, message: '请输入客服工号', trigger: 'blur' },
         ],
-        serviceName: [
+        name: [
           { required: true, message: '请输入客服名称', trigger: 'blur' },
         ],
-        serviceMail: [
+        email: [
           { required: true, message: '请输入客服邮箱', trigger: 'blur' },
         ],
-        servicePhone: [
+        phone: [
           { required: true, message: '请输入客服电话', trigger: 'blur' },
         ],
-        remark: [
+        message: [
           { required: false, message: '请输入备注信息', trigger: 'blur' },
         ],
       },
@@ -106,31 +171,32 @@ export default {
           title: '图片',
           key: 'image',
           scopedSlots: { customRender: 'image' },
+          width: '13%',
+        },
+        {
+          title: '客服工号',
+          dataIndex: 'num',
+          key: 'num',
         },
         {
           title: '客服名称',
-          dataIndex: 'serviceName',
-          key: 'serviceName',
+          dataIndex: 'name',
+          key: 'name',
         },
         {
           title: '客服邮箱',
-          dataIndex: 'serviceMail',
-          key: 'serviceMail',
+          dataIndex: 'email',
+          key: 'email',
         },
         {
           title: '客服电话',
-          dataIndex: 'servicePhone',
-          key: 'servicePhone',
-        },
-        {
-          title: '工作时间',
-          dataIndex: 'serviceTime',
-          key: 'serviceTime',
+          dataIndex: 'phone',
+          key: 'phone',
         },
         {
           title: '备注',
-          dataIndex: 'remark',
-          key: 'remark',
+          dataIndex: 'message',
+          key: 'message',
         },
         {
           title: '编辑',
@@ -139,6 +205,16 @@ export default {
         },
       ],
       tabData: [],
+      // 上传图片
+      uploadUrl: 'http://114.116.253.112:9600/service/attachment/upload',
+      headers: {
+        token,
+      },
+      fileList: [], // 上传图片
+      previewVisible: false, // 预览 打开 or 关闭
+      previewImage: '', // 预览图片
+      addStatus: false, // 新增状态
+      editStatus: false, // 编辑状态
     }
   },
   created() {
@@ -150,44 +226,84 @@ export default {
       this.tabData = []
       this.cancel()
       this.loading = true
-      const data = {};
-      getServiceInfo(data).then(({ data, code }) => {
-        console.log('data: ', data);
+      // const data = {};
+      getServicePage().then(({ data, code }) => {
         if (code != 0) return this.$message.error('获取数据失败')
 
-        data.forEach((item, index) => {
-          const key = index;
-          const id = item.id;
-          const imageUrl = item.imageUrl;
-          const serviceNumber = item.serviceNumber;
-          const serviceName = item.serviceName;
-          const serviceMail = item.serviceMail; // 客服电子邮件
-          const servicePhone = item.servicePhone; // 客服手机号
-          const serviceTime = item.serviceTime; // 工作时间
-          this.tabData.push({
-            key,
-            id,
-            serviceNumber,
-            imageUrl,
-            serviceName,
-            serviceMail,
-            servicePhone,
-            serviceTime
-          })
-          this.loading = false
-        });
+        this.tabData = data.records
+        // data.records.forEach((item, index) => {
+        //   const key = index;
+        //   const id = item.id;
+        //   const imageUrl = item.imageUrl;
+        //   const serviceNumber = item.num;
+        //   const serviceName = item.name;
+        //   const serviceMail = item.email; // 客服电子邮件
+        //   const servicePhone = item.phone; // 客服手机号
+        //   const remark = item.message;
+        //   this.tabData.push({
+        //     key,
+        //     id,
+        //     serviceNumber,
+        //     imageUrl,
+        //     serviceName,
+        //     serviceMail,
+        //     servicePhone,
+        //     remark
+        //   })
+        // })
+
+        this.loading = false
+      })
+    },
+    // 新增客服信息
+    AddServicer() {
+      this.addStatus = true
+      this.visible = true
+      this.fileList = []
+      this.$nextTick(()=>{
+        this.$refs.ruleForm.resetFields();
+      })
+    },
+    // 删除客服信息
+    deleteServicer() {
+        this.cancel()
+        if (this.selectedRows.length == 0) {
+          return this.$message.info('请选择您要删除的')
+        }
+
+        const arr = [];
+        this.selectedRows.forEach(item => {
+          arr.push(item.id)
+        })
+        const ids = arr.join(',')
+
+        const data = {ids}
+        // return
+        // 发送请求 删除选中的
+      deleteServiceInfo(data).then(res => {
+        console.log('res: ', res);
+        if (!res) return
+        if (res.code != 0) {
+          return this.$message.error('删除失败')
+        }
+        // 提示
+        this.$message.success('删除成功')
+        // 重新获取数据
+        this.getServiceInfo()
       })
     },
     // 点击打开 修改客服信息的dialog
     edit(record) {
       console.log('record: ', record);
       this.EditForm = {
-        serviceNumber: record.serviceNumber,
-        serviceName: record.serviceName,
-        serviceMail: record.serviceMail,
-        servicePhone: record.servicePhone,
-        remark: record.remark
+        id: record.id,
+        num: record.num,
+        name: record.name,
+        email: record.email,
+        phone: record.phone,
+        message: record.message
       }
+      this.editStatus = true
       this.visible = true
     },
     // 点击确定回调
@@ -196,28 +312,101 @@ export default {
         if (!valid) return this.$message.info('请完善表单')
 
         this.confirmLoading = true
+        this.EditForm.image = this.EditForm.attachmentID
         const data = this.EditForm;
-        data.id = this.tabData[0].id
         console.log(data);
 
-        // 发送请求 保存客服信息
-        saveServiceInfo(data).then(({ data, code }) => {
-          if (code != 0) {
-            this.confirmLoading = false
-            return this.$message.error('保存失败')
-          }
-
-          this.$message.success('保存成功')
+        if (this.addStatus === true) {
+          this.saveServiceInfo(data)
+        }else {
+          this.updateServiceInfo(data)
+        }
+      })
+    },
+    // 保存新增客服
+    saveServiceInfo (data) {
+      // 发送请求 保存客服信息
+      saveServiceInfo(data).then(({ data, code }) => {
+        if (code != 0) {
           this.confirmLoading = false
-          this.handleCancel()
-          this.getServiceInfo()
-        })
+          return this.$message.error('保存失败')
+        }
+        this.addStatus = false
+        this.$message.success('保存成功')
+        this.confirmLoading = false
+        this.handleCancel()
+        this.getServiceInfo()
+      })
+    },
+    // 更新客服信息
+    updateServiceInfo (data) {
+      // 发送请求 保存客服信息
+      updateServiceInfo(data).then(({ data, code }) => {
+        if (code != 0) {
+          this.confirmLoading = false
+          return this.$message.error('保存失败')
+        }
+
+        this.$message.success('保存成功')
+        this.editStatus = false
+        this.confirmLoading = false
+        this.handleCancel()
+        this.getServiceInfo()
       })
     },
     // 点击遮罩层或右上角叉或取消按钮的回调
     handleCancel() {
       this.visible = false
+      this.addStatus = false
+      this.editStatus = false
+      this.fileList = []
       this.$refs.ruleForm.resetFields()
+    },
+    // 图片处理删除
+    onImgRemove() {
+      debugger
+      let flag = false;
+      this.$confirm('此操作将永久删除该文件, 是否继续?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        this.$message({
+          type: 'success',
+          message: '删除成功!'
+        });
+        this.fileList = [];
+        flag = true
+        this.EditForm.attachmentID = ''
+      }).catch(() => {
+        this.$message({
+          type: 'info',
+          message: '已取消删除'
+        });
+        flag = false
+      });
+      console.log(this.EditForm.attachmentID);
+      return flag
+    },
+    // 处理状态 改变
+    handleImgChange({ file, fileList }) {
+      console.log(file);
+        this.fileList = fileList;
+        if (file.response) {
+          this.EditForm.attachmentID = file.response.data.id
+        }
+    },
+    // 处理预览
+    async handleImgPreview(file) {
+      if (!file.url && !file.preview) {
+        file.preview = await getBase64(file.originFileObj);
+      }
+      this.previewImage = file.url || file.preview;
+      this.previewVisible = true;
+    },
+    // 处理关闭预览
+    handleImgCancel() {
+      this.previewVisible = false;
     },
   },
 }
