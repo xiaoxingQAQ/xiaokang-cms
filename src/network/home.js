@@ -259,6 +259,73 @@ export function deleteRadio(data) {
   })
 }
 
+// 查询养生知识 分类列表
+export function getHealthyList(data) {
+  return request({
+    method: 'post',
+    url: '/service/healthy/gethealthy',
+    headers: { //请求头
+      token: JSON.parse(sessionStorage.getItem('token'))
+    },
+    data
+  })
+}
+// 新增、修改 养生知识 分类
+export function addHealthy(data) {
+  return request({
+    method: 'post',
+    url: '/service/healthy/save',
+    headers: { //请求头
+      token: JSON.parse(sessionStorage.getItem('token'))
+    },
+    data
+  })
+}
+//删除养生分类知识 
+export function delehealthy(data) {
+  return request({
+    method: 'post',
+    url: '/service/healthy/delehealthy',
+    headers: { //请求头
+      token: JSON.parse(sessionStorage.getItem('token'))
+    },
+    data
+  })
+}
+
+//  点击分类查询养生知识内容列表
+export function getByHealthyList(data) {
+  return request({
+    method: 'post',
+    url: '/service/healthy/gethealthyById',
+    headers: { //请求头
+      token: JSON.parse(sessionStorage.getItem('token'))
+    },
+    data
+  })
+}
+//  点击分类新增、修改养生知识内容列表
+export function addByHealthy(data) {
+  return request({
+    method: 'post',
+    url: '/service/healthy/savecontent',
+    headers: { //请求头
+      token: JSON.parse(sessionStorage.getItem('token'))
+    },
+    data
+  })
+}
+//  点击分类删除养生知识内容
+export function deleByHealthy(data) {
+  return request({
+    method: 'post',
+    url: '/service/healthy/deletecontent',
+    headers: { //请求头
+      token: JSON.parse(sessionStorage.getItem('token'))
+    },
+    data
+  })
+} 
 // 版本推送
 export function editionPush(data) {
   return request({
@@ -283,6 +350,39 @@ export function getEditionInfo(params) {
   })
 }
 
+// 健康顾问列表
+export function getCounselorList(data) {
+  return request({
+    method: 'post',
+    url: '/service/doctor/list',
+    headers: { //请求头
+      token: JSON.parse(sessionStorage.getItem('token'))
+    },
+    data
+  })
+}
+// 添加,编辑健康顾问
+export function addCounselor(data) {
+  return request({
+    method: 'post',
+    url: '/service/doctor/save',
+    headers: { //请求头
+      token: JSON.parse(sessionStorage.getItem('token'))
+    },
+    data
+  })
+}
+// 删除健康顾问
+export function deleteCounselor(data) {
+  return request({
+    method: 'post',
+    url: '/service/doctor/delete',
+    headers: { //请求头
+      token: JSON.parse(sessionStorage.getItem('token'))
+    },
+    data
+  })
+}
 
 /* --------数据中心页-------- */
 
