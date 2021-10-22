@@ -11,7 +11,7 @@
     <!-- 按钮 -->
     <el-row>
       <el-button type="primary" @click="showAddDialog">新增分类</el-button>
-      <el-button type="danger" @click="showRemoveDialog">删除分类</el-button>
+      <el-button type="danger" @click="showRemoveDialog">分类管理</el-button>
     </el-row>
 
     <el-row>
@@ -82,9 +82,9 @@
           </template>
           <template slot="editHealth" slot-scope="text, record, index">
             <el-button
-                    @click="editHealth(record)"
-                    type="primary"
-                    icon="el-icon-edit"
+              @click="editHealth(record)"
+              type="primary"
+              icon="el-icon-edit"
             ></el-button>
           </template>
         </a-table>
@@ -126,7 +126,7 @@
       :visible.sync="updataDialogVisible"
       width="50%"
       center
-      @close="addDialogClosed"
+      @close="updataDialogClosed"
       class="addDialog"
     >
       <el-form
@@ -139,11 +139,11 @@
           <el-input
             ref="input"
             placeholder="请输入分类名称"
-            v-model.trim="addForm.directoryName"
+            v-model.trim="updataForm.directoryName"
             @keyup.enter.native="saveAddForm"
           ></el-input>
         </el-form-item>
-        <el-button type="info" @click="addDialogClosed">取消</el-button>
+        <el-button type="info" @click="updataDialogClosed">取消</el-button>
 
         <el-button type="primary" :loading="loading_1" @click="saveAddForm"
           >保存</el-button
@@ -168,7 +168,7 @@
         :pagination="true"
         :loading="TableLoading_1"
       >
-        <template slot="edit" slot-scope="text, record, index">
+        <template slot="edit" slot-scope="text, record">
           <el-button
             @click="edit(record)"
             type="primary"
@@ -218,26 +218,34 @@
     </el-dialog>
     <!-- 编辑养生知识的Dialog -->
     <el-dialog
-            title="编辑养生知识"
-            :visible.sync="editHealthVisible"
-            width="50%"
-            center
-            @close="answerDialogClosed"
-            class="answerDialog"
+      title="编辑养生知识"
+      :visible.sync="editHealthVisible"
+      width="50%"
+      center
+      @close="answerDialogClosed"
+      class="answerDialog"
     >
-      <el-form ref="editFormRef" label-position="right" label-width="80px" v-model="editForm">
+      <el-form
+        ref="editFormRef"
+        label-position="right"
+        label-width="80px"
+        v-model="editForm"
+      >
         <el-form-item label="名称：">
-          <el-input placeholder="请输入名称" v-model.trim="editForm.title"></el-input>
+          <el-input
+            placeholder="请输入名称"
+            v-model.trim="editForm.title"
+          ></el-input>
         </el-form-item>
         <el-form-item label="音频文件：">
           <a-upload
-                  method="post"
-                  :action="uploadUrl"
-                  :headers="headers"
-                  :remove="onRemove"
-                  :multiple="false"
-                  :file-list="editFileList"
-                  @change="handleEditChange"
+            method="post"
+            :action="uploadUrl"
+            :headers="headers"
+            :remove="onRemove"
+            :multiple="false"
+            :file-list="editFileList"
+            @change="handleEditChange"
           >
             <a-button v-if="editFileList.length == 0">
               <a-icon type="upload" /> Upload
@@ -246,7 +254,7 @@
         </el-form-item>
         <el-button type="info" @click="editDialogClosed">取消</el-button>
         <el-button type="primary" :loading="loading_3" @click="saveEditForm"
-        >保存</el-button
+          >保存</el-button
         >
       </el-form>
     </el-dialog>
@@ -307,8 +315,13 @@ export default {
       removeDialogVisible: false,
       editHealthVisible: false, // 编辑养生知识内容  对话框 显示 / 隐藏
       addForm: {
-        // 添加分类
+        // 添加、修改分类
         directoryName: '',
+      },
+      updataForm: {
+        // 修改分类
+        directoryName: '',
+        id: '',
       },
       columns: [
         // 对应分类的表格
@@ -458,7 +471,7 @@ export default {
       const data = {
         memberID,
         healthyID,
-        categoryID
+        categoryID,
       }
       console.log('dai', data)
       console.log(data)
@@ -501,10 +514,13 @@ export default {
       // 发送请求
       this.getHealthy()
     },
-    /* 养生知识新增分类 点击 保存 */
+    /* 养生知识新增、修改分类 点击 保存 */
     saveAddForm() {
       let val = this.addForm.directoryName
-      if (!val) return this.$message.info('您输入的内容为空')
+      if (!val) {
+        if (!this.updataForm.directoryName)
+          return this.$message.info('您输入的内容为空')
+      }
       const memberID = this.memberID
       const directoryName = val
       const status = 1
@@ -512,6 +528,11 @@ export default {
         directoryName,
         memberID,
         status,
+        id: '',
+      }
+      if (this.updataDialogVisible == true) {
+        data.id = this.updataForm.id
+        data.directoryName = this.updataForm.directoryName
       }
       this.loading_1 = true
       this.cancel()
@@ -527,9 +548,17 @@ export default {
 
         this.loading_1 = false
         this.addDialogClosed()
+        this.updataDialogClosed()
         this.getHealthy()
         this.getByHealthyList()
       })
+    },
+    // 修改分类
+    edit(record) {
+      console.log('我是编辑', record)
+      this.updataForm.directoryName = record.directoryName
+      this.updataForm.id = record.id
+      this.updataDialogVisible = true
     },
     /* 点击按钮 删除分类 */
     clearRepository() {
@@ -569,6 +598,10 @@ export default {
     addDialogClosed() {
       this.addForm.directoryName = ''
       this.addDialogVisible = false
+    },
+    /* 关闭 对话框事件 */
+    updataDialogClosed() {
+      this.updataDialogVisible = false
     },
     removeDialogClosed() {
       this.selectedRowKeys = []
@@ -676,7 +709,7 @@ export default {
         return file
       })
 
-        this.fileList = fileList
+      this.fileList = fileList
     },
     // 处理删除文件
     onRemove() {
@@ -706,7 +739,7 @@ export default {
       return flag
     },
     // 编辑养生知识内容
-    editHealth (record) {
+    editHealth(record) {
       console.log(record)
       this.editHealthVisible = true
       this.editHealthData = _.cloneDeep(record)
@@ -760,7 +793,7 @@ export default {
       this.editHealthVisible = false
       this.editStatus = false
     },
-    handleEditChange (info) {
+    handleEditChange(info) {
       console.log(info)
       let fileList = [...info.fileList]
       fileList = fileList.map((file) => {
@@ -772,7 +805,7 @@ export default {
       })
 
       this.editFileList = fileList
-    }
+    },
   },
 }
 </script>
