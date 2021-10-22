@@ -20,61 +20,117 @@
         slot="main"
       >
         <el-row>
-          <div class="left">
-            <span>可添加联系人的数量</span>
-          </div>
-          <div class="right">
-            <a-button
-              v-for="(item, index) in arr_1_a"
-              :key="index"
-              class="switch"
-              type="primary"
-              @click="change_1()"
-              :class="{ active: currentIndex_1 == index }"
-              :disabled="index == 0"
-              :loading="loading_1"
-            >
-              {{ item.title }}
-            </a-button>
-          </div>
+          <el-row>
+            <div class="left">
+              <span>可添加联系人的数量</span>
+            </div>
+            <div class="right">
+              <a-button
+                v-for="(item, index) in arr_1_a"
+                :key="index"
+                class="switch"
+                type="primary"
+                @click="change_1()"
+                :disabled="index == 0"
+                :loading="loading_1"
+              >
+                {{ item.title }}
+              </a-button>
+            </div>
+          </el-row>
+          <el-row>
+            <div class="left">
+              <span>通话时长</span>
+            </div>
+            <div class="right">
+              <a-button
+                v-for="(item, index) in arr_1_b"
+                :key="index"
+                type="primary"
+                class="switch"
+                @click="change_2(index)"
+                :disabled="currentIndex_2 == index"
+                :loading="loading_2"
+              >
+                {{ item.title }}
+              </a-button>
+            </div>
+          </el-row>
+          <el-row>
+            <div class="left">
+              <span>留言数量</span></span>
+            </div>
+            <div class="right">
+              <a-button
+                v-for="(item, index) in arr_1_c"
+                :key="index"
+                type="primary"
+                class="switch"
+                @click="change_3(index)"
+                :disabled="currentIndex_3 == index"
+                :loading="loading_3"
+              >
+                {{ item.title }}
+              </a-button>
+            </div>
+          </el-row>
         </el-row>
-        <el-row>
-          <div class="left">
-            <span>通话时长</span>
-          </div>
-          <div class="right">
-            <a-button
-              v-for="(item, index) in arr_1_b"
-              :key="index"
-              type="primary"
-              class="switch"
-              @click="change_2(index)"
-              :class="{ active: currentIndex_2 == index }"
-              :disabled="currentIndex_2 == index"
-              :loading="loading_2"
-            >
-              {{ item.title }}
-            </a-button>
-          </div>
-        </el-row>
-        <el-row>
-          <div class="left">
-            <span>留言数量</span></span>
-          </div>
-          <div class="right">
-            <a-button
-              v-for="(item, index) in arr_1_c"
-              :key="index"
-              type="primary"
-              class="switch"
-              @click="change_3(index)"
-              :class="{ active: currentIndex_3 == index }"
-              :disabled="currentIndex_3 == index"
-              :loading="loading_3"
-            >
-              {{ item.title }}
-            </a-button>
-          </div>
+
+        <el-row style="margin-top: 20px;">
+          <el-row>
+            <div class="left">
+              <span>使用4G流量</span>
+            </div>
+            <div class="right">
+              <a-button
+                v-for="(item, index) in arr_1"
+                :key="index"
+                class="switch"
+                @click="change_a(index)"
+                :class="{ active: currentIndex_a == index }"
+                :disabled="currentIndex_a == index"
+                :loading="loading_a"
+              >
+                {{ item.title }}
+              </a-button>
+            </div>
+          </el-row>
+          <el-row>
+            <div class="left">
+              <span>屏蔽陌生来电</span>
+            </div>
+            <div class="right">
+              <a-button
+                v-for="(item, index) in arr_1"
+                :key="index"
+                class="switch"
+                @click="change_b(index)"
+                :class="{ active: currentIndex_b == index }"
+                :disabled="currentIndex_b == index"
+                :loading="loading_b"
+              >
+                {{ item.title }}
+              </a-button>
+            </div>
+          </el-row>
+          <el-row>
+            <div class="left">
+              <span>自动接听来电</span>
+            </div>
+            <div class="right">
+              <a-button
+                v-for="(item, index) in arr_1"
+                :key="index"
+                class="switch"
+                @click="change_c(index)"
+                :class="{ active: currentIndex_c == index }"
+                :disabled="currentIndex_c == index"
+                :loading="loading_c"
+              >
+                {{ item.title }}
+              </a-button>
+            </div>
+          </el-row>
         </el-row>
       </div>
     </Card>
@@ -98,8 +154,9 @@
                   :key="index"
                   :type="item.type"
                   class="switch"
-                  @click="change_4(index)"
-                  :class="[{ active: currentIndex_4 == index }, { unique: index == 3 }]"
+                  @click="change_4(item.id, index, item)"
+                  :class="[{ unique: item.id == 1 }]"
+                  :disabled="index == 0"
                   :loading="loading_4"
                 >
                   {{ item.title }}
@@ -150,7 +207,7 @@
     </Card>
 
     <!-- card 3-->
-    <Card class="card_2">
+    <!-- <Card class="card_2">
       <span slot="leftTitle">“稍后提醒”再响间隔（分钟）</span>
       <div
         class="main"
@@ -175,11 +232,11 @@
           </div>
         </el-row>
       </div>
-    </Card>
-
+    </Card> -->
+    <!-- 通话设置 -->
     <!-- 修改可添加联系人的数量 -->
     <el-dialog
-      title="可添加联系人的数量"
+      title="设置可添加联系人的数量"
       :visible.sync="visible_1"
       width="30%"
       :before-close="handleClose_1"
@@ -192,56 +249,56 @@
         slot="footer"
         class="dialog-footer"
       >
-        <el-button @click="visible_1 = false">取 消</el-button>
+        <el-button @click="handleClose_1">取 消</el-button>
         <el-button
           type="primary"
-          @click="visible_1 = false"
+          @click="handleOk_1"
         >确 定</el-button>
       </span>
     </el-dialog>
 
     <!-- 修改通话时长 -->
     <el-dialog
-      title="提示"
+      title="设置通话时长"
       :visible.sync="visible_2"
       width="30%"
       :before-close="handleClose_2"
     >
       <el-input
-        v-model.trim="input_1"
+        v-model.trim="input_2"
         placeholder="请输入需要设置的时长"
       ></el-input>
       <span
         slot="footer"
         class="dialog-footer"
       >
-        <el-button @click="visible_2 = false">取 消</el-button>
+        <el-button @click="handleClose_2">取 消</el-button>
         <el-button
           type="primary"
-          @click="visible_2 = false"
+          @click="handleOk_2"
         >确 定</el-button>
       </span>
     </el-dialog>
 
     <!-- 修改留言数量 -->
     <el-dialog
-      title="提示"
+      title="设置留言数量"
       :visible.sync="visible_3"
       width="30%"
       :before-close="handleClose_3"
     >
       <el-input
-        v-model.trim="input_1"
+        v-model.trim="input_3"
         placeholder="请输入需要设置的数量"
       ></el-input>
       <span
         slot="footer"
         class="dialog-footer"
       >
-        <el-button @click="visible_3 = false">取 消</el-button>
+        <el-button @click="handleClose_3">取 消</el-button>
         <el-button
           type="primary"
-          @click="visible_3 = false"
+          @click="handleOk_3"
         >确 定</el-button>
       </span>
     </el-dialog>
@@ -253,31 +310,54 @@
       width="30%"
       :before-close="handleClose_4"
     >
-      <el-slider
+      <!-- <el-slider
         v-model="value_4"
         @change="handleChange_4"
         show-input
       >
-      </el-slider>
+      </el-slider> -->
+
+      <el-select
+        v-model="value_4"
+        placeholder="请选择"
+      >
+        <el-option
+          v-for="item in options_4"
+          :key="item.value"
+          :label="item.label"
+          :value="item.value"
+          :disabled="item.disabled"
+        >
+        </el-option>
+      </el-select>
+
+      <el-row
+        v-if="value_4_a"
+        class="row"
+        :gutter="10"
+      >
+        <el-row :span="3">当前亮度值</el-row>
+        <el-col :span="6">{{value_4_a}}</el-col>
+      </el-row>
       <span
         slot="footer"
         class="dialog-footer"
       >
-        <el-button @click="visible_4 = false">取 消</el-button>
+        <el-button @click="handleClose_4">取 消</el-button>
         <el-button
           type="primary"
-          @click="visible_4 = false"
+          @click="handleOk_4"
         >确 定</el-button>
       </span>
     </el-dialog>
     <!-- 新增 -->
     <el-dialog
-      title="提示"
+      title="新增亮度配置"
       :visible.sync="visible_4_a"
       width="30%"
       :before-close="handleClose_4_a"
     >
-      <el-select
+      <!-- <el-select
         v-model="value_4_a"
         placeholder="请选择"
       >
@@ -289,15 +369,27 @@
           :disabled="item.disabled"
         >
         </el-option>
-      </el-select>
+      </el-select> -->
+      <el-input
+        style="margin-bottom: 30px;"
+        v-model.trim="input_4_a"
+        placeholder="请输入亮度名称"
+      ></el-input>
+      <h4 class="weight">设置亮度值</h4>
+      <el-slider
+        v-model="value_4_a"
+        @change="handleChange_4_a"
+        show-input
+      >
+      </el-slider>
       <span
         slot="footer"
         class="dialog-footer"
       >
-        <el-button @click="visible_4_a = false">取 消</el-button>
+        <el-button @click="handleClose_4_a">取 消</el-button>
         <el-button
           type="primary"
-          @click="visible_4_a = false"
+          @click="handleOk_4_a"
         >确 定</el-button>
       </span>
     </el-dialog>
@@ -321,14 +413,23 @@
         >
         </el-option>
       </el-select>
+
+      <el-row
+        v-if="value_4_a"
+        class="row"
+        :gutter="10"
+      >
+        <el-row :span="3">当前亮度值</el-row>
+        <el-col :span="6">{{value_4_a}}</el-col>
+      </el-row>
       <span
         slot="footer"
         class="dialog-footer"
       >
-        <el-button @click="visible_4_b = false">取 消</el-button>
+        <el-button @click="handleClose_4_b">取 消</el-button>
         <el-button
           type="primary"
-          @click="visible_4_b = false"
+          @click="handleOk_4_b"
         >确 定</el-button>
       </span>
     </el-dialog>
@@ -399,20 +500,43 @@
 
     <!-- 修改免打扰时段 -->
     <el-dialog
-      title="提示"
+      title="免打扰时段设置"
       :visible.sync="visible_6"
-      width="30%"
+      width="37%"
       :before-close="handleClose_6"
     >
-
+      <el-time-select
+        placeholder="起始时间"
+        v-model="startTime_6"
+        @change="onChange_6_a"
+        :picker-options="{
+      start: '01:00',
+      step: '00:15',
+      end: '23:59'
+    }"
+      >
+      </el-time-select>
+      <span style="margin: 0 5px;fontSize: 20px;">-</span>
+      <el-time-select
+        placeholder="结束时间"
+        @change="onChange_6_b"
+        v-model="endTime_6"
+        :picker-options="{
+      start: '01:00',
+      step: '00:15',
+      end: '23:59',
+      minTime: startTime_6
+    }"
+      >
+      </el-time-select>
       <span
         slot="footer"
         class="dialog-footer"
       >
-        <el-button @click="visible_6 = false">取 消</el-button>
+        <el-button @click="handleClose_6">取 消</el-button>
         <el-button
           type="primary"
-          @click="visible_6 = false"
+          @click="handleOk_6"
         >确 定</el-button>
       </span>
     </el-dialog>
@@ -449,7 +573,7 @@
     </el-dialog>
     <!-- 删除 -->
     <el-dialog
-      title="提示"
+      title="免打扰时段设置"
       :visible.sync="visible_6_b"
       width="30%"
       :before-close="handleClose_6_b"
@@ -484,12 +608,86 @@
 <script>
 import Card from '@/components/content/card/Card'
 
+import {
+  getNoDisturbing,
+  addNoDisturbing,
+  editNoDisturbing,
+  getScreensaver,
+  addScreensaver,
+  editScreensaver,
+  getLuminance,
+  addLuminance,
+  editLuminance,
+  getCall,
+  addCall,
+  editCall,
+  getLuminance_a,
+  deleteLuminance,
+  addLuminance_a
+} from '@/network/home';
+import { mapState } from 'vuex';
+
 export default {
   components: {
     Card,
   },
   data() {
     return {
+      status_5: '',
+      ligth_4: null,
+
+      startTime_6: '',
+      endTime_6: '',
+
+      value_4: '',
+      value_4_a: 0,
+      value_4_b: '',
+      value_5_a: '',
+      value_5_b: '',
+      value_6_a: '',
+      value_6_b: '',
+
+      input_1: '',
+      input_2: '',
+      input_3: '',
+      input_4_a: '',
+      input_6: '',
+
+      visible_1: false,
+      visible_2: false,
+      visible_3: false,
+      visible_4: false,
+      visible_4_a: false,
+      visible_4_b: false,
+      visible_5_a: false,
+      visible_5_b: false,
+      visible_6: false,
+      visible_6_a: false,
+      visible_6_b: false,
+
+      loading_1: false,
+      loading_a: false,
+      loading_b: false,
+      loading_c: false,
+      loading_2: false,
+      loading_3: false,
+      loading_4: false,
+      loading_5: false,
+      loading_6: false,
+      loading_7: false,
+
+      currentIndex_1: 0,
+      currentIndex_a: null,
+      currentIndex_b: null,
+      currentIndex_c: null,
+      currentIndex_2: 0,
+      currentIndex_3: 0,
+      currentIndex_4: null,
+      currentIndex_5: null,
+      currentIndex_6: null,
+      currentIndex_7: 0,
+
+      options_4: [],
       options_4_a: [
         {
           value: '选项1',
@@ -509,25 +707,7 @@ export default {
           label: '北京烤鸭'
         }
       ],
-      options_4_b: [
-        {
-          value: '选项1',
-          label: '黄金糕'
-        }, {
-          value: '选项2',
-          label: '双皮奶',
-          disabled: true
-        }, {
-          value: '选项3',
-          label: '蚵仔煎'
-        }, {
-          value: '选项4',
-          label: '龙须面'
-        }, {
-          value: '选项5',
-          label: '北京烤鸭'
-        }
-      ],
+      options_4_b: [],
       options_5_a: [
         {
           value: '选项1',
@@ -604,75 +784,36 @@ export default {
           label: '北京烤鸭'
         }
       ],
-
-      value_4: 0,
-      value_4_a: '',
-      value_4_b: '',
-      value_5_a: '',
-      value_5_b: '',
-      value_6_a: '',
-      value_6_b: '',
-
-      input_1: '',
-      input_2: '',
-      input_3: '',
-      input_4: '',
-      input_6: '',
-
-      visible_1: false,
-      visible_2: false,
-      visible_3: false,
-      visible_4: false,
-      visible_4_a: false,
-      visible_4_b: false,
-      visible_5_a: false,
-      visible_5_b: false,
-      visible_6: false,
-      visible_6_a: false,
-      visible_6_b: false,
-
-      loading_1: false,
-      loading_2: false,
-      loading_3: false,
-      loading_4: false,
-      loading_5: false,
-      loading_6: false,
-      loading_7: false,
-
-      currentIndex_1: 0,
-      currentIndex_2: 0,
-      currentIndex_3: 0,
-      currentIndex_4: 0,
-      currentIndex_5: 0,
-      currentIndex_6: 0,
-      currentIndex_7: 0,
+      arr_1: [
+        { id: 1, title: '是' },
+        { id: 2, title: '否' },
+      ],
 
       arr_1_a: [
-        { id: 1, title: '100' },
+        { id: 1, title: '' },
         { id: 2, title: '修改', },
       ],
       arr_1_b: [
-        { id: 1, title: '200' },
+        { id: 1, title: '' },
         { id: 2, title: '修改', },
       ],
       arr_1_c: [
-        { id: 1, title: '100' },
+        { id: 1, title: '' },
         { id: 2, title: '修改', },
       ],
+
       arr_2_a: [
-        { id: 1, title: '正常' },
-        { id: 2, title: '高亮' },
-        { id: 3, title: '护眼' },
-        { id: 4, title: '自定义' },
-        { id: 6, title: '新增', type: 'primary' },
-        { id: 7, title: '删除', type: 'danger' },
+        { id: 0, title: '无', num: 50 },
+        { id: 1, title: '设置' },
+        { id: 2, title: '新增', type: 'primary' },
+        { id: 3, title: '删除', type: 'danger' },
       ],
       arr_2_b: [
         { id: 1, title: '日历' },
         { id: 2, title: '相册' },
         { id: 3, title: '随机' },
-        { id: 4, title: '新增', type: 'primary' },
-        { id: 5, title: '删除', type: 'danger' },
+        // { id: 4, title: '新增', type: 'primary' },
+        // { id: 5, title: '删除', type: 'danger' },
       ],
       arr_2_c: [
         { id: 1, title: '20:00-06:00' },
@@ -692,9 +833,440 @@ export default {
       ]
     }
   },
+  created() {
+    // 通话设置
+    this.getCall()
+    // 屏幕亮度
+    this.getLuminance()
+    this.getLuminance_a()
+    // 屏保模式
+    this.getScreensaver()
+    // 免打扰时段
+    this.getNoDisturbing()
+  },
   computed: {
+    ...mapState('edition', ['edition_ID']),
   },
   methods: {
+    /* 网络请求区域 */
+
+    // 获取通话设置信息
+    getCall() {
+      const versionId = this.edition_ID;
+      const params = {
+        versionId
+      }
+      // 发送请求
+      getCall(params).then(({ data, code }) => {
+        console.log('通话data: ', data);
+        if (code != 0) return this.$message.error('获取通话')
+
+        if (data.records.length == 0) {
+          this.addCall()
+        } else {
+          const linkNum = data.records[0].linkNum;
+          const talkTime = data.records[0].talkTime;
+          const messageNum = data.records[0].messageNum;
+          const useFourg = data.records[0].useFourg
+          const shieldStrangeCall = data.records[0].shieldStrangeCall
+          const automaticAnswerCall = data.records[0].automaticAnswerCall
+
+
+          this.arr_1_a[0].title = linkNum + '个';
+          this.arr_1_b[0].title = talkTime + '分钟';
+          this.arr_1_c[0].title = messageNum + '条';
+          this.currentIndex_a = useFourg;
+          this.currentIndex_b = shieldStrangeCall;
+          this.currentIndex_c = automaticAnswerCall;
+        }
+      })
+    },
+    // 新增通话设置
+    addCall() {
+      const versionId = this.edition_ID;
+      const linkNum = 200;
+      const talkTime = 1000;
+      const messageNum = 200;
+      const useFourg = 1;
+      const shieldStrangeCall = 1;
+      const automaticAnswerCall = 1;
+      const data = {
+        versionId,
+        linkNum,
+        talkTime,
+        messageNum,
+        useFourg,
+        shieldStrangeCall,
+        automaticAnswerCall
+      }
+      // 发送请求
+      addCall(data).then(({ data, code }) => {
+        if (code != 0) return this.$message.error('默认配置设置失败')
+
+        this.arr_1_a[0].title = 200 + '条';
+        this.arr_1_b[0].title = 1000 + '分钟';
+        this.arr_1_c[0].title = 200 + '条';
+        this.currentIndex_a = 0;
+        this.currentIndex_b = 0;
+        this.currentIndex_c = 0;
+      })
+    },
+    // 修改通话设置
+    editCall(val, type) {
+      this.loading_a = true
+      this.loading_b = true
+      this.loading_c = true
+
+      const versionId = this.edition_ID;
+      let linkNum, talkTime, messageNum, useFourg, shieldStrangeCall, automaticAnswerCall;
+      switch (type) {
+        case 0:
+          linkNum = val || '';
+          break;
+        case 1:
+          talkTime = val || '';
+          break;
+        case 2:
+          messageNum = val || '';
+          break;
+        case 3:
+          useFourg = val
+          break;
+        case 4:
+          shieldStrangeCall = val
+          break;
+        case 5:
+          automaticAnswerCall = val
+          break;
+      }
+      const data = {
+        versionId,
+        linkNum,
+        talkTime,
+        messageNum,
+        useFourg,
+        shieldStrangeCall,
+        automaticAnswerCall
+      }
+      // 发送请求
+      editCall(data).then(({ data, code }) => {
+        if (code != 0) return this.$message.error('修改失败')
+
+        this.$message.success('修改成功')
+        this.loading_a = false
+        this.loading_b = false
+        this.loading_c = false
+        switch (type) {
+          case 0:
+            this.arr_1_a[0].title = val + '个';
+            break;
+          case 1:
+            this.arr_1_b[0].title = val + '分钟';
+            break;
+          case 2:
+            this.arr_1_c[0].title = val + '条';
+            break;
+        }
+      })
+    },
+    // 获取免打扰时段信息
+    getNoDisturbing() {
+      const versionId = this.edition_ID
+      const params = {
+        versionId
+      }
+      // 发送请求
+      getNoDisturbing(params).then(({ data, code }) => {
+        if (code != 0) return this.$message.error('获取免打扰配置信息失败')
+
+        if (data.records.length == 0) {
+          this.addNoDisturbing()
+        } else {
+          const status = data.records[0].status;
+          const disturbNot = data.records[0].disturbNot;
+          const arr = disturbNot.split('-');
+          this.startTime_6 = arr[0];
+          this.endTime_6 = arr[1];
+          switch (status) {
+            case 0:
+              this.currentIndex_6 = 0
+              this.startTime_6 = '20:00';
+              this.endTime_6 = '06:00';
+              break;
+            case 1:
+              this.currentIndex_6 = 1
+              break;
+            case 2:
+              this.currentIndex_6 = 2
+              break;
+          }
+        }
+      })
+    },
+    // 新增免打扰配置
+    addNoDisturbing() {
+      const versionId = this.edition_ID;
+      const status = '0';
+      const disturbNot = '20:00-06:00';
+      const data = {
+        versionId,
+        status,
+        disturbNot
+      }
+      // 发送请求
+      addNoDisturbing(data).then(({ data, code }) => {
+        if (code != 0) return this.$message.error('默认配置设置失败')
+
+        this.currentIndex_6 = 0
+      })
+    },
+    // 修改免打扰配置
+    editNoDisturbing(status_1) {
+      this.loading_6 = true
+      const versionId = this.edition_ID;
+      const status = status_1 + '';
+      let disturbNot;
+      if (this.currentIndex_6 == 0) {
+        disturbNot = '20:00-6:00';
+        console.log('disturbNot: ', disturbNot);
+      } else if (this.currentIndex_6 == 2) {
+        const startTime_6 = this.startTime_6;
+        const endTime_6 = this.endTime_6;
+        disturbNot = `${startTime_6}-${endTime_6}`
+        console.log('disturbNot: ', disturbNot);
+      }
+      const data = {
+        versionId,
+        status,
+        disturbNot
+      }
+
+      editNoDisturbing(data).then(({ data, code }) => {
+        if (code != 0) return this.$message.error('修改失败')
+
+        this.$message.success('修改成功')
+        this.loading_6 = false
+      })
+    },
+
+    // 获取屏保信息
+    getScreensaver() {
+      const versionId = this.edition_ID
+      const params = {
+        versionId
+      }
+      // 发送请求
+      getScreensaver(params).then(({ data, code }) => {
+        console.log('屏保data: ', data);
+        if (code != 0) return this.$message.error('获取屏保配置信息失败')
+        if (data.records.length == 0) {
+          this.addScreensaver()
+        } else {
+          const status = parseInt(data.records[0].status);
+          this.status_5 = status;
+          switch (status) {
+            case 0:
+              this.currentIndex_5 = 0
+              break;
+            case 1:
+              this.currentIndex_5 = 1
+              break;
+            case 2:
+              this.currentIndex_5 = 2
+              break;
+          }
+        }
+      })
+    },
+    // 新增屏保信息
+    addScreensaver() {
+      const versionId = this.edition_ID;
+      const status = '0';
+      const pattern = 'calendar';
+      const data = {
+        versionId,
+        status,
+        pattern
+      }
+      // 发送请求
+      addScreensaver(data).then(({ data, code }) => {
+        if (code != 0) return this.$message.error('默认配置设置失败')
+
+        this.currentIndex_5 = 0
+      })
+    },
+    // 修改屏保信息
+    editScreensaver(index) {
+      this.loading_5 = true
+      const versionId = this.edition_ID;
+      const status = index + ''
+      let pattern;
+      if (this.currentIndex_5 == 0) {
+        pattern = 'calendar';
+      } else if (this.currentIndex_5 == 1) {
+        pattern = 'photoAlbum ';
+      } else if (this.currentIndex_5 == 2) {
+        pattern = 'random';
+      }
+      const data = {
+        versionId,
+        pattern,
+        status
+      }
+
+      editScreensaver(data).then(({ data, code }) => {
+        console.log('data: ', data);
+        if (code != 0) return this.$message.error('修改失败')
+
+        this.$message.success('修改成功')
+        this.currentIndex_5 = index
+        this.loading_5 = false
+      })
+    },
+
+    // 获取屏幕亮度信息
+    getLuminance() {
+      this.options_4 = []
+      this.options_4_b = []
+      const versionId = this.edition_ID
+      const params = {
+        versionId
+      }
+      // 发送请求
+      getLuminance(params).then(({ data, code }) => {
+        console.log('亮度data: ', data);
+        if (code != 0) return this.$message.error('获取屏幕亮度配置信息失败')
+
+        if (data.records.length == 0) {
+          // 新增屏幕亮度
+          this.addLuminance(1)
+        } else {
+          data.records.forEach(item => {
+            const id = item.id
+            const light = item.light;
+            const name = item.name;
+
+            this.options_4.push({
+              value: id,
+              label: name,
+              light
+            })
+            this.options_4_b.push({
+              value: id,
+              label: name,
+              light
+            })
+          })
+        }
+      })
+    },
+    getLuminance_a() {
+      const versionId = this.edition_ID
+      const params = {
+        versionId
+      }
+
+      // 发送请求
+      getLuminance_a(params).then(({ data, code }) => {
+        console.log('data_a: ', data);
+        if (code != 0) return this.$message.error('获取数据失败')
+        if (data.records.length == 0) {
+          this.addLuminance_a()
+          return this.arr_2_a[0].title = '无'
+        }
+        this.arr_2_a[0].title = data.records[0].name || '无'
+        this.value_4 = data.records[0].name
+        this.value_4_b = data.records[0].name
+        this.value_4_a = Number(data.records[0].brightness)
+      })
+    },
+    // 新增屏幕亮度列表
+    addLuminance(type, item) {
+      const versionId = this.edition_ID
+      let data;
+      if (type == 1) {
+        const name = '正常'
+        const light = '50';
+        data = {
+          versionId,
+          name,
+          light
+        }
+      } else {
+        const light = item.light + '';
+        const name = item.name;
+
+        data = {
+          versionId,
+          light,
+          name
+        }
+      }
+      console.log(data);
+      // 发送请求
+      addLuminance(data).then(({ data, code }) => {
+        console.log('data: ', data);
+        if (code != 0) return this.$message.error('配置设置失败')
+        this.$message.success('新增成功')
+        this.getLuminance()
+      })
+    },
+    addLuminance_a() {
+      const versionId = this.edition_ID
+      const name = '正常'
+      const brightness = '50';
+      const data = {
+        versionId,
+        name,
+        brightness
+      }
+      // 发送请求
+      addLuminance_a(data).then(res => {
+        console.log('res: ', res);
+        this.getLuminance()
+      })
+    },
+    // 设置屏幕亮度
+    editLuminance(item) {
+      const versionId = this.edition_ID
+      const brightness = item.light + '';
+      const name = item.label;
+      const data = {
+        versionId,
+        name,
+        brightness
+      }
+      // 发送请求
+      editLuminance(data).then(({ data, code }) => {
+        console.log('修改data: ', data);
+        if (code != 0) return this.$message.error('修改失败')
+
+        this.$message.success('修改成功')
+        const newArr = this.options_4.filter(item => {
+          if (item.value == this.value_4) {
+            return item
+          }
+        })
+        console.log(newArr);
+        this.arr_2_a[0].title = newArr[0].label
+        this.value_4_a = Number(newArr[0].light)
+      })
+    },
+    // 删除屏幕亮度信息
+    deleteLuminance(ids) {
+      const params = {
+        ids
+      }
+      // 发送请求
+      deleteLuminance(params).then(({ data, code }) => {
+        if (code != 0) return this.$message.error('删除失败')
+
+        this.$message.success('删除成功')
+        this.getLuminance()
+      })
+    },
+
+    /* 网络请求区域 */
     // 返回上一级
     goBack() {
       this.$emit('onChange')
@@ -704,65 +1276,158 @@ export default {
       this.visible_1 = true
     },
     handleClose_1() {
+      this.input_1 = '';
+      this.visible_1 = false
+    },
+    handleOk_1() {
+      const val = parseInt(this.input_1);
+      if (!val) return this.$message.info('您输入的内容为空')
 
+      this.editCall(val, 0)
+      this.handleClose_1()
     },
 
     // 修改通话时长
     change_2(index) {
       this.visible_2 = true
     },
-    handleClose_2() { },
+    handleClose_2() {
+      this.input_2 = '';
+      this.visible_2 = false
+    },
+    handleOk_2() {
+      const val = this.input_2;
+      if (!val) return this.$message.info('您输入的内容为空')
+
+      this.editCall(val, 1)
+      this.handleClose_2()
+    },
 
     // 修改留言数量
     change_3(index) {
       this.visible_3 = true
     },
-    handleClose_3() { },
+    handleClose_3() {
+      this.input_3 = '';
+      this.visible_3 = false
+    },
+    handleOk_3() {
+      const val = this.input_3;
+      if (!val) return this.$message.info('您输入的内容为空')
+
+      this.editCall(val, 2)
+      this.handleClose_3()
+    },
+    // 通话设置2
+    change_a(index) {
+      this.currentIndex_a = index
+      this.editCall(index, 3)
+    },
+    change_b(index) {
+      this.currentIndex_b = index
+      this.editCall(index, 4)
+    },
+    change_c(index) {
+      this.currentIndex_c = index
+      this.editCall(index, 5)
+    },
 
     // 修改屏幕亮度
-    change_4(index) {
-      if (index != 4 && index != 5) {
-        this.currentIndex_4 = index
-      }
-
+    change_4(index, indey, item) {
       switch (index) {
-        case 3:
+        case 1:
           this.visible_4 = true
           break;
-        case 4:
+        case 2:
           this.visible_4_a = true
           break;
-        case 5:
+        case 3:
           this.visible_4_b = true
           break;
       }
 
     },
-    handleChange_4() {
+    handleOk_4() {
+      if (!this.value_4) return this.$message.info('请选择')
+      console.log(this.options_4);
+      const newArr = this.options_4.filter(item => {
+        if (item.value == this.value_4) {
+          return item
+        }
+      })
+      console.log(newArr[0]);
+      this.editLuminance(newArr[0])
+      this.handleClose_4()
+    },
+
+    handleClose_4() {
+      this.visible_4 = false
+    },
+    handleChange_4_a() {
 
     },
-    handleClose_4() {
+    handleOk_4_a() {
+      const name = this.input_4_a;
+      const light = this.value_4_a;
+      console.log('light: ', light);
+      if (!name) return this.$message.info('请完善表单')
+      const newArr = this.options_4.filter(item => {
+        return item.label == name
+      })
 
+      if (newArr.length != 0) {
+        return this.$message.warning('名称重复')
+      }
+
+      if (light < 10) return this.$message.info('太暗了')
+      const data = {
+        name,
+        light
+      }
+      // 新增 接口
+      this.addLuminance(2, data);
+      // 获取屏幕亮度信息
+      this.getLuminance()
+      // this.arr_2_a.splice(3, 0, obj)
+      this.handleClose_4_a()
     },
     handleClose_4_a() {
-
+      this.input_4_a = ''
+      this.visible_4_a = false
+    },
+    handleOk_4_b() {
+      if (!this.value_4_b) return this.$message.info('请选择')
+      console.log('this.value_4_b: ', this.value_4_b);
+      this.deleteLuminance(this.value_4_b + '')
+      this.handleClose_4_b()
     },
     handleClose_4_b() {
-
+      this.visible_4_b = false
     },
 
     change_5(index) {
-      if (index != 3 && index != 4) {
-        this.currentIndex_5 = index
-      }
-      switch (index) {
-        case 3:
-          this.visible_5_a = true
-          break;
-        case 4:
-          this.visible_5_b = true
-          break;
-      }
+      // if (index != 3 && index != 4) {
+      //   this.currentIndex_5 = index
+      // }
+
+      this.editScreensaver(index)
+      // switch (index) {
+      //   // case 0:
+      //   //   this.editScreensaver(index)
+      //   //   break;
+      //   // case 1:
+      //   //   this.editScreensaver(index)
+      //   //   break;
+      //   // case 2:
+      //   //   this.editScreensaver(index)
+      //   //   break;
+      //   // case 3:
+      //   //   this.visible_5_a = true
+      //   //   break;
+      //   // case 4:
+      //   //   this.visible_5_b = true
+      //   //   break;
+      // }
     },
     handleClose_5_a() {
 
@@ -777,6 +1442,12 @@ export default {
         this.currentIndex_6 = index
       }
       switch (index) {
+        case 0:
+          this.editNoDisturbing(index)
+          break;
+        case 1:
+          this.editNoDisturbing(index)
+          break;
         case 2:
           this.visible_6 = true
           break;
@@ -788,9 +1459,22 @@ export default {
           break;
       }
     },
-    handleClose_6() {
-
+    onChange_6_a() {
+      console.log(this.startTime_6);
     },
+    onChange_6_b() {
+      console.log(this.endTime_6);
+    },
+    handleClose_6() {
+      this.visible_6 = false
+    },
+    handleOk_6() {
+      if (!this.startTime_6 && !this.endTime_6) return this.$message.info('请设置完整的时间段')
+      const index = this.currentIndex_6
+      this.editNoDisturbing(index)
+      this.handleClose_6()
+    },
+
     handleClose_6_a() {
 
     },
@@ -845,24 +1529,16 @@ export default {
   overflow: hidden;
 }
 
-.card_1 {
-  .main {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-  }
-}
-
 .card_2 {
   .el-row:first-child {
     transform: translateX(18px);
-    // margin-bottom: 20px;
+    margin-bottom: 20px;
   }
 
   .el-row:nth-child(2) {
     transform: translateX(18px);
 
-    // margin-bottom: 20px;
+    margin-bottom: 20px;
   }
 
   .el-col {
@@ -877,6 +1553,10 @@ export default {
   }
 }
 
+.weight {
+  font-weight: 500px !important;
+}
+
 .active {
   color: #fff !important;
   background-color: @color1 !important;
@@ -884,6 +1564,15 @@ export default {
 }
 
 .unique {
-  color: #67c23a;
+  background-color: #67c23a;
+  color: #fff;
+}
+
+.el-row {
+  font-size: 18px;
+}
+.row {
+  margin-top: 20px;
+  transform: translateX(4px);
 }
 </style>

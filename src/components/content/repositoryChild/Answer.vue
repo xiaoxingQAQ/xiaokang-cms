@@ -280,8 +280,10 @@ export default {
     // 获取 知识库的数据 列表
     getRepositorys() {
       const memberID = this.memberID
+      const categoryID = '1'
       const data = {
-        memberID
+        memberID,
+        categoryID
       }
       this.TableLoading_1 = true
       this.TableLoading_2 = true
@@ -368,11 +370,13 @@ export default {
       let val = this.addForm.name;
       if (!val) return this.$message.info('您输入的内容为空')
 
-      const memberID = this.memberID
+      const memberID = this.memberID;
+      const categoryID = '1'
       const name = val;
       const data = {
         name,
-        memberID
+        memberID,
+        categoryID
       }
       this.loading_1 = true
       this.cancel()

@@ -151,8 +151,7 @@ export default {
       this.cancel()
       this.loading = true
       const data = {};
-      getServiceInfo(data).then(({ data, code }) => {
-        console.log('data: ', data);
+      getServiceInfo().then(({ data, code }) => {
         if (code != 0) return this.$message.error('获取数据失败')
 
         data.forEach((item, index) => {

@@ -6,11 +6,23 @@
       ref="ruleForm"
       label-width="100px"
     >
-      <el-form-item label="版本编号：" prop="number">
+      <el-form-item
+        label="版本名称："
+        prop="name"
+      >
+        <el-input v-model="updateForm.name"></el-input>
+      </el-form-item>
+      <el-form-item
+        label="版本编号："
+        prop="number"
+      >
         <el-input v-model="updateForm.number"></el-input>
       </el-form-item>
 
-      <el-form-item label="更新日志：" prop="updateLog">
+      <el-form-item
+        label="更新日志："
+        prop="updateLog"
+      >
         <el-input
           type="textarea"
           :autosize="{ minRows: 3, maxRows: 6 }"
@@ -91,6 +103,14 @@ export default {
   components: {
     Card
   },
+  props: {
+    TabData: {
+      type: Array,
+      default() {
+        return []
+      }
+    }
+  },
   data() {
     return {
       timer: null, // / 用来存放定时器
@@ -98,6 +118,7 @@ export default {
       action: '', // 必选参数，上传的地址
       updateForm: {
         memberID: '',
+        name: '',
         number: '', // 编号
         updateLog: '', // 更新日志
         attachmentID: '' // 文件id
@@ -109,6 +130,9 @@ export default {
       fileList: [],
       // 表单验证对象
       updateFormRules: {
+        name: [
+          { required: true, message: '请输入版本名称', trigger: 'blur' }
+        ],
         number: [
           { required: true, message: '请输入版本编号', trigger: 'blur' }
         ],
@@ -123,22 +147,34 @@ export default {
   },
   methods: {
     push() {
+      console.log(this.TabData);
       this.$refs.ruleForm.validate(valid => {
         if (!valid) return
         // 先清除 上一个定时器
         clearTimeout(this.timer)
 
-        const memberID = this.memberID;
-        const versionNumber = this.updateForm.number;
-        const updateLog = this.updateForm.updateLog
-        const attachmentID = this.updateForm.attachmentID
+        const versionName = this.updateForm.name;
+        const versionNum = this.updateForm.number;
+        const versionLog = this.updateForm.updateLog
+        const accessories = this.updateForm.attachmentID
+
+        const arr_1 = this.TabData.filter(item => {
+          return item.versionName == versionName
+        })
+        const arr_2 = this.TabData.filter(item => {
+          return item.versionNum == versionNum
+        })
+
+        if (arr_1.length != 0) return this.$message.info('名称重复')
+        if (arr_2.length != 0) return this.$message.info('版本号重复')
+
         const data = {
-          memberID,
-          versionNumber,
-          updateLog,
-          attachmentID
+          versionName,
+          versionNum,
+          versionLog,
+          accessories
         }
-        if (!attachmentID) {
+        if (!accessories) {
           return this.$message.warning('请上传版本文件')
         }
         this.$message.info('正在推送...')
@@ -152,8 +188,7 @@ export default {
             if (res.code != 0) return this.$message.error('推送失败')
 
             this.$message.success('推送成功')
-            let index = 1
-            this.$bus.$emit('handle', index)
+            this.$emit('update')
           })
         }, 800);
 

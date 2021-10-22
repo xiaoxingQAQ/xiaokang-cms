@@ -14,9 +14,10 @@ import {
   Spin, 
   Upload,
   Alert,
-
+  TimePicker,
 } from 'ant-design-vue';
 
+Vue.use(TimePicker)
 Vue.use(Alert)
 Vue.use(Upload)
 Vue.use(Popover)

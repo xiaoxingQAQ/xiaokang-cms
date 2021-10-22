@@ -90,6 +90,8 @@ li {
   font-size: 12px;
 }
 
+.el-form-item__label,
+.el-row,
 .ant-form-explain,
 .ant-form-item-children,
 .ant-form-item-label,

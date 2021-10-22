@@ -1,10 +1,16 @@
 /* 系统版本 */
 <template>
   <div class="wrapper">
-    <transition name="slide-fade" v-if="!isChange">
+    <transition
+      name="slide-fade"
+      v-if="!isChange"
+    >
       <Info @onChange="onChange" />
     </transition>
-    <transition name="slide-fade" v-else="isChange">
+    <transition
+      name="slide-fade"
+      v-else="isChange"
+    >
       <Setting @onChange="onChange" />
     </transition>
   </div>
@@ -43,5 +49,20 @@ export default {
   justify-content: center;
   margin-right: 15px;
   width: 60px;
+}
+
+// 动画
+.slide-fade-enter-active {
+  transition: all 0.3s ease-in;
+  opacity: 0.1;
+}
+.slide-fade-leave-active {
+  transition: all 0.3s ease-in-out;
+  opacity: 0.1;
+}
+.slide-fade-enter,
+.slide-fade-leave-to {
+  transform: translateX(-30px);
+  opacity: 0.1;
 }
 </style>

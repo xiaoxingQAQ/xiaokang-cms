@@ -7,11 +7,12 @@
           style="margin-right: 10px"
           type="primary"
           @click="visible = true"
-          >上传版本</a-button
-        >
-        <a-button type="danger" :loading="loading_2" @click="deleteEdition"
-          >删除版本</a-button
-        >
+        >上传版本</a-button>
+        <a-button
+          type="danger"
+          :loading="loading_2"
+          @click="deleteEdition"
+        >删除版本</a-button>
       </template>
       <template slot="main">
         <a-table
@@ -22,10 +23,25 @@
           :pagination="false"
           :row-selection="rowSelection"
         >
-          <template slot="operate" slot-scope="text, record">
-            <a-button type="primary" @click="goDetail(record)" class="btn"
-              >默认参数配置</a-button
-            >
+          <template
+            slot="edit"
+            slot-scope="text, record"
+          >
+            <a-button
+              class="unique"
+              type="primary"
+              @click="showEdit(record)"
+            >编辑</a-button>
+          </template>
+          <template
+            slot="operate"
+            slot-scope="text, record"
+          >
+            <a-button
+              type="primary"
+              @click="goDetail(record)"
+              class="btn"
+            >默认参数配置</a-button>
           </template>
         </a-table>
       </template>
@@ -40,7 +56,53 @@
       @ok="handleOk"
       @cancel="handleCancel"
     >
-      <SystemUpdata ref="SystemUpdata" />
+      <SystemUpdata
+        :TabData="TabData"
+        @update="handleUpdate"
+        ref="SystemUpdata"
+      />
+    </a-modal>
+
+    <!-- 编辑版本信息 -->
+    <a-modal
+      title="编辑版本信息"
+      okText="保存"
+      cancelText="取消"
+      :visible="visible_1"
+      :confirm-loading="confirmLoading_1"
+      @ok="handleOk_1"
+      @cancel="handleCancel_1"
+    >
+      <el-form
+        :model="updateForm"
+        :rules="updateFormRules"
+        ref="editForm"
+        label-width="100px"
+      >
+        <el-form-item
+          label="版本名称："
+          prop="versionName"
+        >
+          <el-input v-model="updateForm.versionName"></el-input>
+        </el-form-item>
+        <el-form-item
+          label="版本编号："
+          prop="versionNum"
+        >
+          <el-input :disabled="true" v-model="updateForm.versionNum"></el-input>
+        </el-form-item>
+
+        <el-form-item
+          label="更新日志："
+          prop="versionLog"
+        >
+          <el-input
+            type="textarea"
+            :autosize="{ minRows: 3, maxRows: 6 }"
+            v-model="updateForm.versionLog"
+          ></el-input>
+        </el-form-item>
+      </el-form>
     </a-modal>
   </div>
 </template>
@@ -49,7 +111,7 @@
 import Card from '@/components/content/card/Card'
 import SystemUpdata from '@/components/content/editionChild/SystemUpdata'
 
-import { getEditionInfo } from '@/network/home'
+import { getEditionInfo, editEdition, deleteEdition } from '@/network/home'
 import { mapMutations, mapState } from 'vuex'
 
 
@@ -60,6 +122,8 @@ export default {
   },
   data() {
     return {
+      confirmLoading_1: false,
+      visible_1: false,
       selectedRowKeys: [],
       selectedRows: [],
       visible: false, // 上传版本的
@@ -67,26 +131,53 @@ export default {
       loading_2: false,
       loading_3: false,
       confirmLoading: false,
+      updateForm: {
+        versionName: '',
+        versionNum: '',
+        versionLog: '',
+      },
+      updateFormRules: {
+        versionName: [
+          { required: true, message: '请输入版本名称', trigger: 'blur' }
+        ],
+        versionNum: [
+          { required: true, message: '请输入版本编号', trigger: 'blur' }
+        ],
+        versionLog: [
+          { required: true, message: '请输入更新日志', trigger: 'blur' }
+        ]
+      },
       columns: [ // 卡片3
         {
+          title: '版本名称',
+          dataIndex: 'versionName',
+          key: 'versionName',
+        },
+        {
           title: '版本号',
-          dataIndex: 'versionNumber',
-          key: 'versionNumber',
+          dataIndex: 'versionNum',
+          key: 'versionNum',
         },
         {
           title: '更新日志',
-          dataIndex: 'updateLog',
-          key: 'updateLog',
+          dataIndex: 'versionLog',
+          key: 'versionLog',
         },
         {
           title: '版本文件ID',
-          dataIndex: 'attachmentID',
-          key: 'attachmentID',
+          dataIndex: 'accessories',
+          key: 'accessories',
         },
         {
           title: '更新日期',
-          dataIndex: 'uptDate',
-          key: 'uptDate',
+          dataIndex: 'createTime',
+          key: 'createTime',
+        },
+        {
+          title: '编辑',
+          key: 'edit',
+          scopedSlots: { customRender: 'edit' },
+          width: '10%'
         },
         {
           title: '操作',
@@ -117,38 +208,42 @@ export default {
     },
   },
   methods: {
-    ...mapMutations('edition',['Edition_Info']),
-    // 获取版本信息
+    ...mapMutations('edition', ['Edition_Info']),
+    // 获取版本列表
     getEditionInfo() {
+      this.TabData = []
       this.cancel()
       const memberID = this.memberID;
-      const data = {
-        memberID
+      const params = {
       }
-      console.log(memberID);
+
       this.loading_3 = true
       // 发送请求
-      getEditionInfo(data).then(res => {
+      getEditionInfo(params).then(res => {
         console.log('res: ', res);
         if (!res) return
         if (res.code != 0) return this.$message.error('获取数据失败')
 
 
-        res.data.forEach(item => {
-          let key = item.id
+        res.data.records.forEach((item, index) => {
+          let key = index
           let id = item.id;
-          let versionNumber = item.versionNumber // 版本号
-          let updateLog = item.updateLog // 更新日志
-          let uptDate = item.pubDate // 更新日期
-          let attachmentID = item.attachmentID // 文件id
-          this.TabData.push({
+          let versionName = item.versionName // 版本名称
+          let versionNum = item.versionNum // 版本号
+          let versionLog = item.versionLog // 更新日志
+          let createTime = item.createTime // 更新日期
+          let accessories = item.accessories // 文件id
+          this.TabData.unshift({
             key,
             id,
-            versionNumber,
-            updateLog,
-            uptDate,
-            attachmentID
+            versionName,
+            versionNum,
+            versionLog,
+            createTime,
+            accessories
           })
+          // 去重
+          this.TabData = _.uniqBy(this.TabData, 'id')
         });
         this.loading_3 = false
       })
@@ -170,18 +265,18 @@ export default {
         this.loading_2 = false
         return this.$message.info('请选择您要删除的')
       }
-
+      console.log(this.selectedRows);
       const arr = [];
       this.selectedRows.forEach(item => {
         arr.push(item.id)
       })
-      const id = arr.join(',')
+      console.log(arr);
+      const ids = arr.join(',')
       const data = {
-        id
+        ids
       }
-      return
       // 发送请求 删除选中的
-      xxxxxxxxxxxxxx(data).then(res => {
+      deleteEdition(data).then(res => {
         console.log('res: ', res);
         if (!res) return
         if (res.code != 0) {
@@ -202,6 +297,58 @@ export default {
       // 写入本地存储
       sessionStorage.setItem('Edition', JSON.stringify(record))
     },
+    // 处理版本上传完成
+    handleUpdate() {
+      this.getEditionInfo();
+      this.handleCancel();
+    },
+
+    // 版本编辑
+    showEdit(record) {
+      this.visible_1 = true
+      this.updateForm = record
+    },
+    handleOk_1() {
+      this.$refs.editForm.validate(valid => {
+        if (!valid) return
+
+        let id = this.updateForm.id
+        let versionName = this.updateForm.versionName;
+        let versionNum = this.updateForm.versionNum // 版本号
+        let versionLog = this.updateForm.versionLog // 更新日志
+
+        this.TabData = this.TabData.filter(item => {
+          return item.id != this.updateForm.id
+        })
+        const arr_1 = this.TabData.filter(item => {
+          return item.versionName == versionName
+        })
+        const arr_2 = this.TabData.filter(item => {
+          return item.versionNum == versionNum
+        })
+
+        if (arr_1.length != 0) return this.$message.info('名称重复')
+        if (arr_2.length != 0) return this.$message.info('版本号重复')
+
+        const data = {
+          id,
+          versionName,
+          versionNum,
+          versionLog,
+        }
+        // 发送请求
+        editEdition(data).then(({data, code}) => {
+          if (code != 0) return this.$message.error('修改失败')
+
+          this.$message.success('修改成功')
+          this.getEditionInfo();
+          this.handleCancel_1()
+        })
+      })
+    },
+    handleCancel_1() {
+      this.visible_1 = false
+    },
   },
 }
 </script>
@@ -211,11 +358,15 @@ export default {
 @color2: #7f7f7f;
 .wrapper {
   .btn {
-    // width: 90px;
     font-weight: 500;
     color: #fff;
-    // background-color: @color1;
     border: transparent;
   }
+}
+
+.unique {
+  border: 1px solid transparent;
+  background-color: #67c23a;
+  color: #fff;
 }
 </style>

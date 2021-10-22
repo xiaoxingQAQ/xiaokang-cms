@@ -10,5 +10,8 @@ module.exports = {
         'views': '@/views',
       }
     }
+  },
+  devServer: {
+    proxy: 'http://192.168.124.20:9600/',
   }
 }

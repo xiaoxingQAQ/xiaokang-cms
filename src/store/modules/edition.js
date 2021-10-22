@@ -9,7 +9,7 @@ export default {
   mutations: {
     [Edition_Info](state, payload) {
       console.log('payload: ', payload);
-      state.edition_ID = payload.edition_ID;
+      state.edition_ID = payload.id;
 
     },
     [Init_Edition_Info](state) {
@@ -17,7 +17,7 @@ export default {
       console.log('Edition: ', Edition);
       
       if (Edition instanceof Object) {
-        state.edition_ID = Edition.edition_ID;
+        state.edition_ID = Edition.id;
       }
     },
   },

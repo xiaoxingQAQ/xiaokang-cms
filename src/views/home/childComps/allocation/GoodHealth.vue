@@ -91,7 +91,7 @@
               @play="play"
               @pause="pause"
               :class="{ playing: status == 1 }"
-              src="http://m7.music.126.net/20211013155308/e48c716ecc2cde686f703346cfa85ad6/ymusic/045b/005e/0e58/31d39e070a74ea214ab292a3963073c9.mp3"
+              src="https://st.music.163.com/encrypt-pages?params=%7B%22sign%22%3A%22c7f837546f2476b036ada9f2de4736da%22%2C%22event_id%22%3A%2200159226935469322241%22%7D&verifyType=40&verifyId=1007602&verifyToken=00.40.80558b77760127687e72a5ca4368bcec.1228902045&actionCode=1048401"
               controls
               loop
             ></audio>

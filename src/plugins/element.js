@@ -32,8 +32,10 @@ import {
   Breadcrumb,
   BreadcrumbItem,
   Slider,
+  TimeSelect,
 } from 'element-ui'
 
+Vue.use(TimeSelect)
 Vue.use(Slider)
 Vue.use(BreadcrumbItem)
 Vue.use(Breadcrumb)

@@ -406,8 +406,10 @@ export default {
     // 获取 知识库的数据
     getRepositorys() {
       const memberID = this.memberID
+      const categoryID = '1'
       const data = {
-        memberID
+        memberID,
+        categoryID
       }
       this.TableLoading_1 = true
       this.cancel()
@@ -595,6 +597,7 @@ export default {
         this.loading_3 = true
 
         const memberID = this.memberID
+        const categoryID = '1'
         const name = this.addForm_1.name;
         const data_1 = {
           name,
@@ -610,7 +613,7 @@ export default {
             return this.$message.warning(res.message)
           }
           // 发送请求 获取知识库列表
-          getRepository({ memberID }).then(({ data, code }) => {
+          getRepository({ memberID, categoryID }).then(({ data, code }) => {
             data = data.filter(item => {
               return item.name == name
             })
