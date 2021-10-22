@@ -74,6 +74,8 @@
               class="tsp-audio"
               @play="play"
               @pause="pause"
+              controls 
+              loop
               :class="{ playing: status == 1 }"
               :src="record.attachmentUrl"
             ></audio>
