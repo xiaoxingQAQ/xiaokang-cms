@@ -75,7 +75,7 @@
               @play="play"
               @pause="pause"
               :class="{ playing: status == 1 }"
-              :src="record.attachmentID"
+              :src="record.attachmentUrl"
               controls
               loop
             ></audio>
@@ -364,7 +364,13 @@ export default {
       ],
       removeData: [],
       editHealthData: {}, // 储存编辑养生知识，回显
-      editForm: {}, // 保存编辑的内容
+      // 保存编辑的内容
+      editForm: {
+        id: '',
+        title: '',
+        status: 1,
+        attachmentID: '',
+      },
       editStatus: false, // 编辑状态
     }
   },
@@ -440,6 +446,8 @@ export default {
         console.log('res: ', res)
         if (!res) return
         if (res.code != 0) return this.$message.error('获取数据失败')
+        this.nameArr = []
+        this.removeData = []
         res.data.forEach((item, index) => {
           let key = index + 1
           let id = item.id
@@ -477,7 +485,7 @@ export default {
       console.log(data)
       this.TableLoading_2 = true
       this.cancel()
-      // 发送请求
+      // 发送查询请求
       getByHealthyList(data).then((res) => {
         console.log('问答', res)
         if (!res) return
@@ -488,11 +496,13 @@ export default {
           let id = item.id
           let title = item.title
           let attachmentID = item.attachmentID
+          let attachmentUrl = item.attachmentUrl
           this.data.push({
             key,
             id,
             title,
             attachmentID,
+            attachmentUrl,
           })
         })
         // 去重
@@ -521,12 +531,14 @@ export default {
         if (!this.updataForm.directoryName)
           return this.$message.info('您输入的内容为空')
       }
+
       const memberID = this.memberID
       const directoryName = val
       const status = 1
       const data = {
         directoryName,
         memberID,
+        categoryID: '3',
         status,
         id: '',
       }
@@ -550,7 +562,6 @@ export default {
         this.addDialogClosed()
         this.updataDialogClosed()
         this.getHealthy()
-        this.getByHealthyList()
       })
     },
     // 修改分类
@@ -611,7 +622,9 @@ export default {
     // #region
     /* 关闭 新增养生内容的Dialog */
     answerDialogClosed() {
-      this.answerForm = {}
+      this.name = ''
+      this.fileList = []
+      this.editFileList = []
       this.answerDialogVisible = false
     },
     /* 保存 新增养生内容的Dialog */
@@ -649,8 +662,6 @@ export default {
       addByHealthy(data).then((res) => {
         if (!res) return
         if (res.code != 0) return this.$message.error('添加失败')
-        console.log('res: ', res)
-
         this.$message.success('添加成功')
         // 获取养生知识内容数据列表
         this.getByHealthyList()
@@ -742,32 +753,31 @@ export default {
     editHealth(record) {
       console.log(record)
       this.editHealthVisible = true
-      this.editHealthData = _.cloneDeep(record)
-      this.editForm = this.editHealthData
+      this.editForm.id = record.id
+      this.editForm.title = record.title
+      this.editForm.attachmentID = record.attachmentID
       this.editStatus = true
     },
     // 编辑养生知识内容 确定按钮
     saveEditForm() {
+      const id = this.editForm.id
+      const memberID = this.memberID
+      const healthyID = this.healthyID
       const title = this.editForm.title
-      this.editForm.status = 1
+      const status = this.editForm.status
       const attachmentID = this.editForm.attachmentID
       if (!title) return this.$message.warning('请输入名称')
       if (!attachmentID) {
         return this.$message.warning('请上传音频')
       }
-      // 深拷贝
-      const arr = _.cloneDeep(this.data)
-      // 有从重复的 过滤到新数组中
-      const newArr = arr.filter((item) => {
-        return item.title == title
-      })
-      // 如果有值 判断
-      if (newArr.length != 0) {
-        const obj = newArr[0]
-        if (obj.title == title) return this.$message.info('名称重复')
+      const data = {
+        title,
+        status,
+        attachmentID,
+        memberID,
+        healthyID,
+        id,
       }
-      const data = this.editForm
-
       this.loading_3 = true
       this.cancel()
       // 发送请求
@@ -782,7 +792,6 @@ export default {
         // 获取养生知识内容数据列表
         this.getByHealthyList()
       })
-
       setTimeout(() => {
         this.loading_3 = false
         this.answerDialogClosed()
@@ -793,6 +802,8 @@ export default {
       this.editHealthVisible = false
       this.editStatus = false
     },
+
+    // 上传修改音频
     handleEditChange(info) {
       console.log(info)
       let fileList = [...info.fileList]
