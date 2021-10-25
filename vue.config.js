@@ -12,6 +12,6 @@ module.exports = {
     }
   },
   devServer: {
-    proxy: 'http://192.168.124.20:9600/',
+    // proxy: 'http://192.168.124.20:9600/',
   }
 }

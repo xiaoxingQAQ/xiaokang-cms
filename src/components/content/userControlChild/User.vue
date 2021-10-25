@@ -91,6 +91,13 @@ export default {
         equipmentID_user: '',
       },
       columns: [
+         {
+          title: '用户名',
+          dataIndex: 'name',
+          key: 'name',
+          ellipsis: true,
+          width: '20%'
+        },
         {
           title: '用户账号',
           dataIndex: 'memberID',
@@ -232,12 +239,14 @@ export default {
         }
         data.records.forEach((item) => {
           const key = item.memberID;
+          const name = item.name;
           const memberID = item.memberID;
           const equipmentID = item.equipmentID;
           const counts = item.counts;
           const pubDate = item.pubDate;
           this.tabData.push({
             key,
+            name,
             memberID,
             equipmentID,
             counts,

@@ -409,12 +409,12 @@ export default {
           const key = index;
           const name = item.name;
           const piecesOneTime = item.piecesOneTime;
-          const planTime = item.planTime;
+          const pubDate = item.pubDate;
           this.Table_2.push({
             key,
             name,
             piecesOneTime,
-            planTime
+            pubDate
           })
         });
         this.$refs.Table_2.$data.loading = false

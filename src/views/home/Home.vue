@@ -172,17 +172,17 @@ export default {
       },
       detailRules: {
         username: [
-          { required: false, message: '请输入用户名', trigger: 'blur' },
+          { required: true, message: '请输入用户名', trigger: 'blur' },
         ],
         nickName: [
-          { required: false, message: '请输入昵称', trigger: 'blur' },
+          { required: true, message: '请输入昵称', trigger: 'blur' },
         ],
 
         phone: [
-          { required: false, message: '请输入手机号', trigger: 'blur' },
+          { required: true, message: '请输入手机号', trigger: 'blur' },
         ],
         email: [
-          { required: false, message: '请输入邮箱', trigger: 'blur' },
+          { required: true, message: '请输入邮箱', trigger: 'blur' },
         ],
       },
       dialogFormVisible: false,
@@ -276,8 +276,6 @@ export default {
           return true
       }
     },
-  },
-  mounted() {
   },
   methods: {
     showInfo() {
