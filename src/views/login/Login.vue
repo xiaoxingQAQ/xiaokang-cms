@@ -56,9 +56,9 @@
       </div>
     </main>
 
-    <div class="footer">
+    <!-- <div class="footer">
       <div>Copyright 2021</div>
-    </div>
+    </div> -->
   </div>
 </template>
 
@@ -92,16 +92,22 @@ export default {
       this.$refs.loginFormRef.validate(valid => {
         if (!valid) return
         this.loading = true
-        const data = this.loginForm;
+        const account = this.loginForm.username;
+        const password = this.loginForm.password
+        const data ={
+          account,
+          password
+        }
         this.cancel()
         // 发送请求 登录
         login(data).then(res => {
+          console.log('res: ', res);
           if (!res) return this.$message.error('未知错误')
           console.log('登录', res);
           if (res.code != 0) {
             this.loading = false
             return this.$message.warning({
-              message: '登录失败',
+              message: '用户名或密码错误',
               offset: 46,
               duration: '700',
             })
@@ -114,14 +120,19 @@ export default {
             duration: '700',
           })
           const userInfo = {
-            memberID: res.data.id,
+            id: res.data.id,
+            memberID: res.data.menberId,
             username: res.data.username,
-            systemIcon: res.data.systemIcon,
-            systemName: res.data.systemName
+            account: res.data.account,
+            password: res.data.password,
+            phone: res.data.phone,
+            email: res.data.email,
+            nickName: res.data.nickName,
+            sex: res.data.sex
           }
           this.User_Login(userInfo)
           window.sessionStorage.setItem('userInfo', JSON.stringify(userInfo))
-          window.sessionStorage.setItem('token', JSON.stringify(res.data.token))
+          window.sessionStorage.setItem('token', JSON.stringify('token'))
           this.$router.push('/home')
         })
       })
@@ -139,6 +150,7 @@ export default {
   height: 100%;
   background: url('../../assets/images/background.png');
   background-size: 100%;
+  overflow: hidden;
 
   .btn {
     width: 90px;
@@ -215,15 +227,15 @@ export default {
     }
   }
   .footer {
-    position: relative;
+    position: fixed;
     bottom: 0;
-    left: 0;
     width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
     height: 72px;
     border-top: 1px solid #d8d8d870;
     color: #d8d8d8;
-    line-height: 72px;
-    text-align: center;
     background: #fff;
   }
 }

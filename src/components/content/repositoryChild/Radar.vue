@@ -6,7 +6,7 @@
       <el-button type="danger" @click="showClearTerms">删除嗅探词</el-button>
     </el-row>
     <!-- Tag标签 -->
-    <el-row class="loading" v-if="nameArr.length == 0">
+    <el-row class="loading" v-if="isLoading">
       <a-spin tip="Loading...">
         <div class="spin-content"></div>
       </a-spin>
@@ -226,6 +226,7 @@ export default {
   },
   data() {
     return {
+      isLoading: true,
       currentIndex: null,
       repositoryArr: [],
       selectedRowKeys: [],
@@ -341,6 +342,8 @@ export default {
       getSnifferWord(data).then(res => {
         if (!res) return
         if (res.code != 0) return this.$message.error('获取数据失败')
+
+        this.isLoading = false;
         console.log('res: ', res);
         res.data.forEach((item, index) => {
           let key = index + 1;

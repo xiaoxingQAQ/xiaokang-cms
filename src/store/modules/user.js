@@ -4,9 +4,7 @@ export default {
   namespaced: true,
   state: {
     memberID: null,
-    username: null,
-    systemIcon: null,
-    systemName: null,
+    userInfo: {},
 
     equipmentID_user: null,
     memberID_user: null,
@@ -18,9 +16,8 @@ export default {
     // 初次登录 设置
     [User_Login](state, userInfo) {
       state.memberID = userInfo.memberID
-      state.username = userInfo.username
-      state.systemIcon = userInfo.systemIcon
-      state.systemName = userInfo.systemName
+      state.userInfo = userInfo
+      console.log('state.userInfo: ', state.userInfo);
     },
     [User_ID](state, payload) {
       state.counts_user = payload.counts_user
@@ -35,9 +32,7 @@ export default {
 
       if (userInfo instanceof Object) {
         state.memberID = userInfo.memberID
-        state.username = userInfo.username
-        state.systemIcon = userInfo.systemIcon
-        state.systemName = userInfo.systemName
+        state.userInfo = userInfo
       }
 
       if (User instanceof Object) {

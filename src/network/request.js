@@ -7,8 +7,9 @@ window.axiosCancel = []  // 全局定义一个存放取消请求的标识
 
 export function request(config) {
   // 1.创建axios的实例
-  const instance = axios.create({
-    baseURL: 'http://114.116.253.112:9600',
+  const instance = axios.create({ // 
+    // baseURL: 'http://114.116.253.112:9600',
+    baseURL: 'http://192.168.124.20:9600',
     headers: { //请求头
       'Content-Type': 'application/json',
     },

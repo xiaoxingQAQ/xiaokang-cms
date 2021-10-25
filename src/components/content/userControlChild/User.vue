@@ -258,8 +258,6 @@ export default {
     },
     // 点击查询
     onSearch() {
-      if (this.SearchForm.memberID_user == '') return this.$message.warning('请完善表单')
-      if (this.SearchForm.equipmentID_user == '') return this.$message.warning('请完善表单')
       this.searchUser('0', 1)
     },
   },

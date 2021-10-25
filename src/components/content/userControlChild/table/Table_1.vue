@@ -68,8 +68,8 @@ export default {
         },
         {
           title: '舒张压',
-          dataIndex: 'notEatMedicine',
-          key: 'notEatMedicine',
+          dataIndex: 'diastolic',
+          key: 'diastolic',
         },
         {
           title: '血压标准',

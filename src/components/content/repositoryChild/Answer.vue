@@ -10,7 +10,7 @@
       <span class="category">知识库</span>
     </el-row>
 
-    <el-row class="loading" v-if="nameArr.length == 0">
+    <el-row class="loading" v-if="isLoading">
       <a-spin tip="Loading...">
         <div class="spin-content"></div>
       </a-spin>
@@ -173,6 +173,7 @@ export default {
   },
   data() {
     return {
+      isLoading: true,
       currentIndex: null,
       TableLoading_2: false,
       TableLoading_1: false,
@@ -293,6 +294,8 @@ export default {
         console.log('res: ', res);
         if (!res) return
         if (res.code != 0) return this.$message.error('获取数据失败')
+
+        this.isLoading = false
         res.data.forEach((item, index) => {
           let key = index + 1;
           let id = item.id

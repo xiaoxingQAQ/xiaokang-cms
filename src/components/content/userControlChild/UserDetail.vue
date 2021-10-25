@@ -312,15 +312,15 @@ export default {
         // 如果有
         data.forEach((item, index) => {
           let key = index
-          let systolic = item.systolic;
-          let notEatMedicine = item.notEatMedicine;
+          let systolic = item.systolic + 'mmHg'; // 收缩压
+          let diastolic = item.diastolic + 'mmHg'; // 舒张压
           let sequenceNo = item.sequenceNo;
           let statusID = item.statusID;
           let time = item.time
           this.Table_1.push({
             key,
             systolic,
-            notEatMedicine,
+            diastolic,
             sequenceNo,
             statusID,
             time

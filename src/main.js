@@ -24,7 +24,12 @@ import _ from 'lodash'
 Vue.prototype._ = _
 // 时间总线
 Vue.prototype.$bus = new Vue()
-
+// 全局的点击事件
+Vue.prototype.globalClick = function (callback) {
+  document.getElementById('app').onclick = function () {
+    callback();
+  };
+};
 
 // 将cancel,挂载到vue原型上
 Vue.prototype.cancel = function () {

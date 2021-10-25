@@ -7,25 +7,6 @@
         >删除健康顾问</el-button
       >
     </el-row>
-
-    <!-- <el-row class="loading" v-if="nameArr.length == 0">
-      <a-spin tip="Loading...">
-        <div class="spin-content"></div>
-      </a-spin>
-    </el-row> -->
-
-    <!-- <el-row v-else>
-      <el-tag
-        v-for="(item, index) in nameArr"
-        :key="index"
-        type="warning"
-        effect="dark"
-        :class="{ active: currentIndex == index }"
-        @click="toTable(item, index)"
-      >
-        {{ item.name }}
-      </el-tag>
-    </el-row> -->
     <!-- 卡片 -->
     <Card v-for="(item, index) in counselorList" :key="index">
       <span slot="leftTitle">健康顾问：{{ item.nickName }}</span>
