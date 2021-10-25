@@ -4,41 +4,26 @@
     <Card>
       <span slot="leftTitle">客服信息</span>
       <template #rightTitle>
-        <a-button
-          style="margin-right: 10px"
-          type="primary"
-          @click="AddServicer"
-        >新增客服</a-button>
-        <a-button
-          type="danger"
-          @click="deleteServicer"
-        >删除客服</a-button>
+        <a-button style="margin-right: 10px" type="primary" @click="AddServicer"
+          >新增客服</a-button
+        >
+        <a-button type="danger" @click="deleteServicer">删除客服</a-button>
       </template>
       <div slot="main">
         <a-table
-          :rowKey="(record) => record.id"
+          :rowKey="record => record.id"
           :columns="columns"
           :data-source="tabData"
           :loading="loading"
           :pagination="false"
           :row-selection="rowSelection"
         >
-          <template
-            slot="image"
-            slot-scope="text, record, index"
-          >
+          <template slot="image" slot-scope="text, record, index">
             <div>
-              <img
-                style="width: 70%"
-                :src="text.imageUrl"
-                alt=""
-              />
+              <img style="width: 70%" :src="text.photoUrl" alt="" />
             </div>
           </template>
-          <template
-            slot="edit"
-            slot-scope="text, record, index"
-          >
+          <template slot="edit" slot-scope="text, record, index">
             <el-button
               @click="edit(record)"
               type="primary"
@@ -49,7 +34,7 @@
       </div>
     </Card>
     <a-modal
-      :title="addStatus=== true ? '新增客服信息': '编辑客服信息'"
+      :title="addStatus === true ? '新增客服信息' : '编辑客服信息'"
       okText="保存"
       cancelText="取消"
       :visible="visible"
@@ -64,38 +49,19 @@
         :label-col="labelCol"
         :wrapper-col="wrapperCol"
       >
-        <a-form-model-item
-          ref="num"
-          label="客服工号"
-          prop="num"
-        >
+        <!-- <a-form-model-item ref="num" label="客服工号" prop="num">
           <a-input v-model="EditForm.num" />
-        </a-form-model-item>
-        <a-form-model-item
-          ref="name"
-          label="客服名称"
-          prop="name"
-        >
+        </a-form-model-item> -->
+        <!-- <a-form-model-item ref="name" label="客服名称" prop="name">
           <a-input v-model="EditForm.name" />
-        </a-form-model-item>
-        <a-form-model-item
-          ref="email"
-          label="客服邮箱"
-          prop="email"
-        >
+        </a-form-model-item> -->
+        <a-form-model-item ref="email" label="客服邮箱" prop="email">
           <a-input v-model="EditForm.email" />
         </a-form-model-item>
-        <a-form-model-item
-          ref="phone"
-          label="客服电话"
-          prop="phone"
-        >
+        <a-form-model-item ref="phone" label="客服电话" prop="phone">
           <a-input v-model="EditForm.phone" />
         </a-form-model-item>
-        <a-form-model-item
-          ref="image"
-          label="图片"
-        >
+        <a-form-model-item ref="image" label="图片">
           <a-upload
             class="uploader"
             :action="uploadUrl"
@@ -112,16 +78,9 @@
             </div>
           </a-upload>
         </a-form-model-item>
-        <a-form-model-item
-          ref="name"
-          label="备注信息"
-          prop="message"
-        >
-          <a-input
-            type="textarea"
-            v-model="EditForm.message"
-          />
-        </a-form-model-item>
+        <!-- <a-form-model-item ref="name" label="备注信息" prop="message">
+          <a-input type="textarea" v-model="EditForm.message" />
+        </a-form-model-item> -->
       </a-form-model>
     </a-modal>
     <!-- 新增的预览图片 -->
@@ -131,11 +90,7 @@
       :footer="null"
       @cancel="handleImgCancel"
     >
-      <img
-        alt="example"
-        style="width: 100%"
-        :src="previewImage"
-      />
+      <img alt="example" style="width: 100%" :src="previewImage" />
     </a-modal>
   </div>
 </template>
@@ -143,34 +98,44 @@
 <script>
 import Card from '@/components/content/card/Card'
 
-import { getServiceInfo, saveServiceInfo, getServicePage, updateServiceInfo, deleteServiceInfo } from '@/network/home'
+import {
+  getServiceInfo,
+  saveServiceInfo,
+  getServicePage,
+  updateServiceInfo,
+  deleteServiceInfo
+} from '@/network/home'
 
-const token = JSON.parse(sessionStorage.getItem('token'));
+const token = JSON.parse(sessionStorage.getItem('token'))
 function getBase64(file) {
   return new Promise((resolve, reject) => {
-    const reader = new FileReader();
-    reader.readAsDataURL(file);
-    reader.onload = () => resolve(reader.result);
-    reader.onerror = error => reject(error);
-  });
+    const reader = new FileReader()
+    reader.readAsDataURL(file)
+    reader.onload = () => resolve(reader.result)
+    reader.onerror = error => reject(error)
+  })
 }
 
 export default {
   components: {
-    Card,
+    Card
   },
   computed: {
     rowSelection() {
-      const { selectedRowKeys } = this;
+      const { selectedRowKeys } = this
       return {
         selectedRowKeys,
         onChange: (selectedRowKeys, selectedRows) => {
-          console.log(`selectedRowKeys: ${selectedRowKeys}`, 'selectedRows: ', selectedRows);
+          console.log(
+            `selectedRowKeys: ${selectedRowKeys}`,
+            'selectedRows: ',
+            selectedRows
+          )
           this.selectedRowKeys = selectedRowKeys
           this.selectedRows = selectedRows
-        },
-      };
-    },
+        }
+      }
+    }
   },
   data() {
     return {
@@ -187,21 +152,13 @@ export default {
       wrapperCol: { span: 14 },
       labelCol: { span: 4 },
       EditFormRules: {
-        num: [
-          { required: true, message: '请输入客服工号', trigger: 'blur' },
-        ],
-        name: [
-          { required: true, message: '请输入客服名称', trigger: 'blur' },
-        ],
-        email: [
-          { required: true, message: '请输入客服邮箱', trigger: 'blur' },
-        ],
-        phone: [
-          { required: true, message: '请输入客服电话', trigger: 'blur' },
-        ],
-        message: [
-          { required: false, message: '请输入备注信息', trigger: 'blur' },
-        ],
+        // num: [{ required: true, message: '请输入客服工号', trigger: 'blur' }],
+        // name: [{ required: true, message: '请输入客服名称', trigger: 'blur' }],
+        email: [{ required: true, message: '请输入客服邮箱', trigger: 'blur' }],
+        phone: [{ required: true, message: '请输入客服电话', trigger: 'blur' }],
+        // message: [
+        //   { required: false, message: '请输入备注信息', trigger: 'blur' }
+        // ]
       },
       visible: false, // 显示与隐藏
       confirmLoading: false, // 点击确定按钮的回调
@@ -211,50 +168,50 @@ export default {
           title: '图片',
           key: 'image',
           scopedSlots: { customRender: 'image' },
-          width: '13%',
+          width: '13%'
         },
-        {
-          title: '客服工号',
-          dataIndex: 'num',
-          key: 'num',
-        },
-        {
-          title: '客服名称',
-          dataIndex: 'name',
-          key: 'name',
-        },
+        // {
+        //   title: '客服工号',
+        //   dataIndex: 'num',
+        //   key: 'num'
+        // },
+        // {
+        //   title: '客服名称',
+        //   dataIndex: 'name',
+        //   key: 'name'
+        // },
         {
           title: '客服邮箱',
           dataIndex: 'email',
-          key: 'email',
+          key: 'email'
         },
         {
           title: '客服电话',
           dataIndex: 'phone',
-          key: 'phone',
+          key: 'phone'
         },
-        {
-          title: '备注',
-          dataIndex: 'message',
-          key: 'message',
-        },
+        // {
+        //   title: '备注',
+        //   dataIndex: 'message',
+        //   key: 'message'
+        // },
         {
           title: '编辑',
           key: 'edit',
-          scopedSlots: { customRender: 'edit' },
-        },
+          scopedSlots: { customRender: 'edit' }
+        }
       ],
       tabData: [],
       // 上传图片
       uploadUrl: 'http://114.116.253.112:9600/service/attachment/upload',
       headers: {
-        token,
+        token
       },
       fileList: [], // 上传图片
       previewVisible: false, // 预览 打开 or 关闭
       previewImage: '', // 预览图片
       addStatus: false, // 新增状态
-      editStatus: false, // 编辑状态
+      editStatus: false // 编辑状态
     }
   },
   created() {
@@ -266,9 +223,6 @@ export default {
       this.tabData = []
       this.cancel()
       this.loading = true
-
-
-
       // const data = {};
       getServicePage().then(({ data, code }) => {
         if (code != 0) return this.$message.error('获取数据失败')
@@ -304,7 +258,7 @@ export default {
       this.visible = true
       this.fileList = []
       this.$nextTick(() => {
-        this.$refs.ruleForm.resetFields();
+        this.$refs.ruleForm.resetFields()
       })
     },
     // 删除客服信息
@@ -314,7 +268,7 @@ export default {
         return this.$message.info('请选择您要删除的')
       }
 
-      const arr = [];
+      const arr = []
       this.selectedRows.forEach(item => {
         arr.push(item.id)
       })
@@ -324,7 +278,7 @@ export default {
       // return
       // 发送请求 删除选中的
       deleteServiceInfo(data).then(res => {
-        console.log('res: ', res);
+        console.log('res: ', res)
         if (!res) return
         if (res.code != 0) {
           return this.$message.error('删除失败')
@@ -337,27 +291,27 @@ export default {
     },
     // 点击打开 修改客服信息的dialog
     edit(record) {
-      console.log('record: ', record);
+      console.log('record: ', record)
       this.EditForm = {
         id: record.id,
-        num: record.num,
-        name: record.name,
+        // num: record.num,
+        // name: record.name,
         email: record.email,
         phone: record.phone,
-        message: record.message
+        // message: record.message
       }
       this.editStatus = true
       this.visible = true
     },
     // 点击确定回调
     handleOk() {
-      this.$refs.ruleForm.validate((valid) => {
+      this.$refs.ruleForm.validate(valid => {
         if (!valid) return this.$message.info('请完善表单')
 
         this.confirmLoading = true
         this.EditForm.image = this.EditForm.attachmentID
-        const data = this.EditForm;
-        console.log(data);
+        const data = this.EditForm
+        console.log(data)
 
         if (this.addStatus === true) {
           this.saveServiceInfo(data)
@@ -408,33 +362,35 @@ export default {
     // 图片处理删除
     onImgRemove() {
       debugger
-      let flag = false;
+      let flag = false
       this.$confirm('此操作将永久删除该文件, 是否继续?', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning'
-      }).then(() => {
-        this.$message({
-          type: 'success',
-          message: '删除成功!'
-        });
-        this.fileList = [];
-        flag = true
-        this.EditForm.attachmentID = ''
-      }).catch(() => {
-        this.$message({
-          type: 'info',
-          message: '已取消删除'
-        });
-        flag = false
-      });
-      console.log(this.EditForm.attachmentID);
+      })
+        .then(() => {
+          this.$message({
+            type: 'success',
+            message: '删除成功!'
+          })
+          this.fileList = []
+          flag = true
+          this.EditForm.attachmentID = ''
+        })
+        .catch(() => {
+          this.$message({
+            type: 'info',
+            message: '已取消删除'
+          })
+          flag = false
+        })
+      console.log(this.EditForm.attachmentID)
       return flag
     },
     // 处理状态 改变
     handleImgChange({ file, fileList }) {
-      console.log(file);
-      this.fileList = fileList;
+      console.log(file)
+      this.fileList = fileList
       if (file.response) {
         this.EditForm.attachmentID = file.response.data.id
       }
@@ -442,16 +398,16 @@ export default {
     // 处理预览
     async handleImgPreview(file) {
       if (!file.url && !file.preview) {
-        file.preview = await getBase64(file.originFileObj);
+        file.preview = await getBase64(file.originFileObj)
       }
-      this.previewImage = file.url || file.preview;
-      this.previewVisible = true;
+      this.previewImage = file.url || file.preview
+      this.previewVisible = true
     },
     // 处理关闭预览
     handleImgCancel() {
-      this.previewVisible = false;
-    },
-  },
+      this.previewVisible = false
+    }
+  }
 }
 </script>
 

@@ -1,12 +1,13 @@
+<!-- 健康顾问 -->
 <template>
   <div class="wrapper">
     <!-- 按钮 -->
-    <el-row>
+    <!-- <el-row>
       <el-button type="primary" @click="showAddDialog">新增健康顾问</el-button>
       <el-button type="danger" @click="showRemoveDialog"
         >删除健康顾问</el-button
       >
-    </el-row>
+    </el-row> -->
 
     <!-- <el-row class="loading" v-if="nameArr.length == 0">
       <a-spin tip="Loading...">
@@ -33,7 +34,7 @@
       <div>{{ counselorList }}</div>
       <div slot="main">
         <a-table
-          :rowKey="(record) => record.id"
+          :rowKey="record => record.id"
           style="margin-top: 10px"
           :columns="columns"
           :data-source="[counselorList[index]]"
@@ -138,7 +139,7 @@
       class="removeDialog"
     >
       <a-table
-        :rowKey="(record) => record.id"
+        :rowKey="record => record.id"
         :columns="removeColumns"
         :data-source="removeData"
         :row-selection="removeRowSelection"
@@ -182,6 +183,9 @@
             style="width: 100%"
           ></el-date-picker>
         </a-form-model-item>
+        <a-form-model-item label="电话号码" prop="phone">
+          <a-input v-model="EditForm.phone"></a-input>
+        </a-form-model-item>
         <a-form-item label="上传图片">
           <a-upload
             class="uploader"
@@ -217,14 +221,14 @@ function getBase64(file) {
     const reader = new FileReader()
     reader.readAsDataURL(file)
     reader.onload = () => resolve(reader.result)
-    reader.onerror = (error) => reject(error)
+    reader.onerror = error => reject(error)
   })
 }
 
 export default {
   components: {
     AFormItem,
-    Card,
+    Card
   },
   data() {
     return {
@@ -236,19 +240,20 @@ export default {
       changedEditForm: {}, // 编辑后的顾问信息
       EditFormRules: {
         nickName: [
-          { required: true, message: '请输入顾问姓名', trigger: 'blur' },
+          { required: true, message: '请输入顾问姓名', trigger: 'blur' }
         ],
         profile: [
-          { required: true, message: '请输入个人简介', trigger: 'blur' },
+          { required: true, message: '请输入个人简介', trigger: 'blur' }
         ],
         signDate: [
           {
             type: 'date',
             required: true,
             message: '请选择日期',
-            trigger: 'change',
-          },
+            trigger: 'change'
+          }
         ],
+        phone: [{ required: true, message: '请输入电话号码', trigger: 'blur' }]
       },
       currentIndex: null,
       TableLoading_2: false,
@@ -271,7 +276,7 @@ export default {
         nickName: null,
         profile: null,
         signDate: null,
-        attachmentID: null,
+        attachmentID: null
       },
       columns: [
         // 对应健康顾问的表格
@@ -279,29 +284,34 @@ export default {
           title: '图片',
           key: 'image',
           scopedSlots: { customRender: 'image' },
-          width: '25%',
+          width: '25%'
         },
         {
           title: '姓名',
           dataIndex: 'nickName',
-          key: 'nickName',
+          key: 'nickName'
         },
         {
           title: '个人简介',
           dataIndex: 'profile',
           key: 'profile',
-          width: '40%',
+          width: '40%'
         },
         {
           title: '签约时间',
           dataIndex: 'signDate',
-          key: 'signDate',
+          key: 'signDate'
+        },
+        {
+          title: '电话号码',
+          dataIndex: 'phone',
+          key: 'phone'
         },
         {
           title: '编辑',
           key: 'edit',
-          scopedSlots: { customRender: 'edit' },
-        },
+          scopedSlots: { customRender: 'edit' }
+        }
       ],
       data: [
         // 对应知识库的数据
@@ -311,14 +321,14 @@ export default {
         {
           title: '序号',
           dataIndex: 'key',
-          key: 'key',
+          key: 'key'
         },
         {
           title: '健康顾问',
           dataIndex: 'name',
           key: 'name',
-          width: '70%',
-        },
+          width: '70%'
+        }
       ],
       removeData: [
         // 删除 知识库 table 的数据
@@ -329,11 +339,11 @@ export default {
       editFileList: [], // 编辑的上传文件列表
       uploadUrl: 'http://114.116.253.112:9600/service/attachment/upload',
       headers: {
-        token,
+        token
       },
       previewVisible: false, // 预览 打开 or 关闭
       previewImage: '', // 预览图片
-      editStatus: false, // 编辑状态
+      editStatus: false // 编辑状态
     }
   },
   created() {
@@ -355,9 +365,9 @@ export default {
           )
           this.selectedRowKeys = selectedRowKeys
           this.selectedRows = selectedRows
-        },
+        }
       }
-    },
+    }
   },
   methods: {
     //获取当前时间 yyyy-MM-dd
@@ -384,7 +394,7 @@ export default {
     },
     // 编辑点击确定回调
     handleOk() {
-      this.$refs.ruleForm.validate((valid) => {
+      this.$refs.ruleForm.validate(valid => {
         if (!valid) return this.$message.info('请完善表单')
 
         this.confirmLoading = true
@@ -431,7 +441,8 @@ export default {
     getCounselorList() {
       const data = {}
       // 发送请求
-      getCounselorList(data).then((res) => {
+      getCounselorList(data).then(res => {
+        console.log(res.data)
         if (!res) return
         if (res.code != 0) return this.$message.error('获取数据失败')
         this.counselorList = res.data
@@ -442,7 +453,7 @@ export default {
           this.removeData.push({
             key,
             id,
-            name,
+            name
           })
         })
       })
@@ -479,12 +490,12 @@ export default {
         profile,
         signDate,
         pubDate,
-        photoID,
+        photoID
       }
       this.loading_1 = true
       this.cancel()
       // 发送请求
-      addCounselor(data).then((res) => {
+      addCounselor(data).then(res => {
         if (!res) return
         if (res.code != 0) {
           this.loading_1 = false
@@ -507,17 +518,17 @@ export default {
         }
 
         const arr = []
-        this.selectedRows.forEach((item) => {
+        this.selectedRows.forEach(item => {
           arr.push(item.id)
         })
         const id = arr.join(',')
         const data = {
-          id,
+          id
         }
         console.log(data)
         this.cancel()
         // 发送请求 删除对应的 知识库
-        deleteCounselor(data).then((res) => {
+        deleteCounselor(data).then(res => {
           console.log('res: ', res)
           if (!res) return
           if (res.code != 0) return this.$message.error('删除失败')
@@ -550,12 +561,12 @@ export default {
       this.$confirm('此操作将永久删除该文件, 是否继续?', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
-        type: 'warning',
+        type: 'warning'
       })
         .then(() => {
           this.$message({
             type: 'success',
-            message: '删除成功!',
+            message: '删除成功!'
           })
           this.fileList = []
           this.editFileList = []
@@ -566,7 +577,7 @@ export default {
         .catch(() => {
           this.$message({
             type: 'info',
-            message: '已取消删除',
+            message: '已取消删除'
           })
           flag = false
         })
@@ -598,8 +609,8 @@ export default {
     handleImgCancel() {
       this.previewVisible = false
       this.AddDialogVisible = true
-    },
-  },
+    }
+  }
 }
 </script>
 
