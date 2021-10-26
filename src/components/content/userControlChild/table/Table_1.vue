@@ -7,10 +7,6 @@
       :loading="loading"
       :pagination="true"
     >
-      <template slot="tag" slot-scope="text, record, index">
-        <el-tag type="success" v-if="status">已读</el-tag>
-        <el-tag type="danger" v-else>未读</el-tag>
-      </template>
     </a-table>
 
     <a-table
@@ -21,19 +17,19 @@
       :pagination="true"
     >
       <template slot="tag_1" slot-scope="text, record, index">
-        <el-tag v-if="type_1 == 0" type="success">正常</el-tag>
-        <el-tag v-else-if="type_1 == 1" type="warning">偏高</el-tag>
-        <el-tag v-else-if="type_1 == 2" type="danger">偏低</el-tag>
+        <el-tag v-if="record.emptyRemindNum === 0" type="success">正常</el-tag>
+        <el-tag v-else-if="record.emptyRemindNum === 1" type="warning">偏高</el-tag>
+        <el-tag v-else-if="record.emptyRemindNum === 2" type="danger">偏低</el-tag>
       </template>
       <template slot="tag_2" slot-scope="text, record, index">
-        <el-tag v-if="type_2 == 0" type="success">正常</el-tag>
-        <el-tag v-else-if="type_2 == 1" type="warning">偏高</el-tag>
-        <el-tag v-else-if="type_2 == 2" type="danger">偏低</el-tag>
+        <el-tag v-if="record.afterRemindNum == 0" type="success">正常</el-tag>
+        <el-tag v-else-if="record.afterRemindNum == 1" type="warning">偏高</el-tag>
+        <el-tag v-else-if="record.afterRemindNum == 2" type="danger">偏低</el-tag>
       </template>
       <template slot="tag_3" slot-scope="text, record, index">
-        <el-tag effect="dark" v-if="type_3 == 0" type="success">正常</el-tag>
-        <el-tag effect="dark" v-else-if="type_3 == 1" type="warning">偏高</el-tag>
-        <el-tag effect="dark" v-else-if="type_3 == 2" type="danger">偏低</el-tag>
+        <el-tag effect="dark" v-if="record.remindNum == 0" type="success">正常</el-tag>
+        <el-tag effect="dark" v-else-if="record.remindNum == 1" type="warning">偏高</el-tag>
+        <el-tag effect="dark" v-else-if="record.remindNum == 2" type="danger">偏低</el-tag>
       </template>
     </a-table>
   </div>
@@ -55,6 +51,11 @@ export default {
       }
     }
   },
+  watch: {
+    Table_1_a() {
+      console.log(this.Table_1_a);
+    }
+  },
   data() {
     return {
       type: null,
@@ -62,9 +63,19 @@ export default {
       loading: false,
       columns_1: [
         {
+          title: '近7天的 收缩压均值',
+          dataIndex: 'avgsystolic',
+          key: 'avgsystolic',
+        },
+        {
           title: '收缩压',
           dataIndex: 'systolic',
           key: 'systolic',
+        },
+        {
+          title: '近7天的 舒张压均值',
+          dataIndex: 'avgdiastolic',
+          key: 'avgdiastolic',
         },
         {
           title: '舒张压',
@@ -75,11 +86,6 @@ export default {
           title: '血压标准',
           dataIndex: 'sequenceNo',
           key: 'sequenceNo',
-        },
-        {
-          title: '状态',
-          key: 'tag',
-          scopedSlots: { customRender: 'tag' },
         },
         {
           title: '录入时间',
@@ -126,34 +132,6 @@ export default {
           scopedSlots: { customRender: 'tag_3' },
         },
       ],
-    }
-  },
-  computed: {
-    status() {
-      let status = this.Table_1[0].statusID
-      //  0绿色，1黄色 2红色
-      if (status == 1) {
-        return true
-      } else {
-        return false
-      }
-    },
-    type_1() {
-      //  0绿色，1黄色 2红色
-      let type = this.Table_1_a[0].emptyRemindNum
-      return type
-    },
-    type_2() {
-      //  0绿色，1黄色 2红色 
-      //  正常、偏高、偏低
-      let type = this.Table_1_a[0].afterRemindNum
-      return type
-    },
-    type_3() {
-      //  0绿色，1黄色 2红色 
-      //  正常、偏高、偏低
-      let type = this.Table_1_a[0].remindNum
-      return type
     }
   },
 }

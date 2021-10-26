@@ -17,6 +17,7 @@
               @change="(checked) => onChange(checked, text, index)"
             />
           </template>
+          <a-pagination @change="onChange" :total="50" />
         </a-table>
       </div>
     </Card>

@@ -53,10 +53,10 @@
       <!-- 侧边栏 -->
       <el-aside>
         <HomeAside v-if="$route.path === '/main'" />
-        <AllocationAside v-else-if="showAsideA" />
-        <DataCenterAside v-else-if="showAsideD" />
-        <OperationAside v-else-if="showAsideO" />
-        <ManageAside v-else-if="showAsideM" />
+        <AllocationAside ref="AllocationAside" v-else-if="showAsideA" />
+        <DataCenterAside ref="DataCenterAside" v-else-if="showAsideD" />
+        <OperationAside ref="OperationAside" v-else-if="showAsideO" />
+        <ManageAside ref="ManageAside" v-else-if="showAsideM" />
       </el-aside>
       <!-- 右侧内容主体 -->
       <el-main>
@@ -205,9 +205,19 @@ export default {
   watch: {
     '$route'(to, from) {
       this.$refs.NavBar.selected()
+      this.$nextTick(() => {
+        if (this.showAsideA) {
+          this.$refs.AllocationAside.selected()
+        } else if (this.showAsideD) {
+          this.$refs.DataCenterAside.selected()
+        } else if (this.showAsideO) {
+          this.$refs.OperationAside.selected()
+        } else if (this.showAsideM) {
+          this.$refs.ManageAside.selected()
+        }
+      })
       sessionStorage.setItem('tabsIndex', JSON.stringify(0))
     },
-
   },
   created() {
     const userInfo = JSON.parse(sessionStorage.getItem('userInfo'));

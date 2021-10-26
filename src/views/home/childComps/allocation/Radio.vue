@@ -105,7 +105,7 @@
     <el-dialog
       title="分类管理"
       :visible.sync="removeDialogVisible"
-      width="50%"
+      width="70%"
       center
       @close="removeDialogClosed"
       class="removeDialog"
@@ -299,18 +299,19 @@ export default {
         {
           title: '序号',
           dataIndex: 'key',
-          key: 'key'
+          key: 'key',
+          width: '10%'
         },
         {
           title: '知识库名称',
           dataIndex: 'name',
           key: 'name',
-          width: '70%'
+          width: '75%'
         },
         {
           title: '编辑',
           key: 'edit',
-          scopedSlots: { customRender: 'edit' }
+          scopedSlots: { customRender: 'edit' },
         }
       ],
       removeData: [
@@ -448,7 +449,7 @@ export default {
       this.removeData = []
       this.removeDialogVisible = true
       // 发送请求
-      this.getRepositorys()
+      this.getRadioList()
     },
     /* 收音机 点击 保存 */
     saveAddForm() {
@@ -485,9 +486,8 @@ export default {
         }
         this.visible = false
         this.loading_1 = false
-        this.getRepositorys()
+        this.getRadioList()
         this.addDialogClosed()
-        // this.getAnswer()
       })
     },
     /* 点击按钮 删除知识库 */

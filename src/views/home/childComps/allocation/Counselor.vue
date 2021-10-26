@@ -505,7 +505,7 @@ export default {
 
           // 提示
           this.$message.success('删除成功')
-          // this.nameArr = []
+          this.selectedRows = [];
           this.removeData = []
           this.getCounselorList()
           this.loading_2 = false

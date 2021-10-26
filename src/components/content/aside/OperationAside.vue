@@ -1,17 +1,25 @@
 <template>
   <div class="allocation-aside">
-    <el-menu :default-active="activeIndex">
-      <el-menu-item
+    <div class="el-menu" :default-active="activeIndex">
+      <div
         v-for="(item, index) in menuList"
         :key="item.id"
         :index="item.id + ''"
         @click="goNext(index)"
+        class="el-menu-item"
+        :class="{ active: activeIndex == index }"
       >
-        <i :class="['iconfont', item.icon]">
+        <i
+          :class="[
+            'iconfont',
+            item.icon,
+            { active_text: activeIndex == index },
+          ]"
+        >
           <span>{{ item.title }}</span>
         </i>
-      </el-menu-item>
-    </el-menu>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -47,17 +55,17 @@ export default {
           // 点击之后 如果 当前路由 和 将要跳转的路由 相同 那么阻止跳转
           // 否则 放行
           if (this.$route.path == '/operation') return
-          this.$router.replace('/operation')
+          this.$router.push('/operation')
           break;
         case '1':
           this.activeIndex = indey
           if (this.$route.path == '/userControl') return
-          this.$router.replace('/userControl')
+          this.$router.push('/userControl')
           break;
         case '2':
           this.activeIndex = indey
           if (this.$route.path == '/operationControl') return
-          this.$router.replace('/operationControl')
+          this.$router.push('/operationControl')
           break;
       }
     },
@@ -111,13 +119,12 @@ export default {
     }
   }
 
-  .el-menu--collapse {
-    width: 80px;
-  }
-
-  .el-menu-item.is-active {
+  .active {
     color: #409eff;
     background-color: #edf4fc;
+  }
+  .active_text {
+    color: #409eff;
   }
 }
 </style>

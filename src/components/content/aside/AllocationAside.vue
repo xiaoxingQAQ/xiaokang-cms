@@ -1,17 +1,19 @@
 <template>
   <div class="allocation-aside">
-    <el-menu :default-active="activeIndex">
-      <el-menu-item
+    <div class="el-menu" :default-active="activeIndex">
+      <div
         v-for="(item, index) in menuList"
         :key="item.id"
         :index="item.id + ''"
         @click="goNext(item.id)"
+        class="el-menu-item"
+        :class="{active: activeIndex == index}"
       >
-        <i :class="['iconfont', item.icon]">
+        <i :class="['iconfont', item.icon, {active_text: activeIndex == index}]">
           <span>{{ item.title }}</span>
         </i>
-      </el-menu-item>
-    </el-menu>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -43,32 +45,32 @@ export default {
           // 点击之后 如果 当前路由 和 将要跳转的路由 相同 那么阻止跳转
           // 否则 放行
           if (path == '/allocation') return
-          this.$router.replace('/allocation')
+          this.$router.push('/allocation')
           break;
         case '1':
           this.activeIndex = indey
           if (path == '/skill') return
-          this.$router.replace('/skill')
+          this.$router.push('/skill')
           break;
         case '2':
           this.activeIndex = indey
           if (path == '/repository') return
-          this.$router.replace('/repository')
+          this.$router.push('/repository')
           break;
         case '3':
           this.activeIndex = indey
           if (path == '/radio') return
-          this.$router.replace('/radio')
+          this.$router.push('/radio')
           break;
         case '4':
           this.activeIndex = indey
           if (path == '/goodHealth') return
-          this.$router.replace('/goodHealth')
+          this.$router.push('/goodHealth')
           break;
         case '5':
           this.activeIndex = indey
           if (path == '/counselor') return
-          this.$router.replace('/counselor')
+          this.$router.push('/counselor')
           break;
       }
     },
@@ -134,13 +136,12 @@ export default {
     }
   }
 
-  .el-menu--collapse {
-    width: 80px;
-  }
-
-  .el-menu-item.is-active {
+  .active {
     color: #409eff;
     background-color: #edf4fc;
+  }
+  .active_text {
+    color: #409eff;
   }
 }
 </style>

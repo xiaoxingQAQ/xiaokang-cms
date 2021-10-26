@@ -155,7 +155,7 @@
     <el-dialog
       title="分类管理"
       :visible.sync="removeDialogVisible"
-      width="50%"
+      width="60%"
       center
       @close="removeDialogClosed"
       class="removeDialog"
@@ -349,6 +349,7 @@ export default {
           title: '序号',
           dataIndex: 'key',
           key: 'key',
+          width: '10%'
         },
         {
           title: '名称',
@@ -600,6 +601,7 @@ export default {
 
           // 提示
           this.$message.success('删除成功')
+          this.selectedRows = []
           this.nameArr = []
           this.removeData = []
           this.getHealthy()
@@ -702,6 +704,7 @@ export default {
 
           // 提示
           this.$message.success('删除成功')
+          this.selectedRows_2 = []
           console.log(this.repository)
           this.getByHealthyList()
 

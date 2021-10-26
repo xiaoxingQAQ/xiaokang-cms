@@ -12,7 +12,7 @@
     <!-- 卡片1-->
     <Card class="Card">
       <span slot="leftTitle">设备数据</span></span>
-      <span slot="rightTitle" @click="$router.replace('/dataCenter')">查看更多数据</span></span>
+      <span slot="rightTitle" @click="$router.push('/dataCenter')">查看更多数据</span></span>
 
       <div slot="data_1" >
       <span v-if="JSON.stringify(cardData_1) != '{}'">{{cardData_1.upcount}}</span>

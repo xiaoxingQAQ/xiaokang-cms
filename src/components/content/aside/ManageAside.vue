@@ -1,17 +1,25 @@
 <template>
   <div class="allocation-aside">
-    <el-menu :default-active="activeIndex">
-      <el-menu-item
+    <div class="el-menu" :default-active="activeIndex">
+      <div
         v-for="(item, index) in menuList"
         :key="item.id"
         :index="item.id + ''"
         @click="goNext(index)"
+        class="el-menu-item"
+        :class="{ active: activeIndex == index }"
       >
-        <i :class="['iconfont', item.icon]">
+        <i
+          :class="[
+            'iconfont',
+            item.icon,
+            { active_text: activeIndex == index },
+          ]"
+        >
           <span>{{ item.title }}</span>
         </i>
-      </el-menu-item>
-    </el-menu>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -46,12 +54,12 @@ export default {
         case '0':
           this.activeIndex = indey
           if (this.$route.path == '/service') return
-          this.$router.replace('/service')
+          this.$router.push('/service')
           break;
         case '1':
           this.activeIndex = indey
           if (this.$route.path == '/edition') return
-          this.$router.replace('/edition')
+          this.$router.push('/edition')
           break;
       }
     },
@@ -101,13 +109,12 @@ export default {
     }
   }
 
-  .el-menu--collapse {
-    width: 80px;
-  }
-
-  .el-menu-item.is-active {
+  .active {
     color: #409eff;
     background-color: #edf4fc;
+  }
+  .active_text {
+    color: #409eff;
   }
 }
 </style>

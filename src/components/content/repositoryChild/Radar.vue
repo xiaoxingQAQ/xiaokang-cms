@@ -3,7 +3,7 @@
     <!-- 按钮 -->
     <el-row>
       <el-button type="primary" @click="showAddDialog">新增嗅探词</el-button>
-      <el-button type="danger" @click="showClearTerms">删除嗅探词</el-button>
+      <el-button type="danger" @click="showClearTerms">分类管理</el-button>
     </el-row>
     <!-- Tag标签 -->
     <el-row class="loading" v-if="isLoading">
@@ -94,7 +94,7 @@
 
     <!-- 删除的Dialog对话框 -->
     <el-dialog
-      title="删除嗅探词"
+      title="分类管理"
       :visible.sync="removeDialogVisible"
       width="50%"
       center
@@ -532,6 +532,7 @@ export default {
           }
           // 提示
           this.$message.success('删除成功')
+          this.selectedRows = []
           this.nameArr = []
           this.removeData = []
           // 重新获取 嗅探词列表
