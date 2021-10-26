@@ -354,6 +354,40 @@ export default {
           let emptyRemindNum = item.emptyRemindNum // 空腹的状态码
 
           let remindNum = item.remindNum; // 整体状态
+
+          switch (emptyRemindNum) {
+            case 0:
+              emptyRemindNum = '正常'
+              break;
+            case 1:
+              emptyRemindNum = '偏高'
+              break;
+            case 2:
+              emptyRemindNum = '偏低'
+              break;
+          }
+          switch (afterRemindNum) {
+            case 0:
+              afterRemindNum = '正常'
+              break;
+            case 1:
+              afterRemindNum = '偏高'
+              break;
+            case 2:
+              afterRemindNum = '偏低'
+              break;
+          }
+          switch (remindNum) {
+            case 0:
+              remindNum = '正常'
+              break;
+            case 1:
+              remindNum = '偏高'
+              break;
+            case 2:
+              remindNum = '偏低'
+              break;
+          }
           this.Table_1_a.push({
             key,
             avgEmptySugar,

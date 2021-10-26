@@ -16,21 +16,21 @@
       :loading="loading"
       :pagination="true"
     >
-      <template slot="tag_1" slot-scope="text, record, index">
+      <!-- <span slot="tag_a" slot-scope="text, record, index">
         <el-tag v-if="record.emptyRemindNum === 0" type="success">正常</el-tag>
         <el-tag v-else-if="record.emptyRemindNum === 1" type="warning">偏高</el-tag>
         <el-tag v-else-if="record.emptyRemindNum === 2" type="danger">偏低</el-tag>
-      </template>
-      <template slot="tag_2" slot-scope="text, record, index">
+      </span>
+      <span slot="tag_b" slot-scope="text, record, index">
         <el-tag v-if="record.afterRemindNum == 0" type="success">正常</el-tag>
         <el-tag v-else-if="record.afterRemindNum == 1" type="warning">偏高</el-tag>
         <el-tag v-else-if="record.afterRemindNum == 2" type="danger">偏低</el-tag>
-      </template>
-      <template slot="tag_3" slot-scope="text, record, index">
+      </span>
+      <span slot="tag_c" slot-scope="text, record, index">
         <el-tag effect="dark" v-if="record.remindNum == 0" type="success">正常</el-tag>
         <el-tag effect="dark" v-else-if="record.remindNum == 1" type="warning">偏高</el-tag>
         <el-tag effect="dark" v-else-if="record.remindNum == 2" type="danger">偏低</el-tag>
-      </template>
+      </span> -->
     </a-table>
   </div>
 </template>
@@ -52,13 +52,12 @@ export default {
     }
   },
   watch: {
-    Table_1_a() {
-      console.log(this.Table_1_a);
+    Table_1_a(val) {
+      this.Table_1_a = val
     }
   },
   data() {
     return {
-      type: null,
       isChange: false,
       loading: false,
       columns_1: [
@@ -106,11 +105,15 @@ export default {
         },
         {
           title: '空腹状态',
-          key: 'tag_1',
-          scopedSlots: { customRender: 'tag_1' },
+          dataIndex: 'emptyRemindNum',
+           key: 'emptyRemindNum',
         },
-
-
+        // {
+        //   title: '空腹状态',
+        //   dataIndex: 'emptyRemindNum',
+        //   key: 'tag_a',
+        //   scopedSlots: { customRender: 'tag_a' },
+        // },
         {
           title: '餐后血糖平均值',
           dataIndex: 'avgAfterSugar',
@@ -123,14 +126,26 @@ export default {
         },
         {
           title: '餐后状态',
-          key: 'tag_2',
-          scopedSlots: { customRender: 'tag_2' },
+          dataIndex: 'afterRemindNum',
+          key: 'afterRemindNum',
         },
         {
           title: '整体状态',
-          key: 'tag_3',
-          scopedSlots: { customRender: 'tag_3' },
+          dataIndex: 'remindNum',
+          key: 'remindNum',
         },
+        // {
+        //   title: '餐后状态',
+        //   dataIndex: 'afterRemindNum',
+        //   key: 'tag_b',
+        //   scopedSlots: { customRender: 'tag_b' },
+        // },
+        // {
+        //   title: '整体状态',
+        //   dataIndex: 'remindNum',
+        //   key: 'tag_c',
+        //   scopedSlots: { customRender: 'tag_c' },
+        // },
       ],
     }
   },
