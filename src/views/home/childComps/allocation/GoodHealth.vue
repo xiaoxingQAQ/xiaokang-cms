@@ -628,6 +628,7 @@ export default {
     answerDialogClosed() {
       this.name = ''
       this.fileList = []
+      this.attachmentID = null
       this.editFileList = []
       this.answerDialogVisible = false
     },
