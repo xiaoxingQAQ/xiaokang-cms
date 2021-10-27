@@ -3,6 +3,7 @@
   <div>
     <Card>
       <span slot="leftTitle">客服信息</span>
+
       <!-- <template #rightTitle>
         <a-button style="margin-right: 10px" type="primary" @click="AddServicer"
           >新增客服</a-button
@@ -11,7 +12,7 @@
       </template> -->
       <div slot="main">
         <a-table
-          :rowKey="(record) => record.id"
+          :rowKey="record => record.id"
           :columns="columns"
           :data-source="tabData"
           :loading="loading"
@@ -52,6 +53,7 @@
       >
         <!-- <a-form-model-item ref="num" label="客服工号" prop="num">
           <a-input v-model="EditForm.num" />
+
         </a-form-model-item>
         <a-form-model-item ref="name" label="客服名称" prop="name">
           <a-input v-model="EditForm.name" />
@@ -62,7 +64,9 @@
         <a-form-model-item ref="phone" label="客服电话" prop="phone">
           <a-input v-model="EditForm.phone" />
         </a-form-model-item>
+
         <a-form-model-item ref="image" label="客服图片">
+
           <a-upload
             class="uploader"
             :action="uploadUrl"
@@ -99,34 +103,44 @@
 <script>
 import Card from '@/components/content/card/Card'
 
-import { getServiceInfo, saveServiceInfo, getServicePage, updateServiceInfo, deleteServiceInfo } from '@/network/home'
+import {
+  getServiceInfo,
+  saveServiceInfo,
+  getServicePage,
+  updateServiceInfo,
+  deleteServiceInfo
+} from '@/network/home'
 
-const token = JSON.parse(sessionStorage.getItem('token'));
+const token = JSON.parse(sessionStorage.getItem('token'))
 function getBase64(file) {
   return new Promise((resolve, reject) => {
-    const reader = new FileReader();
-    reader.readAsDataURL(file);
-    reader.onload = () => resolve(reader.result);
-    reader.onerror = error => reject(error);
-  });
+    const reader = new FileReader()
+    reader.readAsDataURL(file)
+    reader.onload = () => resolve(reader.result)
+    reader.onerror = error => reject(error)
+  })
 }
 
 export default {
   components: {
-    Card,
+    Card
   },
   computed: {
     rowSelection() {
-      const { selectedRowKeys } = this;
+      const { selectedRowKeys } = this
       return {
         selectedRowKeys,
         onChange: (selectedRowKeys, selectedRows) => {
-          console.log(`selectedRowKeys: ${selectedRowKeys}`, 'selectedRows: ', selectedRows);
+          console.log(
+            `selectedRowKeys: ${selectedRowKeys}`,
+            'selectedRows: ',
+            selectedRows
+          )
           this.selectedRowKeys = selectedRowKeys
           this.selectedRows = selectedRows
-        },
-      };
-    },
+        }
+      }
+    }
   },
   data() {
     return {
@@ -140,21 +154,13 @@ export default {
       wrapperCol: { span: 14 },
       labelCol: { span: 4 },
       EditFormRules: {
-        num: [
-          { required: true, message: '请输入客服工号', trigger: 'blur' },
-        ],
-        name: [
-          { required: true, message: '请输入客服名称', trigger: 'blur' },
-        ],
-        email: [
-          { required: true, message: '请输入客服邮箱', trigger: 'blur' },
-        ],
-        phone: [
-          { required: true, message: '请输入客服电话', trigger: 'blur' },
-        ],
-        message: [
-          { required: false, message: '请输入备注信息', trigger: 'blur' },
-        ],
+        // num: [{ required: true, message: '请输入客服工号', trigger: 'blur' }],
+        // name: [{ required: true, message: '请输入客服名称', trigger: 'blur' }],
+        email: [{ required: true, message: '请输入客服邮箱', trigger: 'blur' }],
+        phone: [{ required: true, message: '请输入客服电话', trigger: 'blur' }],
+        // message: [
+        //   { required: false, message: '请输入备注信息', trigger: 'blur' }
+        // ]
       },
       visible: false, // 显示与隐藏
       confirmLoading: false, // 点击确定按钮的回调
@@ -179,7 +185,7 @@ export default {
         {
           title: '客服邮箱',
           dataIndex: 'email',
-          key: 'email',
+          key: 'email'
         },
         {
           title: '客服电话',
@@ -194,20 +200,20 @@ export default {
         {
           title: '编辑',
           key: 'edit',
-          scopedSlots: { customRender: 'edit' },
-        },
+          scopedSlots: { customRender: 'edit' }
+        }
       ],
       tabData: [],
       // 上传图片
       uploadUrl: 'http://114.116.253.112:9600/service/attachment/upload',
       headers: {
-        token,
+        token
       },
       fileList: [], // 上传图片
       previewVisible: false, // 预览 打开 or 关闭
       previewImage: '', // 预览图片
       addStatus: false, // 新增状态
-      editStatus: false, // 编辑状态
+      editStatus: false // 编辑状态
     }
   },
   created() {
@@ -254,7 +260,7 @@ export default {
       this.visible = true
       this.fileList = []
       this.$nextTick(() => {
-        this.$refs.ruleForm.resetFields();
+        this.$refs.ruleForm.resetFields()
       })
     },
     // 删除客服信息
@@ -264,7 +270,7 @@ export default {
         return this.$message.info('请选择您要删除的')
       }
 
-      const arr = [];
+      const arr = []
       this.selectedRows.forEach(item => {
         arr.push(item.id)
       })
@@ -274,7 +280,7 @@ export default {
       // return
       // 发送请求 删除选中的
       deleteServiceInfo(data).then(res => {
-        console.log('res: ', res);
+        console.log('res: ', res)
         if (!res) return
         if (res.code != 0) {
           return this.$message.error('删除失败')
@@ -287,7 +293,7 @@ export default {
     },
     // 点击打开 修改客服信息的dialog
     edit(record) {
-      console.log('record: ', record);
+      console.log('record: ', record)
       this.EditForm = {
         id: record.id,
         email: record.email,
@@ -298,7 +304,7 @@ export default {
     },
     // 点击确定回调
     handleOk() {
-      this.$refs.ruleForm.validate((valid) => {
+      this.$refs.ruleForm.validate(valid => {
         if (!valid) return this.$message.info('请完善表单')
 
 
@@ -308,8 +314,8 @@ export default {
 
         this.confirmLoading = true
         this.EditForm.image = this.EditForm.attachmentID
-        const data = this.EditForm;
-        console.log(data);
+        const data = this.EditForm
+        console.log(data)
 
         if (this.addStatus === true) {
           this.saveServiceInfo(data)
@@ -363,33 +369,35 @@ export default {
     // 图片处理删除
     onImgRemove() {
       debugger
-      let flag = false;
+      let flag = false
       this.$confirm('此操作将永久删除该文件, 是否继续?', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning'
-      }).then(() => {
-        this.$message({
-          type: 'success',
-          message: '删除成功!'
-        });
-        this.fileList = [];
-        flag = true
-        this.EditForm.attachmentID = ''
-      }).catch(() => {
-        this.$message({
-          type: 'info',
-          message: '已取消删除'
-        });
-        flag = false
-      });
-      console.log(this.EditForm.attachmentID);
+      })
+        .then(() => {
+          this.$message({
+            type: 'success',
+            message: '删除成功!'
+          })
+          this.fileList = []
+          flag = true
+          this.EditForm.attachmentID = ''
+        })
+        .catch(() => {
+          this.$message({
+            type: 'info',
+            message: '已取消删除'
+          })
+          flag = false
+        })
+      console.log(this.EditForm.attachmentID)
       return flag
     },
     // 处理状态 改变
     handleImgChange({ file, fileList }) {
-      console.log(file);
-      this.fileList = fileList;
+      console.log(file)
+      this.fileList = fileList
       if (file.response) {
         this.EditForm.attachmentID = file.response.data.id
       }
@@ -397,16 +405,16 @@ export default {
     // 处理预览
     async handleImgPreview(file) {
       if (!file.url && !file.preview) {
-        file.preview = await getBase64(file.originFileObj);
+        file.preview = await getBase64(file.originFileObj)
       }
-      this.previewImage = file.url || file.preview;
-      this.previewVisible = true;
+      this.previewImage = file.url || file.preview
+      this.previewVisible = true
     },
     // 处理关闭预览
     handleImgCancel() {
-      this.previewVisible = false;
-    },
-  },
+      this.previewVisible = false
+    }
+  }
 }
 </script>
 
