@@ -35,6 +35,7 @@
     </Card>
     <a-modal
       :title="addStatus === true ? '新增客服信息' : '编辑客服信息'"
+      :dialog-style="{ top: '20px' }"
       okText="保存"
       cancelText="取消"
       :visible="visible"

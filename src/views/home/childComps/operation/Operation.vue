@@ -7,8 +7,8 @@
     </div>
 
     <!-- 提示 -->
-   <a-alert
-      style="margin-top: 30px;"
+    <a-alert
+      style="margin-top: 30px"
       message="提示："
       description="此功能会推送到所有小康设备"
       type="info"
@@ -17,6 +17,7 @@
 
     <!-- Dialog 对话框 -->
     <a-modal
+      :dialog-style="{ top: '50px' }"
       width="800px"
       title="新建消息推送"
       v-model="visible"

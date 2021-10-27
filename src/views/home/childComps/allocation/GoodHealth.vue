@@ -71,12 +71,13 @@
         >
           <template slot="audio" slot-scope="text, record">
             <audio
+              id="audio"
+              ref="audio"
               class="tsp-audio"
               @play="play"
               @pause="pause"
-              controls 
+              controls
               loop
-              :class="{ playing: status == 1 }"
               :src="record.attachmentUrl"
             ></audio>
           </template>
@@ -280,9 +281,10 @@ export default {
   },
   data() {
     return {
+      audioUrl: null,
+      playArr: [],
       isLoading: true,
       currentIndex: null,
-      status: 0, // 0 pause, 1 play
       fileList: [],
       editFileList: [],
       uploadUrl: 'http://114.116.253.112:9600/service/attachment/upload',
@@ -379,7 +381,7 @@ export default {
   created() {
     this.getHealthy()
   },
-  mounted() {},
+  mounted() { },
   computed: {
     ...mapState('user', ['memberID']),
     // 删除知识库的内容table
@@ -417,10 +419,22 @@ export default {
   },
   methods: {
     play() {
-      this.status = 1
+      const audio = document.getElementById('audio');
+      if (this.playArr.length !== 0) {
+        this.playArr.forEach(item => {
+          item.pause()
+          this.playArr = []
+        })
+      }
+      this.playArr.push(audio)
     },
     pause() {
-      this.status = 0
+      this.playArr = []
+      console.log(' this.playArr: ',  this.playArr);
+    },
+    // 停止所有播放
+    pauseAll() {
+      console.log(this.$refs.audio);
     },
     /* 点击tag标签养身知识分类 跳转 查询养生知识内容*/
     toTable(item, indey) {

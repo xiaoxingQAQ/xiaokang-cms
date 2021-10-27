@@ -141,6 +141,7 @@
     <!-- 编辑健康顾问的信息 -->
     <a-modal
       title="编辑健康顾问信息"
+      :dialog-style="{ top: '10px' }"
       okText="保存"
       cancelText="取消"
       :visible="visible"
@@ -280,6 +281,7 @@ export default {
           title: '姓名',
           dataIndex: 'nickName',
           key: 'nickName',
+          width: '10%'
         },
         {
           title: '电话',
@@ -290,12 +292,13 @@ export default {
           title: '个人简介',
           dataIndex: 'profile',
           key: 'profile',
-          width: '40%',
+          width: '20%',
         },
         {
           title: '签约时间',
           dataIndex: 'signDate',
           key: 'signDate',
+          width: '20%',
         },
         {
           title: '编辑',

@@ -60,7 +60,15 @@
           :row-selection="rowSelection"
           :pagination="true"
           :loading="TableLoading_2"
-        />
+        >
+          <template #edit="text, record">
+            <el-button
+              type="primary"
+              icon="el-icon-edit"
+              @click="showEdit_2(record)"
+            ></el-button>
+          </template>
+        </a-table>
       </div>
     </Card>
     <!-- 新增知识库的 Dialog对话框 -->
@@ -110,11 +118,37 @@
         :row-selection="removeRowSelection"
         :pagination="true"
         :loading="TableLoading_1"
-      />
+      >
+        <template #edit="text, record">
+          <el-button
+            type="primary"
+            icon="el-icon-edit"
+            @click="showEdit_1(record)"
+          ></el-button>
+        </template>
+      </a-table>
       <el-button type="info" @click="removeDialogClosed">取消</el-button>
       <el-button type="danger" @click="clearRepository" :loading="loading_2"
         >删除</el-button
       >
+
+      <!-- 修改分类名称 -->
+      <el-dialog
+        title="修改分类名称"
+        :visible.sync="visible_1"
+        :modal="false"
+        width="40%"
+        center
+      >
+        <el-input
+          ref="input"
+          placeholder="请输入分类名称"
+          v-model.trim="name"
+          @keyup.enter.native="saveEdit_1"
+        ></el-input>
+        <el-button type="info" @click="visible_1 = false">取消</el-button>
+        <el-button type="primary" @click="saveEdit_1">保存</el-button>
+      </el-dialog>
     </el-dialog>
 
     <!-- 新增问答的Dialog -->
@@ -152,6 +186,30 @@
         >
       </el-form>
     </el-dialog>
+
+    <!-- 修改问答 -->
+    <el-dialog
+      title="修改问答"
+      :visible.sync="visible_2"
+      width="40%"
+      center
+      class="dialog"
+    >
+      <el-input
+        ref="input"
+        placeholder="请输入问题"
+        v-model.trim="editForm.questions"
+        @keyup.enter.native="saveEdit_1"
+      ></el-input>
+      <el-input
+        ref="input"
+        placeholder="请输入回答"
+        v-model.trim="editForm.answers"
+        @keyup.enter.native="saveEdit_1"
+      ></el-input>
+      <el-button type="info" @click="visible_2 = false">取消</el-button>
+      <el-button type="primary" @click="saveEdit_2">保存</el-button>
+    </el-dialog>
   </div>
 </template>
 
@@ -173,6 +231,17 @@ export default {
   },
   data() {
     return {
+      editForm: {
+        id: null,
+        questions: null,
+        answers: null
+      },
+      name: null,
+      id_1: null,
+
+      visible_1: false,
+      visible_2: false,
+
       isLoading: true,
       currentIndex: null,
       TableLoading_2: false,
@@ -213,6 +282,11 @@ export default {
           key: 'answers',
           width: '60%',
         },
+        {
+          title: '编辑',
+          key: 'edit',
+          scopedSlots: { customRender: 'edit' }
+        }
       ],
       data: [ // 对应知识库的数据
 
@@ -222,6 +296,7 @@ export default {
           title: '序号',
           dataIndex: 'key',
           key: 'key',
+          width: '12%'
         },
         {
           title: '知识库名称',
@@ -229,6 +304,11 @@ export default {
           key: 'name',
           width: '70%',
         },
+        {
+          title: '编辑',
+          key: 'edit',
+          scopedSlots: { customRender: 'edit' }
+        }
       ],
       removeData: [ // 删除 知识库 table 的数据
       ],
@@ -280,6 +360,8 @@ export default {
     },
     // 获取 知识库的数据 列表
     getRepositorys() {
+      this.nameArr = []
+      this.removeData = []
       const memberID = this.memberID
       const categoryID = '1'
       const data = {
@@ -514,7 +596,7 @@ export default {
         const data = {
           id
         }
-        
+
         console.log(data);
         this.cancel()
         // 发送请求 删除对应的 知识库
@@ -528,7 +610,7 @@ export default {
           this.$message.success('删除成功')
           this.selectedRows_2 = []
           console.log(this.selectedRows_2);
-         
+
           console.log(this.repository);
           this.getAnswer()
 
@@ -537,13 +619,97 @@ export default {
       }, 500);
     },
     // #endregion
+
+    // 打开知识库分类名称
+    showEdit_1(record) {
+      this.visible_1 = true;
+      this.name = record.name
+      this.id_1 = record.id
+    },
+    saveEdit_1() {
+      if (!this.name) return this.$message.info('您输入的内容为空')
+
+      const memberID = this.memberID;
+      const categoryID = '1'
+      const name = this.name;
+      const id = this.id_1
+      const data = {
+        id,
+        name,
+        memberID,
+        categoryID
+      }
+      this.cancel()
+      // 发送请求
+      addRepository(data).then(res => {
+        if (!res) return
+        if (res.code != 0) {
+          return this.$message.warning('名称重复')
+        }
+
+        this.$message.success('保存成功')
+        this.getRepositorys()
+        this.visible_1 = false
+      })
+    },
+
+    showEdit_2(record) {
+      console.log(record);
+      this.editForm = _.cloneDeep(record)
+      this.visible_2 = true;
+      
+    },
+    saveEdit_2() {
+      this.cancel()
+
+      const memberID = this.memberID;
+      const categoryID = '1'
+      const questions = this.editForm.questions;
+      const answers = this.editForm.answers;
+      const id = this.editForm.id;
+      const data = {
+        id,
+        questions,
+        answers,
+        memberID,
+        categoryID
+      }
+      
+      if (!questions) return this.$message.info('请完善表单')
+      if (!answers) return this.$message.info('请完善表单')
+
+      // // 深拷贝
+      // const arr = _.cloneDeep(this.data)
+      // // 有从重复的 过滤到新数组中
+      // const newArr = arr.filter(item => {
+      //   return item.questions == questions
+      // })
+      // // 如果有值 判断
+      // if (newArr.length != 0) {
+      //   const obj = newArr[0]
+      //   if (obj.questions == questions) return this.$message.info('问题重复')
+      // }
+
+
+      // 发送请求
+      addAnswer(data).then(res => {
+        if (!res) return
+        if (res.code != 0) {
+          return this.$message.warning('修改失败')
+        }
+
+        this.$message.success('修改成功')
+        // 获取问答的数据列表
+        this.getAnswer()
+        this.visible_2 = false
+      })
+    },
   },
 }
 </script>
 
 <style lang="less" scoped>
 .wrapper {
-
   .category {
     font-size: 25px;
     font-weight: 500;
@@ -594,6 +760,17 @@ export default {
           margin-top: 10px;
           margin-left: 10px;
         }
+      }
+    }
+
+    .dialog {
+      ::v-deep .el-input__inner {
+        margin-bottom: 20px !important;
+      }
+      .el-button {
+        float: right;
+        margin-top: 10px;
+        margin-left: 10px;
       }
     }
 

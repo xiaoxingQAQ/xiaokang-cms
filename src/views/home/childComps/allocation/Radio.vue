@@ -105,7 +105,7 @@
     <el-dialog
       title="分类管理"
       :visible.sync="removeDialogVisible"
-      width="70%"
+      width="50%"
       center
       @close="removeDialogClosed"
       class="removeDialog"
@@ -300,13 +300,13 @@ export default {
           title: '序号',
           dataIndex: 'key',
           key: 'key',
-          width: '10%'
+          width: '12%'
         },
         {
           title: '知识库名称',
           dataIndex: 'name',
           key: 'name',
-          width: '75%'
+          width: '70%'
         },
         {
           title: '编辑',
