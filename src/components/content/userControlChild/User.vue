@@ -91,6 +91,13 @@ export default {
         equipmentID_user: '',
       },
       columns: [
+         {
+          title: '用户名',
+          dataIndex: 'name',
+          key: 'name',
+          ellipsis: true,
+          width: '20%'
+        },
         {
           title: '用户账号',
           dataIndex: 'memberID',
@@ -232,12 +239,14 @@ export default {
         }
         data.records.forEach((item) => {
           const key = item.memberID;
+          const name = item.name;
           const memberID = item.memberID;
           const equipmentID = item.equipmentID;
           const counts = item.counts;
           const pubDate = item.pubDate;
           this.tabData.push({
             key,
+            name,
             memberID,
             equipmentID,
             counts,
@@ -258,8 +267,6 @@ export default {
     },
     // 点击查询
     onSearch() {
-      if (this.SearchForm.memberID_user == '') return this.$message.warning('请完善表单')
-      if (this.SearchForm.equipmentID_user == '') return this.$message.warning('请完善表单')
       this.searchUser('0', 1)
     },
   },

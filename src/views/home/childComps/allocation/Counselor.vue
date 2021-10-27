@@ -8,25 +8,6 @@
         >删除健康顾问</el-button
       >
     </el-row> -->
-
-    <!-- <el-row class="loading" v-if="nameArr.length == 0">
-      <a-spin tip="Loading...">
-        <div class="spin-content"></div>
-      </a-spin>
-    </el-row> -->
-
-    <!-- <el-row v-else>
-      <el-tag
-        v-for="(item, index) in nameArr"
-        :key="index"
-        type="warning"
-        effect="dark"
-        :class="{ active: currentIndex == index }"
-        @click="toTable(item, index)"
-      >
-        {{ item.name }}
-      </el-tag>
-    </el-row> -->
     <!-- 卡片 -->
     <Card v-for="(item, index) in counselorList" :key="index">
       <span slot="leftTitle">健康顾问：{{ item.nickName }}</span>
@@ -76,6 +57,13 @@
             ref="input"
             placeholder="请输入顾问姓名"
             v-model.trim="addForm.nickName"
+          ></el-input>
+        </el-form-item>
+        <el-form-item label="电话：" prop="phone">
+          <el-input
+            ref="input"
+            placeholder="请输入顾问电话"
+            v-model.trim="addForm.phone"
           ></el-input>
         </el-form-item>
         <el-form-item label="简介：" prop="profile">
@@ -171,6 +159,9 @@
         <a-form-model-item ref="nickName" label="顾问姓名" prop="nickName">
           <a-input v-model="EditForm.nickName" />
         </a-form-model-item>
+        <a-form-model-item label="顾问电话" prop="phone">
+          <a-input v-model="EditForm.phone" />
+        </a-form-model-item>
         <a-form-model-item label="个人简介" prop="profile">
           <a-input v-model="EditForm.profile" />
         </a-form-model-item>
@@ -242,6 +233,7 @@ export default {
         nickName: [
           { required: true, message: '请输入顾问姓名', trigger: 'blur' }
         ],
+        phone: [{ required: true, message: '请输入顾问电话', trigger: 'blur' }],
         profile: [
           { required: true, message: '请输入个人简介', trigger: 'blur' }
         ],
@@ -274,6 +266,7 @@ export default {
       addForm: {
         // 添加表单对象
         nickName: null,
+        phone: null,
         profile: null,
         signDate: null,
         attachmentID: null
@@ -290,6 +283,11 @@ export default {
           title: '姓名',
           dataIndex: 'nickName',
           key: 'nickName'
+        },
+        {
+          title: '电话',
+          dataIndex: 'phone',
+          key: 'phone'
         },
         {
           title: '个人简介',
@@ -477,6 +475,7 @@ export default {
     /* 健康顾问 点击 保存 */
     saveAddForm() {
       let nickName = this.addForm.nickName
+      let phone = this.addForm.phone
       let profile = this.addForm.profile
       let signDate = this.addForm.signDate
       let pubDate = this.currentDate // 创建时间
@@ -487,6 +486,7 @@ export default {
 
       const data = {
         nickName,
+        phone,
         profile,
         signDate,
         pubDate,
@@ -535,7 +535,7 @@ export default {
 
           // 提示
           this.$message.success('删除成功')
-          // this.nameArr = []
+          this.selectedRows = []
           this.removeData = []
           this.getCounselorList()
           this.loading_2 = false

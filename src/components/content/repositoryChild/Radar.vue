@@ -3,10 +3,10 @@
     <!-- 按钮 -->
     <el-row>
       <el-button type="primary" @click="showAddDialog">新增嗅探词</el-button>
-      <el-button type="danger" @click="showClearTerms">删除嗅探词</el-button>
+      <el-button type="danger" @click="showClearTerms">分类管理</el-button>
     </el-row>
     <!-- Tag标签 -->
-    <el-row class="loading" v-if="nameArr.length == 0">
+    <el-row class="loading" v-if="isLoading">
       <a-spin tip="Loading...">
         <div class="spin-content"></div>
       </a-spin>
@@ -94,7 +94,7 @@
 
     <!-- 删除的Dialog对话框 -->
     <el-dialog
-      title="删除嗅探词"
+      title="分类管理"
       :visible.sync="removeDialogVisible"
       width="50%"
       center
@@ -226,6 +226,7 @@ export default {
   },
   data() {
     return {
+      isLoading: true,
       currentIndex: null,
       repositoryArr: [],
       selectedRowKeys: [],
@@ -341,6 +342,8 @@ export default {
       getSnifferWord(data).then(res => {
         if (!res) return
         if (res.code != 0) return this.$message.error('获取数据失败')
+
+        this.isLoading = false;
         console.log('res: ', res);
         res.data.forEach((item, index) => {
           let key = index + 1;
@@ -529,6 +532,7 @@ export default {
           }
           // 提示
           this.$message.success('删除成功')
+          this.selectedRows = []
           this.nameArr = []
           this.removeData = []
           // 重新获取 嗅探词列表

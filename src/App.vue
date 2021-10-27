@@ -24,16 +24,16 @@ export default {
 <style lang="less">
 // 动画
 .slide-fade-enter-active {
-  transition: all 0.6s ease-in;
-  opacity: 0.1;
+  transition: all 0.6s ease;
+  opacity: 0.8;
 }
 .slide-fade-leave-active {
   transition: all 0.6s ease-in-out;
-  opacity: 0.1;
+  opacity: 0.3;
 }
 .slide-fade-enter,
 .slide-fade-leave-to {
-  transform: translate(-50px);
+  transform: translate(-80px);
   opacity: 0.1;
 }
 </style>

@@ -37,27 +37,27 @@ export default {
         case 0:
           this.currentIndex = index
           if (this.$route.path == '/main') return
-          this.$router.replace('/main')
+          this.$router.push('/main')
           break;
         case 1:
           this.currentIndex = index
           if (this.$route.path == '/allocation') return
-          this.$router.replace('/allocation')
+          this.$router.push('/allocation')
           break;
         case 2:
           this.currentIndex = index
           if (this.$route.path == '/dataCenter') return
-          this.$router.replace('/dataCenter')
+          this.$router.push('/dataCenter')
           break;
         case 3:
           this.currentIndex = index
           if (this.$route.path == '/operation') return
-          this.$router.replace('/operation')
+          this.$router.push('/operation')
           break;
         case 4:
           this.currentIndex = index
           if (this.$route.path == '/service') return
-          this.$router.replace('/service')
+          this.$router.push('/service')
           break;
       }
     },

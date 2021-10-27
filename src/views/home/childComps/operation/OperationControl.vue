@@ -219,6 +219,32 @@ export default {
       this.previewVisible = true;
     },
 
+    // 处理删除
+    onRemove() {
+      let flag = false;
+      this.$confirm('此操作将永久删除该文件, 是否继续?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        this.$message({
+          type: 'success',
+          message: '删除成功!'
+        });
+        this.fileList = [];
+        flag = true
+        this.updateForm.attachmentID = ''
+      }).catch(() => {
+        this.$message({
+          type: 'info',
+          message: '已取消删除'
+        });
+        flag = false
+      });
+      console.log(this.updateForm.attachmentID);
+      return flag
+    },
+
     // 处理状态 改变
     handleChange({ file, fileList }) {
       console.log(file);
@@ -293,6 +319,7 @@ export default {
         }
         // 提示
         this.$message.success('删除成功')
+        this.selectedRows = []
         this.getOperation()
         this.loading_2 = false
       })

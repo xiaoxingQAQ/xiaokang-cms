@@ -12,7 +12,7 @@
     <!-- 卡片1-->
     <Card class="Card">
       <span slot="leftTitle">设备数据</span></span>
-      <span slot="rightTitle" @click="$router.replace('/dataCenter')">查看更多数据</span></span>
+      <span slot="rightTitle" @click="$router.push('/dataCenter')">查看更多数据</span></span>
 
       <div slot="data_1" >
       <span v-if="JSON.stringify(cardData_1) != '{}'">{{cardData_1.upcount}}</span>
@@ -241,17 +241,17 @@ export default {
   }
   // 动画
   .slide-fade-enter-active {
-    transition: all 0.6s ease-in;
-    opacity: 0.6;
+    transition: all 0.5s ease-in;
+    opacity: 0.3;
   }
   .slide-fade-leave-active {
-    transition: all 0.6s ease-in-out;
-    opacity: 0.6;
+    transition: all 0.5s ease-in-out;
+    opacity: 0.3;
   }
   .slide-fade-enter,
   .slide-fade-leave-to {
-    transform: translate(-50px);
-    opacity: 0.6;
+    transform: translate(-30px);
+    opacity: 0.3;
   }
 }
 </style>

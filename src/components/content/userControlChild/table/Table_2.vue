@@ -43,8 +43,8 @@ export default {
         },
         {
           title: '服用时间',
-          dataIndex: 'planTime',
-          key: 'planTime',
+          dataIndex: 'pubDate',
+          key: 'pubDate',
         },
       ],
     }

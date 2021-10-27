@@ -250,7 +250,9 @@ export default {
     },
     // 处理提交按钮
     handleOk() {
+      this.confirmLoading = true
       this.$refs.SystemUpdata.push()
+      this.confirmLoading = false
     },
     // 处理取消
     handleCancel() {
@@ -311,7 +313,8 @@ export default {
     handleOk_1() {
       this.$refs.editForm.validate(valid => {
         if (!valid) return
-
+        
+        this.confirmLoading_1 = true
         let id = this.updateForm.id
         let versionName = this.updateForm.versionName;
         let versionNum = this.updateForm.versionNum // 版本号
@@ -343,6 +346,7 @@ export default {
           this.$message.success('修改成功')
           this.getEditionInfo();
           this.handleCancel_1()
+          this.confirmLoading_1 = false
         })
       })
     },

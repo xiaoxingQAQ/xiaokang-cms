@@ -18,7 +18,7 @@
       <span class="category">养生知识</span>
     </el-row>
     <!-- loading -->
-    <el-row class="loading" v-if="nameArr.length == 0">
+    <el-row class="loading" v-if="isLoading">
       <a-spin tip="Loading...">
         <div class="spin-content"></div>
       </a-spin>
@@ -74,6 +74,8 @@
               class="tsp-audio"
               @play="play"
               @pause="pause"
+              controls 
+              loop
               :class="{ playing: status == 1 }"
               :src="record.attachmentUrl"
             ></audio>
@@ -153,7 +155,7 @@
     <el-dialog
       title="分类管理"
       :visible.sync="removeDialogVisible"
-      width="50%"
+      width="60%"
       center
       @close="removeDialogClosed"
       class="removeDialog"
@@ -278,6 +280,7 @@ export default {
   },
   data() {
     return {
+      isLoading: true,
       currentIndex: null,
       status: 0, // 0 pause, 1 play
       fileList: [],
@@ -346,6 +349,7 @@ export default {
           title: '序号',
           dataIndex: 'key',
           key: 'key',
+          width: '10%'
         },
         {
           title: '名称',
@@ -444,6 +448,7 @@ export default {
         console.log('res: ', res)
         if (!res) return
         if (res.code != 0) return this.$message.error('获取数据失败')
+        this.isLoading = false
         this.nameArr = []
         this.removeData = []
         res.data.forEach((item, index) => {
@@ -596,6 +601,7 @@ export default {
 
           // 提示
           this.$message.success('删除成功')
+          this.selectedRows = []
           this.nameArr = []
           this.removeData = []
           this.getHealthy()
@@ -622,6 +628,7 @@ export default {
     answerDialogClosed() {
       this.name = ''
       this.fileList = []
+      this.attachmentID = null
       this.editFileList = []
       this.answerDialogVisible = false
     },
@@ -698,6 +705,7 @@ export default {
 
           // 提示
           this.$message.success('删除成功')
+          this.selectedRows_2 = []
           console.log(this.repository)
           this.getByHealthyList()
 

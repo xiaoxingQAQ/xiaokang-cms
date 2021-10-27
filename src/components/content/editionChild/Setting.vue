@@ -852,6 +852,12 @@ export default {
 
     // 获取通话设置信息
     getCall() {
+      this.loading_1 = true
+      this.loading_2 = true
+      this.loading_3 = true
+      this.loading_a = true
+      this.loading_b = true
+      this.loading_c = true
       const versionId = this.edition_ID;
       const params = {
         versionId
@@ -879,6 +885,12 @@ export default {
           this.currentIndex_b = shieldStrangeCall;
           this.currentIndex_c = automaticAnswerCall;
         }
+        this.loading_1 = false
+        this.loading_2 = false
+        this.loading_3 = false
+        this.loading_a = false
+        this.loading_b = false
+        this.loading_c = false
       })
     },
     // 新增通话设置
@@ -913,6 +925,9 @@ export default {
     },
     // 修改通话设置
     editCall(val, type) {
+      this.loading_1 = true
+      this.loading_2 = true
+      this.loading_3 = true
       this.loading_a = true
       this.loading_b = true
       this.loading_c = true
@@ -953,6 +968,9 @@ export default {
         if (code != 0) return this.$message.error('修改失败')
 
         this.$message.success('修改成功')
+        this.loading_1 = false
+        this.loading_2 = false
+        this.loading_3 = false
         this.loading_a = false
         this.loading_b = false
         this.loading_c = false
@@ -971,6 +989,7 @@ export default {
     },
     // 获取免打扰时段信息
     getNoDisturbing() {
+      this.loading_6 = true
       const versionId = this.edition_ID
       const params = {
         versionId
@@ -1001,6 +1020,7 @@ export default {
               break;
           }
         }
+        this.loading_6 = false
       })
     },
     // 新增免打扰配置
@@ -1051,6 +1071,7 @@ export default {
 
     // 获取屏保信息
     getScreensaver() {
+      this.loading_5 = true
       const versionId = this.edition_ID
       const params = {
         versionId
@@ -1076,6 +1097,7 @@ export default {
               break;
           }
         }
+        this.loading_5 = false
       })
     },
     // 新增屏保信息
@@ -1126,6 +1148,7 @@ export default {
 
     // 获取屏幕亮度信息
     getLuminance() {
+      this.loading_4 = true
       this.options_4 = []
       this.options_4_b = []
       const versionId = this.edition_ID
@@ -1158,8 +1181,10 @@ export default {
             })
           })
         }
+        this.loading_4 = false
       })
     },
+    // 获取屏幕亮度信息
     getLuminance_a() {
       const versionId = this.edition_ID
       const params = {
@@ -1206,7 +1231,7 @@ export default {
       // 发送请求
       addLuminance(data).then(({ data, code }) => {
         console.log('data: ', data);
-        if (code != 0) return this.$message.error('配置设置失败')
+        if (code != 0) return this.$message.error('配置失败')
         this.$message.success('新增成功')
         this.getLuminance()
       })
@@ -1221,13 +1246,15 @@ export default {
         brightness
       }
       // 发送请求
-      addLuminance_a(data).then(res => {
-        console.log('res: ', res);
-        this.getLuminance()
+      addLuminance_a(data).then(({ data, code }) => {
+        if (code != 0) return this.$message.error('配置失败')
+
+        this.getLuminance_a()
       })
     },
     // 设置屏幕亮度
     editLuminance(item) {
+      this.loading_4 = true
       const versionId = this.edition_ID
       const brightness = item.light + '';
       const name = item.label;
@@ -1250,6 +1277,7 @@ export default {
         console.log(newArr);
         this.arr_2_a[0].title = newArr[0].label
         this.value_4_a = Number(newArr[0].light)
+        this.loading_4 = false
       })
     },
     // 删除屏幕亮度信息
@@ -1574,5 +1602,12 @@ export default {
 .row {
   margin-top: 20px;
   transform: translateX(4px);
+}
+
+// ::v-deep .el-input__inner {
+//   width: 80% !important;
+// }
+.el-date-editor.el-input, .el-date-editor.el-input__inner {
+  width: 150px;
 }
 </style>

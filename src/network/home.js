@@ -927,3 +927,15 @@ export function deleteServiceInfo(params) {
     },
   })
 }
+
+// 修改信息
+export function editInfo(data) {
+  return request({
+    data,
+    method: 'post',
+    url: 'admin/user/update',
+    headers: { //请求头
+      token: JSON.parse(sessionStorage.getItem('token'))
+    },
+  })
+}

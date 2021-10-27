@@ -3,14 +3,14 @@
     <!-- 按钮 -->
     <el-row>
       <el-button type="primary" @click="showAddDialog">新增知识库</el-button>
-      <el-button type="danger" @click="showRemoveDialog">删除知识库</el-button>
+      <el-button type="danger" @click="showRemoveDialog">分类管理</el-button>
     </el-row>
 
     <el-row>
       <span class="category">知识库</span>
     </el-row>
 
-    <el-row class="loading" v-if="nameArr.length == 0">
+    <el-row class="loading" v-if="isLoading">
       <a-spin tip="Loading...">
         <div class="spin-content"></div>
       </a-spin>
@@ -96,7 +96,7 @@
 
     <!-- 删除的Dialog对话框 -->
     <el-dialog
-      title="删除知识库"
+      title="分类管理"
       :visible.sync="removeDialogVisible"
       width="50%"
       center
@@ -104,7 +104,7 @@
       class="removeDialog"
     >
       <a-table
-        :rowKey="(record) => record.key"
+        :rowKey="(record) => record.id"
         :columns="removeColumns"
         :data-source="removeData"
         :row-selection="removeRowSelection"
@@ -173,6 +173,7 @@ export default {
   },
   data() {
     return {
+      isLoading: true,
       currentIndex: null,
       TableLoading_2: false,
       TableLoading_1: false,
@@ -293,6 +294,8 @@ export default {
         console.log('res: ', res);
         if (!res) return
         if (res.code != 0) return this.$message.error('获取数据失败')
+
+        this.isLoading = false
         res.data.forEach((item, index) => {
           let key = index + 1;
           let id = item.id
@@ -423,6 +426,7 @@ export default {
 
           // 提示
           this.$message.success('删除成功')
+          this.selectedRows = []
           this.nameArr = []
           this.removeData = []
           this.getRepositorys()
@@ -510,7 +514,7 @@ export default {
         const data = {
           id
         }
-
+        
         console.log(data);
         this.cancel()
         // 发送请求 删除对应的 知识库
@@ -522,13 +526,9 @@ export default {
 
           // 提示
           this.$message.success('删除成功')
-          // this.selectedRows_2.forEach(item => {
-          //   this.data.forEach((ele, index) => {
-          //     if (item.id == ele.id) {
-          //       this.data.splice(index, 1)
-          //     }
-          //   })
-          // })
+          this.selectedRows_2 = []
+          console.log(this.selectedRows_2);
+         
           console.log(this.repository);
           this.getAnswer()
 

@@ -3,7 +3,7 @@
   <div class="wrapper">
     <Card>
       <span slot="leftTitle">设备数据</span>
-      <div slot="main" v-if="detailForm.name == ''">
+      <div slot="main" v-if="isLoading">
         <el-row class="loading">
           <a-spin size="large" tip="Loading...">
             <div class="spin-content"></div>
@@ -68,6 +68,7 @@ export default {
   },
   data() {
     return {
+      isLoading: true,
       loading: false,
       // 表单数据
       detailForm: {
@@ -134,6 +135,7 @@ export default {
         if (!res) return
         console.log(res.data);
         if (res.code != 0) return this.$message.error('获取数据失败')
+        this.isLoading = false
         const Form = res.data
         this.detailForm = {
           name: Form.name.trim(),

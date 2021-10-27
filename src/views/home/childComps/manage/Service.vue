@@ -3,12 +3,13 @@
   <div>
     <Card>
       <span slot="leftTitle">客服信息</span>
-      <template #rightTitle>
+
+      <!-- <template #rightTitle>
         <a-button style="margin-right: 10px" type="primary" @click="AddServicer"
           >新增客服</a-button
         >
         <a-button type="danger" @click="deleteServicer">删除客服</a-button>
-      </template>
+      </template> -->
       <div slot="main">
         <a-table
           :rowKey="record => record.id"
@@ -51,8 +52,9 @@
       >
         <!-- <a-form-model-item ref="num" label="客服工号" prop="num">
           <a-input v-model="EditForm.num" />
-        </a-form-model-item> -->
-        <!-- <a-form-model-item ref="name" label="客服名称" prop="name">
+
+        </a-form-model-item>
+        <a-form-model-item ref="name" label="客服名称" prop="name">
           <a-input v-model="EditForm.name" />
         </a-form-model-item> -->
         <a-form-model-item ref="email" label="客服邮箱" prop="email">
@@ -61,7 +63,9 @@
         <a-form-model-item ref="phone" label="客服电话" prop="phone">
           <a-input v-model="EditForm.phone" />
         </a-form-model-item>
-        <a-form-model-item ref="image" label="图片">
+
+        <a-form-model-item ref="image" label="客服图片">
+
           <a-upload
             class="uploader"
             :action="uploadUrl"
@@ -142,11 +146,8 @@ export default {
       selectedRowKeys: [],
       selectedRows: [],
       EditForm: {
-        num: '',
-        name: '',
         email: '',
         phone: '',
-        message: '',
         attachmentID: ''
       },
       wrapperCol: { span: 14 },
@@ -168,17 +169,17 @@ export default {
           title: '图片',
           key: 'image',
           scopedSlots: { customRender: 'image' },
-          width: '13%'
+          width: '13%',
         },
         // {
         //   title: '客服工号',
         //   dataIndex: 'num',
-        //   key: 'num'
+        //   key: 'num',
         // },
         // {
         //   title: '客服名称',
         //   dataIndex: 'name',
-        //   key: 'name'
+        //   key: 'name',
         // },
         {
           title: '客服邮箱',
@@ -188,12 +189,12 @@ export default {
         {
           title: '客服电话',
           dataIndex: 'phone',
-          key: 'phone'
+          key: 'phone',
         },
         // {
         //   title: '备注',
         //   dataIndex: 'message',
-        //   key: 'message'
+        //   key: 'message',
         // },
         {
           title: '编辑',
@@ -294,11 +295,8 @@ export default {
       console.log('record: ', record)
       this.EditForm = {
         id: record.id,
-        // num: record.num,
-        // name: record.name,
         email: record.email,
         phone: record.phone,
-        // message: record.message
       }
       this.editStatus = true
       this.visible = true
@@ -307,6 +305,11 @@ export default {
     handleOk() {
       this.$refs.ruleForm.validate(valid => {
         if (!valid) return this.$message.info('请完善表单')
+
+
+        // if (!this.EditForm.attachmentID) {
+        //   return this.$message.warning('请上传图片')
+        // }
 
         this.confirmLoading = true
         this.EditForm.image = this.EditForm.attachmentID
@@ -353,11 +356,14 @@ export default {
     },
     // 点击遮罩层或右上角叉或取消按钮的回调
     handleCancel() {
+      this.$refs.ruleForm.resetFields()
+      this.EditForm.attachmentID = null
+      console.log('this.EditForm: ', this.EditForm);
       this.visible = false
       this.addStatus = false
       this.editStatus = false
       this.fileList = []
-      this.$refs.ruleForm.resetFields()
+
     },
     // 图片处理删除
     onImgRemove() {

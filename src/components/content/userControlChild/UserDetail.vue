@@ -312,17 +312,19 @@ export default {
         // 如果有
         data.forEach((item, index) => {
           let key = index
-          let systolic = item.systolic;
-          let notEatMedicine = item.notEatMedicine;
+          let systolic = item.systolic + 'mmHg'; // 收缩压
+          let diastolic = item.diastolic + 'mmHg'; // 舒张压
           let sequenceNo = item.sequenceNo;
-          let statusID = item.statusID;
+          let avgsystolic = item.avgsystolic;
+          let avgdiastolic = item.avgdiastolic;
           let time = item.time
           this.Table_1.push({
             key,
             systolic,
-            notEatMedicine,
+            diastolic,
             sequenceNo,
-            statusID,
+            avgsystolic,
+            avgdiastolic,
             time
           })
         });
@@ -352,6 +354,40 @@ export default {
           let emptyRemindNum = item.emptyRemindNum // 空腹的状态码
 
           let remindNum = item.remindNum; // 整体状态
+
+          switch (emptyRemindNum) {
+            case 0:
+              emptyRemindNum = '正常'
+              break;
+            case 1:
+              emptyRemindNum = '偏高'
+              break;
+            case 2:
+              emptyRemindNum = '偏低'
+              break;
+          }
+          switch (afterRemindNum) {
+            case 0:
+              afterRemindNum = '正常'
+              break;
+            case 1:
+              afterRemindNum = '偏高'
+              break;
+            case 2:
+              afterRemindNum = '偏低'
+              break;
+          }
+          switch (remindNum) {
+            case 0:
+              remindNum = '正常'
+              break;
+            case 1:
+              remindNum = '偏高'
+              break;
+            case 2:
+              remindNum = '偏低'
+              break;
+          }
           this.Table_1_a.push({
             key,
             avgEmptySugar,
@@ -409,12 +445,12 @@ export default {
           const key = index;
           const name = item.name;
           const piecesOneTime = item.piecesOneTime;
-          const planTime = item.planTime;
+          const pubDate = item.pubDate;
           this.Table_2.push({
             key,
             name,
             piecesOneTime,
-            planTime
+            pubDate
           })
         });
         this.$refs.Table_2.$data.loading = false
@@ -449,12 +485,12 @@ export default {
           const key = index;
           const name = item.name;
           const piecesOneTime = item.piecesOneTime;
-          const planTime = item.planTime;
+          const pubDate = item.pubDate;
           this.Table_2.push({
             key,
             name,
             piecesOneTime,
-            planTime
+            pubDate
           })
         });
         this.$refs.Table_2.$data.loading = false

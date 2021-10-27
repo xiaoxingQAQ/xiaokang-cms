@@ -11,6 +11,7 @@
             class="changeDateBtn"
             :disabled="currentIndex == index"
             :class="{ active: currentIndex == index }"
+            :loading="loading"
             >{{ item }}日</a-button
           >
         </template>
@@ -23,6 +24,7 @@
             @click="changeStatus(index)"
             :disabled="currentIndex_1 == index"
             :class="{ active: currentIndex_1 == index }"
+            :loading="loading"
           >
             {{ item }}
           </a-button>
@@ -58,6 +60,7 @@ export default {
   },
   data() {
     return {
+      loading: false,
       value: [], // 自定义日期 value值
       dateArr: [7, 14, 30], // changdate的数组
       dateArr_text: ['活跃排名', '最新激活'],

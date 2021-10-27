@@ -16,7 +16,7 @@
           <div>
             <div class="left">
               <div>{{ username }}</div>
-              <div style="margin-bottom: 5px">{{ systemName }}</div>
+              <div style="margin-bottom: 5px">{{ nickName }}</div>
             </div>
             <div class="avatar">
               <img src="@/assets/images/avatar.png" alt="" />
@@ -24,13 +24,13 @@
           </div>
 
           <div class="list">
-            <div @click="">
+            <div @click="detail">
               <i class="iconfont icon-shezhi2"></i>
-              <span>修改资料</span>
+              <span>查看/修改资料</span>
             </div>
-            <div @click="">
+            <div @click="dialogFormVisible = true">
               <i class="iconfont icon-suo"></i>
-              <span>修改密码</span>
+              <span>修改账号/密码</span>
             </div>
             <div @click="logout">
               <i class="iconfont icon-logout"></i>
@@ -53,10 +53,10 @@
       <!-- 侧边栏 -->
       <el-aside>
         <HomeAside v-if="$route.path === '/main'" />
-        <AllocationAside v-else-if="showAsideA" />
-        <DataCenterAside v-else-if="showAsideD" />
-        <OperationAside v-else-if="showAsideO" />
-        <ManageAside v-else-if="showAsideM" />
+        <AllocationAside ref="AllocationAside" v-else-if="showAsideA" />
+        <DataCenterAside ref="DataCenterAside" v-else-if="showAsideD" />
+        <OperationAside ref="OperationAside" v-else-if="showAsideO" />
+        <ManageAside ref="ManageAside" v-else-if="showAsideM" />
       </el-aside>
       <!-- 右侧内容主体 -->
       <el-main>
@@ -64,6 +64,73 @@
         <router-view />
       </el-main>
     </el-container>
+
+    <!-- 查看资料 -->
+    <el-dialog title="资料" :visible.sync="visible" @close="handleCancel_2">
+      <el-form :model="detailForm" ref="detailForm" :rules="detailRules">
+        <el-form-item label="用户名：" prop="username" label-width="120px">
+          <el-input
+            v-model.trim="detailForm.username"
+            autocomplete="off"
+          ></el-input>
+        </el-form-item>
+        <el-form-item label="昵称：" prop="nickName" label-width="120px">
+          <el-input
+            v-model.trim="detailForm.nickName"
+            autocomplete="off"
+          ></el-input>
+        </el-form-item>
+
+        <el-form-item label="手机号：" prop="phone" label-width="120px">
+          <el-input
+            v-model.trim="detailForm.phone"
+            autocomplete="off"
+          ></el-input>
+        </el-form-item>
+        <el-form-item label="邮箱：" prop="email" label-width="120px">
+          <el-input
+            v-model.trim="detailForm.email"
+            autocomplete="off"
+          ></el-input>
+        </el-form-item>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="handleCancel_2">取 消</el-button>
+        <el-button type="primary" @click="handleOk_2">修 改</el-button>
+      </div>
+    </el-dialog>
+
+    <!-- 修改密码 -->
+    <el-dialog
+      title="修改密码"
+      :visible.sync="dialogFormVisible"
+      @close="handleCancel_1"
+    >
+      <el-form :model="Form" ref="Form" :rules="FormRules">
+        <el-form-item label="账号：" prop="account" label-width="120px">
+          <el-input v-model.trim="Form.account" autocomplete="off"></el-input>
+        </el-form-item>
+
+        <el-form-item label="新密码：" prop="password_1" label-width="120px">
+          <el-input
+            type="password"
+            v-model.trim="Form.password_1"
+            autocomplete="off"
+          ></el-input>
+        </el-form-item>
+        <el-form-item label="确认密码：" prop="password_2" label-width="120px">
+          <el-input
+            type="password"
+            v-model.trim="Form.password_2"
+            autocomplete="off"
+          ></el-input>
+        </el-form-item>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="handleCancel_1">取 消</el-button>
+        <el-button type="primary" @click="handleOk_1">确 定</el-button>
+      </div>
+    </el-dialog>
   </el-container>
 </template>
 
@@ -76,6 +143,7 @@ import OperationAside from '@/components/content/aside/OperationAside'
 import ManageAside from '@/components/content/aside/ManageAside'
 import { mapState } from 'vuex'
 
+import { editInfo } from '@/network/home';
 
 export default {
   components: {
@@ -88,18 +156,79 @@ export default {
   },
   data() {
     return {
+      username: '',
+      nickName: '',
+      visible: false,
+      Form: { // 修改账号密码的表单
+        account: '',
+        password_1: '',
+        password_2: ''
+      },
+      detailForm: {
+        username: '',
+        nickName: '',
+        phone: '',
+        email: '',
+      },
+      detailRules: {
+        username: [
+          { required: true, message: '请输入用户名', trigger: 'blur' },
+        ],
+        nickName: [
+          { required: true, message: '请输入昵称', trigger: 'blur' },
+        ],
+
+        phone: [
+          { required: true, message: '请输入手机号', trigger: 'blur' },
+        ],
+        email: [
+          { required: true, message: '请输入邮箱', trigger: 'blur' },
+        ],
+      },
+      dialogFormVisible: false,
       isShow: false,
       isCollapse: true,
+      // 修改密码的表单 验证规则
+      FormRules: {
+        account: [
+          { required: true, message: '请输入账号', trigger: 'blur' }
+        ],
+        password_1: [
+          { required: true, message: '请输入新密码', trigger: 'blur' },
+        ],
+        password_2: [
+          { required: true, message: '请再次输入密码', trigger: 'blur' },
+        ],
+      }
     }
   },
   watch: {
     '$route'(to, from) {
       this.$refs.NavBar.selected()
+      this.$nextTick(() => {
+        if (this.showAsideA) {
+          this.$refs.AllocationAside.selected()
+        } else if (this.showAsideD) {
+          this.$refs.DataCenterAside.selected()
+        } else if (this.showAsideO) {
+          this.$refs.OperationAside.selected()
+        } else if (this.showAsideM) {
+          this.$refs.ManageAside.selected()
+        }
+      })
       sessionStorage.setItem('tabsIndex', JSON.stringify(0))
+    },
+  },
+  created() {
+    const userInfo = JSON.parse(sessionStorage.getItem('userInfo'));
+    if (userInfo instanceof Object) {
+      this.username = this.userInfo.username;
+      this.nickName = this.userInfo.nickName;
+      this.detailForm = this.userInfo;
     }
   },
   computed: {
-    ...mapState('user', ['username', 'systemIcon', 'systemName']),
+    ...mapState('user', ['memberID', 'userInfo']),
     showAsideA() {
       const path = this.$route.path;
       const APath = '/allocation';
@@ -181,7 +310,76 @@ export default {
           message: '已取消操作'
         });
       });
-    }
+    },
+    // 处理保存修改密码
+    handleOk_1() {
+      this.$refs.Form.validate(valid => {
+        if (!valid) return
+
+        const id = this.userInfo.id;
+        const account = this.Form.account;
+        const password = this.Form.password_1;
+        const password_2 = this.Form.password_2;
+        if (password_2 !== password) return this.$message.warning('两次密码输入不一致')
+        const data = {
+          id,
+          password
+        }
+        // 发送请求
+        editInfo(data).then(({ data, code }) => {
+          if (code != 0) return this.$message.error('修改失败')
+
+
+          this.$message.success('修改成功')
+          this.handleCancel_1()
+        })
+      })
+    },
+    // 处理取消
+    handleCancel_1() {
+      this.$refs.Form.resetFields()
+      this.dialogFormVisible = false
+      this.isShow = false
+    },
+    // 查看、修改资料
+    detail() {
+      this.visible = true
+    },
+    handleOk_2() {
+      this.$refs.detailForm.validate(valid => {
+        if (!valid) return
+
+        const id = this.userInfo.id;
+        const username = this.detailForm.username;
+        const nickName = this.detailForm.nickName;
+        const sex = this.detailForm.sex;
+        const phone = this.detailForm.phone;
+        const email = this.detailForm.email;
+
+        const data = {
+          id,
+          username,
+          nickName,
+          sex,
+          phone,
+          email
+        }
+        // 发送请求
+        editInfo(data).then(({ data, code }) => {
+          if (code != 0) return this.$message.error('修改失败')
+
+          this.$message.success('修改成功')
+          this.nickName = this.detailForm.nickName;
+          this.username = this.detailForm.username;
+          sessionStorage.setItem('userInfo', JSON.stringify(this.detailForm))
+          this.handleCancel_2()
+        })
+      })
+    },
+    handleCancel_2() {
+      this.visible = false
+      this.isShow = false
+    },
   }
 }
 </script>
@@ -249,14 +447,16 @@ export default {
     // 动画
     .slide-fade-enter-active {
       transition: all 0.3s ease;
+      opacity: 0.9;
     }
     .slide-fade-leave-active {
-      transition: all 0.3s cubic-bezier(1, 0.5, 0.8, 1);
+      transition: all 0.3s ease-in-out;
+      opacity: 0.3;
     }
     .slide-fade-enter,
     .slide-fade-leave-to {
-      transform: translateX(5px);
-      opacity: 0;
+      transform: translate(-50px);
+      opacity: 0.1;
     }
 
     .via {
@@ -265,7 +465,6 @@ export default {
       left: 80px;
       z-index: 9;
       width: 190px;
-      height: 180px;
 
       background-color: rgb(251, 248, 248);
       box-shadow: 0 2px 10px rgba(51, 49, 49, 0.3);
@@ -296,10 +495,10 @@ export default {
         padding: 8px 15px 15px;
         div {
           display: flex;
-          margin-top: 10px;
+          margin-top: 15px;
           cursor: pointer;
           span {
-            margin-left: 12px;
+            margin-left: 20px;
           }
         }
       }

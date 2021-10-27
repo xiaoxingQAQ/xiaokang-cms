@@ -64,7 +64,7 @@ export default {
       const data = {
         memberID,
         pageIndex: 1,
-        pageSize: 10,
+        pageSize: 999999,
       }
       this.loading = true
       this.cancel()

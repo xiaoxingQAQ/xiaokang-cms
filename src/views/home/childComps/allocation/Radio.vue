@@ -9,7 +9,7 @@
     <el-row>
       <span class="category">频道分类</span>
     </el-row>
-    <el-row class="loading" v-if="nameArr.length == 0">
+    <el-row class="loading" v-if="isLoading">
       <a-spin tip="Loading...">
         <div class="spin-content"></div>
       </a-spin>
@@ -105,7 +105,7 @@
     <el-dialog
       title="分类管理"
       :visible.sync="removeDialogVisible"
-      width="50%"
+      width="70%"
       center
       @close="removeDialogClosed"
       class="removeDialog"
@@ -217,12 +217,9 @@
 <script>
 import Card from '@/components/content/card/Card'
 import {
-  addRepository,
   getRepository,
+  addRepository,
   deleteRepository,
-  getAnswer,
-  addAnswer,
-  deleteAnswer,
   getRadioList,
   deleteRadio,
   addRadio
@@ -235,6 +232,7 @@ export default {
   },
   data() {
     return {
+      isLoading: true,
       currentIndex: null,
       TableLoading_2: false,
       TableLoading_1: false,
@@ -301,18 +299,19 @@ export default {
         {
           title: '序号',
           dataIndex: 'key',
-          key: 'key'
+          key: 'key',
+          width: '10%'
         },
         {
           title: '知识库名称',
           dataIndex: 'name',
           key: 'name',
-          width: '70%'
+          width: '75%'
         },
         {
           title: '编辑',
           key: 'edit',
-          scopedSlots: { customRender: 'edit' }
+          scopedSlots: { customRender: 'edit' },
         }
       ],
       removeData: [
@@ -321,7 +320,7 @@ export default {
     }
   },
   created() {
-    this.getRepositorys()
+    this.getRadioList()
   },
   mounted() {},
   computed: {
@@ -371,11 +370,9 @@ export default {
       this.getAnswer()
     },
     // 获取 分类数据 列表
-    getRepositorys() {
-      const memberID = this.memberID
+    getRadioList() {
       const categoryID = '2'
       const data = {
-        memberID,
         categoryID
       }
       this.TableLoading_2 = true
@@ -385,6 +382,7 @@ export default {
         console.log('res: ', res)
         if (!res) return
         if (res.code != 0) return this.$message.error('获取数据失败')
+        this.isLoading = false;
         this.nameArr = []
         this.removeData = []
         res.data.forEach((item, index) => {
@@ -418,9 +416,9 @@ export default {
       this.cancel()
       // 发送请求
       getRadioList(data).then(res => {
+        console.log('res: ', res);
         if (!res) return
         if (res.code != 0) return this.$message.error('获取数据失败')
-        console.log(res.data)
         res.data.forEach((item, index) => {
           let key = index
           let id = item.id
@@ -451,7 +449,7 @@ export default {
       this.removeData = []
       this.removeDialogVisible = true
       // 发送请求
-      this.getRepositorys()
+      this.getRadioList()
     },
     /* 收音机 点击 保存 */
     saveAddForm() {
@@ -488,9 +486,8 @@ export default {
         }
         this.visible = false
         this.loading_1 = false
-        this.getRepositorys()
+        this.getRadioList()
         this.addDialogClosed()
-        // this.getAnswer()
       })
     },
     /* 点击按钮 删除知识库 */

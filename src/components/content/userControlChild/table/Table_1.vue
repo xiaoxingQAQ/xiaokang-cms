@@ -7,10 +7,6 @@
       :loading="loading"
       :pagination="true"
     >
-      <template slot="tag" slot-scope="text, record, index">
-        <el-tag type="success" v-if="status">已读</el-tag>
-        <el-tag type="danger" v-else>未读</el-tag>
-      </template>
     </a-table>
 
     <a-table
@@ -20,21 +16,21 @@
       :loading="loading"
       :pagination="true"
     >
-      <template slot="tag_1" slot-scope="text, record, index">
-        <el-tag v-if="type_1 == 0" type="success">正常</el-tag>
-        <el-tag v-else-if="type_1 == 1" type="warning">偏高</el-tag>
-        <el-tag v-else-if="type_1 == 2" type="danger">偏低</el-tag>
-      </template>
-      <template slot="tag_2" slot-scope="text, record, index">
-        <el-tag v-if="type_2 == 0" type="success">正常</el-tag>
-        <el-tag v-else-if="type_2 == 1" type="warning">偏高</el-tag>
-        <el-tag v-else-if="type_2 == 2" type="danger">偏低</el-tag>
-      </template>
-      <template slot="tag_3" slot-scope="text, record, index">
-        <el-tag effect="dark" v-if="type_3 == 0" type="success">正常</el-tag>
-        <el-tag effect="dark" v-else-if="type_3 == 1" type="warning">偏高</el-tag>
-        <el-tag effect="dark" v-else-if="type_3 == 2" type="danger">偏低</el-tag>
-      </template>
+      <!-- <span slot="tag_a" slot-scope="text, record, index">
+        <el-tag v-if="record.emptyRemindNum === 0" type="success">正常</el-tag>
+        <el-tag v-else-if="record.emptyRemindNum === 1" type="warning">偏高</el-tag>
+        <el-tag v-else-if="record.emptyRemindNum === 2" type="danger">偏低</el-tag>
+      </span>
+      <span slot="tag_b" slot-scope="text, record, index">
+        <el-tag v-if="record.afterRemindNum == 0" type="success">正常</el-tag>
+        <el-tag v-else-if="record.afterRemindNum == 1" type="warning">偏高</el-tag>
+        <el-tag v-else-if="record.afterRemindNum == 2" type="danger">偏低</el-tag>
+      </span>
+      <span slot="tag_c" slot-scope="text, record, index">
+        <el-tag effect="dark" v-if="record.remindNum == 0" type="success">正常</el-tag>
+        <el-tag effect="dark" v-else-if="record.remindNum == 1" type="warning">偏高</el-tag>
+        <el-tag effect="dark" v-else-if="record.remindNum == 2" type="danger">偏低</el-tag>
+      </span> -->
     </a-table>
   </div>
 </template>
@@ -55,31 +51,40 @@ export default {
       }
     }
   },
+  watch: {
+    Table_1_a(val) {
+      this.Table_1_a = val
+    }
+  },
   data() {
     return {
-      type: null,
       isChange: false,
       loading: false,
       columns_1: [
+        {
+          title: '近7天的 收缩压均值',
+          dataIndex: 'avgsystolic',
+          key: 'avgsystolic',
+        },
         {
           title: '收缩压',
           dataIndex: 'systolic',
           key: 'systolic',
         },
         {
+          title: '近7天的 舒张压均值',
+          dataIndex: 'avgdiastolic',
+          key: 'avgdiastolic',
+        },
+        {
           title: '舒张压',
-          dataIndex: 'notEatMedicine',
-          key: 'notEatMedicine',
+          dataIndex: 'diastolic',
+          key: 'diastolic',
         },
         {
           title: '血压标准',
           dataIndex: 'sequenceNo',
           key: 'sequenceNo',
-        },
-        {
-          title: '状态',
-          key: 'tag',
-          scopedSlots: { customRender: 'tag' },
         },
         {
           title: '录入时间',
@@ -100,11 +105,15 @@ export default {
         },
         {
           title: '空腹状态',
-          key: 'tag_1',
-          scopedSlots: { customRender: 'tag_1' },
+          dataIndex: 'emptyRemindNum',
+           key: 'emptyRemindNum',
         },
-
-
+        // {
+        //   title: '空腹状态',
+        //   dataIndex: 'emptyRemindNum',
+        //   key: 'tag_a',
+        //   scopedSlots: { customRender: 'tag_a' },
+        // },
         {
           title: '餐后血糖平均值',
           dataIndex: 'avgAfterSugar',
@@ -117,43 +126,27 @@ export default {
         },
         {
           title: '餐后状态',
-          key: 'tag_2',
-          scopedSlots: { customRender: 'tag_2' },
+          dataIndex: 'afterRemindNum',
+          key: 'afterRemindNum',
         },
         {
           title: '整体状态',
-          key: 'tag_3',
-          scopedSlots: { customRender: 'tag_3' },
+          dataIndex: 'remindNum',
+          key: 'remindNum',
         },
+        // {
+        //   title: '餐后状态',
+        //   dataIndex: 'afterRemindNum',
+        //   key: 'tag_b',
+        //   scopedSlots: { customRender: 'tag_b' },
+        // },
+        // {
+        //   title: '整体状态',
+        //   dataIndex: 'remindNum',
+        //   key: 'tag_c',
+        //   scopedSlots: { customRender: 'tag_c' },
+        // },
       ],
-    }
-  },
-  computed: {
-    status() {
-      let status = this.Table_1[0].statusID
-      //  0绿色，1黄色 2红色
-      if (status == 1) {
-        return true
-      } else {
-        return false
-      }
-    },
-    type_1() {
-      //  0绿色，1黄色 2红色
-      let type = this.Table_1_a[0].emptyRemindNum
-      return type
-    },
-    type_2() {
-      //  0绿色，1黄色 2红色 
-      //  正常、偏高、偏低
-      let type = this.Table_1_a[0].afterRemindNum
-      return type
-    },
-    type_3() {
-      //  0绿色，1黄色 2红色 
-      //  正常、偏高、偏低
-      let type = this.Table_1_a[0].remindNum
-      return type
     }
   },
 }
