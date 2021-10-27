@@ -1,12 +1,12 @@
 <template>
   <div class="wrapper">
     <!-- 按钮 -->
-    <el-row>
+    <!-- <el-row>
       <el-button type="primary" @click="showAddDialog">新增健康顾问</el-button>
       <el-button type="danger" @click="showRemoveDialog"
         >删除健康顾问</el-button
       >
-    </el-row>
+    </el-row> -->
     <!-- 卡片 -->
     <Card v-for="(item, index) in counselorList" :key="index">
       <span slot="leftTitle">健康顾问：{{ item.nickName }}</span>

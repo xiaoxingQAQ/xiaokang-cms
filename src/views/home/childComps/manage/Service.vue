@@ -3,12 +3,12 @@
   <div>
     <Card>
       <span slot="leftTitle">客服信息</span>
-      <template #rightTitle>
+      <!-- <template #rightTitle>
         <a-button style="margin-right: 10px" type="primary" @click="AddServicer"
           >新增客服</a-button
         >
         <a-button type="danger" @click="deleteServicer">删除客服</a-button>
-      </template>
+      </template> -->
       <div slot="main">
         <a-table
           :rowKey="(record) => record.id"
@@ -301,9 +301,9 @@ export default {
         if (!valid) return this.$message.info('请完善表单')
 
 
-        if (!this.EditForm.attachmentID) {
-          return this.$message.warning('请上传图片')
-        }
+        // if (!this.EditForm.attachmentID) {
+        //   return this.$message.warning('请上传图片')
+        // }
 
         this.confirmLoading = true
         this.EditForm.image = this.EditForm.attachmentID
