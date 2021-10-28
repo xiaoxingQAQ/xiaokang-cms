@@ -10,7 +10,7 @@
       <span slot="leftTitle">设备增长</span>
       <div slot="main">
         <!-- 选择时间 -->
-        <DateRow ref="DateRow" @onChange="getTrend_1" @Change="getTrend_2" />
+        <DateRow ref="DateRow_1" @onChange="getTrend_1" @Change="getTrend_2" />
         <div class="echarts" ref="echarts"></div>
       </div>
     </Card>
@@ -91,7 +91,9 @@ export default {
     },
     // 获取 请求趋势的数据
     getTrend_1(day = 0) {
-      this.$refs.DateRow.$data.loading = true
+      this.$nextTick(() => {
+        this.$refs.DateRow_1.$data.loading = true
+      })
       this.option.series[0].data = []
       this.option.series[1].data = []
       this.option.xAxis.data = []
@@ -150,12 +152,16 @@ export default {
             }
           ]
         })
-      this.$refs.DateRow.$data.loading = false
+        this.$nextTick(() => {
+          this.$refs.DateRow_1.$data.loading = false
+        })
       })
 
     },
     getTrend_2(day, start_date) {
-      this.$refs.DateRow.$data.loading = true
+      this.$nextTick(() => {
+        this.$refs.DateRow_1.$data.loading = true
+      })
       this.option.series[0].data = []
       this.option.series[1].data = []
       this.option.xAxis.data = []
@@ -203,7 +209,9 @@ export default {
             }
           ]
         })
-        this.$refs.DateRow.$data.loading = false
+        this.$nextTick(() => {
+          this.$refs.DateRow_1.$data.loading = false
+        })
       })
     },
     // ECharts

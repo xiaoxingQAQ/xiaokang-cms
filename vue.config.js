@@ -11,6 +11,7 @@ module.exports = {
       }
     }
   },
+  // 代理
   devServer: {
     // proxy: 'http://192.168.124.20:9600/',
   }
