@@ -71,7 +71,7 @@
 import Card from '@/components/content/card/Card'
 import DataRow from '@/components/content/dateRow/DateRow'
 
-import { getUserList, getActive } from '@/network/home';
+import { getUserList, getActive } from '@/network/home'
 import { getDate } from '@/utils/getDate'
 import { mapMutations, mapState } from 'vuex'
 
@@ -88,10 +88,10 @@ export default {
       // 搜索表单对象
       SearchForm: {
         memberID_user: '',
-        equipmentID_user: '',
+        equipmentID_user: ''
       },
       columns: [
-         {
+        {
           title: '用户名',
           dataIndex: 'name',
           key: 'name',
@@ -132,7 +132,7 @@ export default {
           width: '20%'
         }
       ],
-      tabData: [],
+      tabData: []
     }
   },
   mounted() {
@@ -145,12 +145,12 @@ export default {
     ...mapMutations('user', ['User_ID']),
     // 页面加载获取 本地数据
     setData() {
-      let User = JSON.parse(sessionStorage.getItem('User'));
-      console.log('User: ', User);
+      let User = JSON.parse(sessionStorage.getItem('User'))
+      console.log('User: ', User)
       if (User instanceof Object) {
         this.tabData = []
         this.tabData.push(User)
-        this.$refs.DataRow.$data.currentIndex_1 = null;
+        this.$refs.DataRow.$data.currentIndex_1 = null
       } else {
         this.getUserList_1()
       }
@@ -170,7 +170,7 @@ export default {
     },
     getUserList_2(day, start_date, end_date) {
       const index = this.type_index
-      console.log('index: ', index);
+      console.log('index: ', index)
       if (!index) {
         this.$refs.DataRow.$data.currentIndex_1 = 0
         this.tabData = []
@@ -193,30 +193,36 @@ export default {
       this.tabData = []
       if (this.tabData.length == 0) this.loading = true
 
-      let memberID = this.SearchForm.memberID_user;
-      let equipmentID = this.SearchForm.equipmentID_user;
+      let memberID = this.SearchForm.memberID_user
+      let equipmentID = this.SearchForm.equipmentID_user
 
       if (indey == '0') {
         indey = ''
       } else {
-        memberID = '';
-        equipmentID = '';
+        memberID = ''
+        equipmentID = ''
       }
 
-      let startdate;
-      let enddate;
-      let pageIndex = 1;
-      let pageSize = 9999999;
-      let type;
+      let startdate
+      let enddate
+      let pageIndex = 1
+      let pageSize = 9999999
+      let type
+      let startTime
+      let endTime
 
       if (typx == 1) {
         startdate = getDate(-6) + ''
         enddate = getDate(0) + ''
-        type = indey;
+        startTime = startdate
+        endTime = enddate
+        type = indey
       } else {
         startdate = start_date
         enddate = end_date
-        type = this.type_index;
+        startTime = startdate
+        endTime = enddate
+        type = this.type_index
       }
       if (indey == '3') {
         type = '2'
@@ -228,22 +234,24 @@ export default {
         pageSize,
         startdate,
         enddate,
+        startTime,
+        endTime,
         type
       }
       this.cancel()
-      // 发送请求 获取活跃排名数据 
+      // 发送请求 获取活跃排名数据
       getUserList(data).then(({ data, code }) => {
         if (code != 0) {
           this.loading = false
           return this.$message.error('获取数据失败')
         }
-        data.records.forEach((item) => {
-          const key = item.memberID;
-          const name = item.name;
-          const memberID = item.memberID;
-          const equipmentID = item.equipmentID;
-          const counts = item.counts;
-          const pubDate = item.pubDate;
+        data.records.forEach(item => {
+          const key = item.memberID
+          const name = item.name
+          const memberID = item.memberID
+          const equipmentID = item.equipmentID
+          const counts = item.counts
+          const pubDate = item.pubDate
           this.tabData.push({
             key,
             name,
@@ -252,7 +260,7 @@ export default {
             counts,
             pubDate
           })
-        });
+        })
         // 去重
         this.tabData = _.uniqBy(this.tabData, 'memberID')
         this.loading = false
@@ -268,8 +276,8 @@ export default {
     // 点击查询
     onSearch() {
       this.searchUser('0', 1)
-    },
-  },
+    }
+  }
 }
 </script>
 
