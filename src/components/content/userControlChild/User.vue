@@ -214,8 +214,8 @@ export default {
       if (typx == 1) {
         startdate = getDate(-6) + ''
         enddate = getDate(0) + ''
-        startTime = startdate
-        endTime = enddate
+        startTime = null
+        endTime = null
         type = indey
       } else {
         startdate = start_date

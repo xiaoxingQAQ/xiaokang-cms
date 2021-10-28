@@ -59,7 +59,7 @@
           <a-input v-model="EditForm.name" />
         </a-form-model-item> -->
         <a-form-model-item ref="email" label="客服邮箱" prop="email">
-          <a-input v-model="EditForm.email" />
+          <a-input v-model="EditForm.email" @change="inputChangeFn()" />
         </a-form-model-item>
         <a-form-model-item ref="phone" label="客服电话" prop="phone">
           <a-input v-model="EditForm.phone" />
@@ -220,6 +220,11 @@ export default {
     this.getServiceInfo()
   },
   methods: {
+    inputChangeFn() {
+      if(this.EditForm.email.length > 15) {
+        this.EditForm.email = this.EditForm.email.slice(0,15)
+      }
+    },
     // 获取客服信息
     getServiceInfo() {
       this.tabData = []
