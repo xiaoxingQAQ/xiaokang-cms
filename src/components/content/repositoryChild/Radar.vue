@@ -3,7 +3,7 @@
     <!-- 按钮 -->
     <el-row>
       <el-button type="primary" @click="showAddDialog">新增嗅探词</el-button>
-      <el-button type="danger" @click="showClearTerms">分类管理</el-button>
+      <el-button type="danger" @click="showClearTerms">删除嗅探词</el-button>
     </el-row>
     <!-- Tag标签 -->
     <el-row class="loading" v-if="isLoading">
@@ -94,7 +94,7 @@
 
     <!-- 删除的Dialog对话框 -->
     <el-dialog
-      title="分类管理"
+      title="删除嗅探词"
       :visible.sync="removeDialogVisible"
       width="50%"
       center
