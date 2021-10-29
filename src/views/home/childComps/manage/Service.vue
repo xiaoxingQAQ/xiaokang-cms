@@ -82,6 +82,10 @@
               <div class="ant-upload-text">Upload</div>
             </div>
           </a-upload>
+          <a-alert
+            message="图片大小：332*332"
+            banner
+          />
         </a-form-model-item>
         <!-- <a-form-model-item ref="name" label="备注信息" prop="message">
           <a-input type="textarea" v-model="EditForm.message" />

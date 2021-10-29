@@ -194,6 +194,10 @@
               <div class="ant-upload-text">Upload</div>
             </div>
           </a-upload>
+          <a-alert
+            message="图片大小：212*212"
+            banner
+          />
         </a-form-item>
       </a-form-model>
     </a-modal>
@@ -246,7 +250,8 @@ export default {
             trigger: 'change'
           }
         ],
-        phone: [{ required: true, message: '请输入电话号码', trigger: 'blur' }]
+        phone: [{ required: true, message: '请输入电话号码', trigger: 'blur' }],
+        hint: [{ required: true, message: '1111111' }]
       },
       currentIndex: null,
       TableLoading_2: false,
@@ -285,7 +290,6 @@ export default {
           dataIndex: 'nickName',
           key: 'nickName',
           width: '10%'
-
         },
         {
           title: '电话',
@@ -296,14 +300,13 @@ export default {
           title: '个人简介',
           dataIndex: 'profile',
           key: 'profile',
-          width: '20%',
+          width: '20%'
         },
         {
           title: '签约时间',
           dataIndex: 'signDate',
           key: 'signDate',
-          width: '20%',
-
+          width: '20%'
         },
         {
           title: '编辑',
