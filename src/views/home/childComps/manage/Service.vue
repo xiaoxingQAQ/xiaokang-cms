@@ -12,7 +12,7 @@
       </template> -->
       <div slot="main">
         <a-table
-          :rowKey="record => record.id"
+          :rowKey="(record) => record.id"
           :columns="columns"
           :data-source="tabData"
           :loading="loading"
@@ -66,7 +66,6 @@
         </a-form-model-item>
 
         <a-form-model-item ref="image" label="客服图片">
-
           <a-upload
             class="uploader"
             :action="uploadUrl"
@@ -76,16 +75,14 @@
             :file-list="fileList"
             @preview="handleImgPreview"
             @change="handleImgChange"
+            :beforeUpload="beforeUpload"
           >
             <div v-if="fileList.length < 1">
               <a-icon type="plus" />
               <div class="ant-upload-text">Upload</div>
             </div>
           </a-upload>
-          <a-alert
-            message="图片大小：332*332"
-            banner
-          />
+          <a-alert message="图片大小：332*332" banner />
         </a-form-model-item>
         <!-- <a-form-model-item ref="name" label="备注信息" prop="message">
           <a-input type="textarea" v-model="EditForm.message" />
@@ -112,7 +109,7 @@ import {
   saveServiceInfo,
   getServicePage,
   updateServiceInfo,
-  deleteServiceInfo
+  deleteServiceInfo,
 } from '@/network/home'
 
 const token = JSON.parse(sessionStorage.getItem('token'))
@@ -121,13 +118,13 @@ function getBase64(file) {
     const reader = new FileReader()
     reader.readAsDataURL(file)
     reader.onload = () => resolve(reader.result)
-    reader.onerror = error => reject(error)
+    reader.onerror = (error) => reject(error)
   })
 }
 
 export default {
   components: {
-    Card
+    Card,
   },
   computed: {
     rowSelection() {
@@ -142,18 +139,19 @@ export default {
           )
           this.selectedRowKeys = selectedRowKeys
           this.selectedRows = selectedRows
-        }
+        },
       }
-    }
+    },
   },
   data() {
     return {
+      isJpgOrPng: true,
       selectedRowKeys: [],
       selectedRows: [],
       EditForm: {
         email: '',
         phone: '',
-        attachmentID: ''
+        attachmentID: '',
       },
       wrapperCol: { span: 14 },
       labelCol: { span: 4 },
@@ -189,7 +187,7 @@ export default {
         {
           title: '客服邮箱',
           dataIndex: 'email',
-          key: 'email'
+          key: 'email',
         },
         {
           title: '客服电话',
@@ -204,20 +202,20 @@ export default {
         {
           title: '编辑',
           key: 'edit',
-          scopedSlots: { customRender: 'edit' }
-        }
+          scopedSlots: { customRender: 'edit' },
+        },
       ],
       tabData: [],
       // 上传图片
       uploadUrl: 'http://114.116.253.112:9600/service/attachment/upload',
       headers: {
-        token
+        token,
       },
       fileList: [], // 上传图片
       previewVisible: false, // 预览 打开 or 关闭
       previewImage: '', // 预览图片
       addStatus: false, // 新增状态
-      editStatus: false // 编辑状态
+      editStatus: false, // 编辑状态
     }
   },
   created() {
@@ -225,8 +223,8 @@ export default {
   },
   methods: {
     inputChangeFn() {
-      if(this.EditForm.email.length > 15) {
-        this.EditForm.email = this.EditForm.email.slice(0,15)
+      if (this.EditForm.email.length > 15) {
+        this.EditForm.email = this.EditForm.email.slice(0, 15)
       }
     },
     // 获取客服信息
@@ -280,7 +278,7 @@ export default {
       }
 
       const arr = []
-      this.selectedRows.forEach(item => {
+      this.selectedRows.forEach((item) => {
         arr.push(item.id)
       })
       const ids = arr.join(',')
@@ -288,7 +286,7 @@ export default {
       const data = { ids }
       // return
       // 发送请求 删除选中的
-      deleteServiceInfo(data).then(res => {
+      deleteServiceInfo(data).then((res) => {
         console.log('res: ', res)
         if (!res) return
         if (res.code != 0) {
@@ -313,9 +311,8 @@ export default {
     },
     // 点击确定回调
     handleOk() {
-      this.$refs.ruleForm.validate(valid => {
+      this.$refs.ruleForm.validate((valid) => {
         if (!valid) return this.$message.info('请完善表单')
-
 
         // if (!this.EditForm.attachmentID) {
         //   return this.$message.warning('请上传图片')
@@ -368,12 +365,11 @@ export default {
     handleCancel() {
       this.$refs.ruleForm.resetFields()
       this.EditForm.attachmentID = null
-      console.log('this.EditForm: ', this.EditForm);
+      console.log('this.EditForm: ', this.EditForm)
       this.visible = false
       this.addStatus = false
       this.editStatus = false
       this.fileList = []
-
     },
     // 图片处理删除
     onImgRemove() {
@@ -382,12 +378,12 @@ export default {
       this.$confirm('此操作将永久删除该文件, 是否继续?', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
-        type: 'warning'
+        type: 'warning',
       })
         .then(() => {
           this.$message({
             type: 'success',
-            message: '删除成功!'
+            message: '删除成功!',
           })
           this.fileList = []
           flag = true
@@ -396,7 +392,7 @@ export default {
         .catch(() => {
           this.$message({
             type: 'info',
-            message: '已取消删除'
+            message: '已取消删除',
           })
           flag = false
         })
@@ -405,11 +401,15 @@ export default {
     },
     // 处理状态 改变
     handleImgChange({ file, fileList }) {
-      console.log(file)
-      this.fileList = fileList
-      if (file.response) {
-        this.EditForm.attachmentID = file.response.data.id
+      console.log(this.isJpgOrPng)
+      if (this.isJpgOrPng) {
+        console.log(file)
+        this.fileList = fileList
+        if (file.response) {
+          this.EditForm.attachmentID = file.response.data.id
+        }
       }
+      this.isJpgOrPng = true
     },
     // 处理预览
     async handleImgPreview(file) {
@@ -422,8 +422,22 @@ export default {
     // 处理关闭预览
     handleImgCancel() {
       this.previewVisible = false
-    }
-  }
+    },
+    // 限制图片类型
+    beforeUpload(file) {
+      const isJpgOrPng =
+        file.type === 'image/jpeg' ||
+        file.type === 'image/png' ||
+        file.type === 'image/jpg' ||
+        file.type === 'image/bmp' ||
+        file.type === 'image/psd' ||
+        file.type === 'image/webp'
+      if (!isJpgOrPng) {
+        this.$message.error('只能上传图片格式的文件！')
+        return (this.isJpgOrPng = false && isJpgOrPng)
+      }
+    },
+  },
 }
 </script>
 

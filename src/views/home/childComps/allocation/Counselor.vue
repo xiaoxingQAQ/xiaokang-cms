@@ -188,16 +188,14 @@
             :file-list="editFileList"
             @preview="handleImgPreview"
             @change="handleImgChange"
+            :beforeUpload="beforeUpload"
           >
             <div v-if="editFileList.length < 1">
               <a-icon type="plus" />
               <div class="ant-upload-text">Upload</div>
             </div>
           </a-upload>
-          <a-alert
-            message="图片大小：212*212"
-            banner
-          />
+          <a-alert message="图片大小：212*212" banner />
         </a-form-item>
       </a-form-model>
     </a-modal>
@@ -228,6 +226,14 @@ export default {
   },
   data() {
     return {
+      //   beforeUpload: (file) => {
+      //   const isJpgOrPng = file.type === 'image/jpeg' || file.type === 'image/png' || file.type === "image/jpg" || file.type === "image/bmp" || file.type === "image/psd"
+      //   if (!isJpgOrPng) {
+      //     message.error('只能上传图片格式的文件！')
+      //   }
+      //   return isJpgOrPng
+      // },
+      isJpgOrPng: true,
       wrapperCol: { span: 14 },
       labelCol: { span: 4 },
       visible: false, // 显示与隐藏
@@ -590,14 +596,18 @@ export default {
     },
     // 处理状态 改变
     handleImgChange({ file, fileList }) {
-      console.log(file)
-      if (this.editStatus === false) {
-        this.fileList = fileList
-        if (file.response) this.addForm.attachmentID = file.response.data.id
-      } else {
-        this.editFileList = fileList
-        if (file.response) this.EditForm.photoID = file.response.data.id
+      console.log(this.isJpgOrPng)
+      if (this.isJpgOrPng) {
+        console.log(file)
+        if (this.editStatus === false) {
+          this.fileList = fileList
+          if (file.response) this.addForm.attachmentID = file.response.data.id
+        } else {
+          this.editFileList = fileList
+          if (file.response) this.EditForm.photoID = file.response.data.id
+        }
       }
+      this.isJpgOrPng = true
     },
     // 处理预览
     async handleImgPreview(file) {
@@ -612,6 +622,20 @@ export default {
     handleImgCancel() {
       this.previewVisible = false
       this.AddDialogVisible = true
+    },
+    // 限制图片类型
+    beforeUpload(file) {
+      const isJpgOrPng =
+        file.type === 'image/jpeg' ||
+        file.type === 'image/png' ||
+        file.type === 'image/jpg' ||
+        file.type === 'image/bmp' ||
+        file.type === 'image/psd' ||
+        file.type === 'image/webp'
+      if (!isJpgOrPng) {
+        this.$message.error('只能上传图片格式的文件！')
+        return (this.isJpgOrPng = false)
+      }
     }
   }
 }
