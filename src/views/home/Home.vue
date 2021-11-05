@@ -61,7 +61,9 @@
       <!-- 右侧内容主体 -->
       <el-main>
         <!-- 路由占位符 -->
-        <router-view />
+        <transition name="fade-transform" mode="out-in">
+          <router-view />
+        </transition>
       </el-main>
     </el-container>
 
@@ -457,6 +459,22 @@ export default {
     .slide-fade-leave-to {
       transform: translate(-50px);
       opacity: 0.1;
+    }
+
+    /* fade-transform */
+    .fade-transform-leave-active,
+    .fade-transform-enter-active {
+      transition: all 0.5s;
+    }
+
+    .fade-transform-enter {
+      opacity: 0;
+      transform: translateX(-30px);
+    }
+
+    .fade-transform-leave-to {
+      opacity: 0;
+      transform: translateX(30px);
     }
 
     .via {

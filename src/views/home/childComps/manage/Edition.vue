@@ -1,16 +1,10 @@
 /* 系统版本 */
 <template>
   <div class="wrapper">
-    <transition
-      name="slide-fade"
-      v-if="!isChange"
-    >
+    <transition name="fade-transform" mode="out-in" v-if="!isChange">
       <Info @onChange="onChange" />
     </transition>
-    <transition
-      name="slide-fade"
-      v-else="isChange"
-    >
+    <transition name="fade-transform" mode="out-in" v-else="isChange">
       <Setting @onChange="onChange" />
     </transition>
   </div>

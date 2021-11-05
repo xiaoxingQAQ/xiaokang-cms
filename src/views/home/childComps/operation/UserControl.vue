@@ -1,10 +1,10 @@
 /* 用户管理 */
 <template>
   <div class="wrapper" >
-    <transition name="slide-fade" v-if="!isChange">
+    <transition name="fade-transform" mode="out-in" v-if="!isChange">
       <User @onChange="onChange" />
     </transition>
-    <transition name="slide-fade" v-else="isChange">
+    <transition name="fade-transform" mode="out-in" v-else="isChange">
       <UserDetail @onChange="onChange" />
     </transition>
   </div>
