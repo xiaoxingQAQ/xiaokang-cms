@@ -133,7 +133,7 @@ export default {
           this.User_Login(userInfo)
           window.sessionStorage.setItem('userInfo', JSON.stringify(userInfo))
           window.sessionStorage.setItem('token', JSON.stringify('token'))
-          this.$router.push('/home')
+          this.$router.push('/')
         })
       })
     },

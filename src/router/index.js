@@ -1,6 +1,9 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 Vue.use(VueRouter)
+// 导入 NProgress 包对应的js 和 css
+import NProgress from 'nprogress';
+import 'nprogress/nprogress.css';
 
 import Home from '@/views/home/Home'
 
@@ -26,10 +29,10 @@ const Service = () => import('@/views/home/childComps/manage/Service')
 const Edition = () => import('@/views/home/childComps/manage/Edition')
 
 const routes = [
-  { path: '', redirect: '/login', },
+  // { path: '', redirect: '/', },
   { path: '/login', name: 'Login', component: Login },
   {
-    path: '/home',
+    path: '',
     name: 'Home',
     component: Home,
     redirect: '/main',
@@ -65,13 +68,17 @@ const router = new VueRouter({
 
 // 导航守卫
 router.beforeEach((to, from, next) => {
+  NProgress.start();
   // 如果访问登录页直接放行
   if (to.path === '/login') return next()
   /* 如果访问的不是 login 页面 */
   // 从sessionStorage 中获取保存的 token
   const tokenStr = JSON.parse(sessionStorage.getItem('token'));
   // 如果没有token,就强制跳转到 登录页面
-  if (!tokenStr) return next('/login')
+  if (!tokenStr) {
+    NProgress.done()
+    return next('/login')
+  }
   next()
 
   // 获取缓存的 请求取消标识 数组，取消所有关联的请求
@@ -83,5 +90,9 @@ router.beforeEach((to, from, next) => {
   })
   next()
 })
+router.afterEach(() => {
+  NProgress.done()
+})
+
 
 export default router
